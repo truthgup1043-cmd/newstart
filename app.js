@@ -18,7 +18,7 @@ const ROUTINES = [
       ],
       doneText: s => s.bible_chapters != null ? `오늘 ${s.bible_chapters}장 읽음` : "완료",
     } },
-  { id: "meditation", name: "성경묵상", emoji: "💭", sub: "말씀을 마음에 새기기", color: "#8a6fbf" },
+  { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
   { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a",
     value: {
       optional: true,
@@ -395,3 +395,10 @@ async function loadQT() {
 renderAll();
 syncFromCloud();
 loadQT();
+
+// ---------- PWA: 서비스 워커 등록 ----------
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch((e) => console.warn("SW 등록 실패:", e));
+  });
+}
