@@ -513,8 +513,16 @@ function updateAuthUI() {
   if (loggedIn) document.getElementById("userEmail").textContent = user.email;
 }
 function authError(msg) {
-  document.getElementById("authErr").textContent = msg;
+  const el = document.getElementById("authErr");
+  el.textContent = msg;
+  el.style.color = "#c0392b";
 }
+function authSuccess(msg) {
+  const el = document.getElementById("authErr");
+  el.textContent = msg;
+  el.style.color = "#4a7c59";
+}
+let signupJustCompleted = false;
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
   user = session?.user || null;
@@ -527,7 +535,7 @@ async function initAuth() {
     const changed = (!u !== !user) || (u && user && u.id !== user.id);
     user = u;
     if (changed) {
-      document.getElementById("authModal").classList.add("hidden");
+      if (!signupJustCompleted) document.getElementById("authModal").classList.add("hidden");
       authError("");
       loadLocal();
       updateAuthUI();
@@ -563,10 +571,17 @@ document.getElementById("authSignup").onclick = async () => {
   if (password.length < 6) { authError("비밀번호는 6자 이상이어야 해요."); return; }
   const { data, error } = await sb.auth.signUp({ email, password });
   if (error) { authError("가입 실패: " + error.message); return; }
-  if (!data.session) {
-    authError("가입은 됐어요. 이메일로 온 확인 링크를 눌러 인증한 뒤 로그인해주세요.");
+  if (data.session) {
+    // 이메일 확인이 꺼져 있으면 바로 로그인됨
+    signupJustCompleted = true;
+    authSuccess("회원 가입이 완료 되었습니다.");
+    setTimeout(() => {
+      document.getElementById("authModal").classList.add("hidden");
+      signupJustCompleted = false;
+    }, 1800);
+  } else {
+    authSuccess("회원 가입이 완료 되었습니다. 이메일로 온 확인 링크를 눌러주세요.");
   }
-  // 이메일 확인이 꺼져 있으면 세션이 바로 생겨 onAuthStateChange가 처리함
 };
 document.getElementById("logoutBtn").onclick = async () => {
   await sb.auth.signOut();
