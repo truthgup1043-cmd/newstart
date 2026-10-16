@@ -459,10 +459,20 @@ renderGospel();
 renderAll();
 syncFromCloud();
 
-// ---------- PWA: 서비스 워커 등록 ----------
+// ---------- PWA: 서비스 워커 등록 + 자동 업데이트 ----------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch((e) => console.warn("SW 등록 실패:", e));
+    navigator.serviceWorker.register("sw.js").then((reg) => {
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener("statechange", () => {
+          if (nw.state === "activated" && navigator.serviceWorker.controller) {
+            window.location.reload(); // 새 버전으로 자동 새로고침
+          }
+        });
+      });
+    }).catch((e) => console.warn("SW 등록 실패:", e));
   });
 }
 
