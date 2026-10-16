@@ -111,7 +111,16 @@
         <div class="go">›</div>
       </a>
       <p class="qt-note">성경 본문 텍스트는 저작권 보호로 공식 사이트에도 게시되지 않아, 오늘의 큐티(본문 범위·해설) 페이지로 연결됩니다.</p>
+      <section class="card qt-message-card">
+        <h3>오늘 나에게 주신 메시지</h3>
+        <textarea id="qtMessage" rows="2" placeholder="한 문장으로 적어보세요"></textarea>
+        <button class="btn primary" id="qtMessageSave" onclick="saveQtMessage()">저장</button>
+      </section>
       <button class="btn primary eng-done-btn" onclick="completeQtRoutine()">오늘 QT 완료하기</button>
+      <section class="card qt-archive-card">
+        <h3>메시지 아카이브</h3>
+        <div id="qtArchive"></div>
+      </section>
     </section>
   </div>
   <div class="tab-panel hidden" id="panel-praise">

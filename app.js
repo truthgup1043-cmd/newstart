@@ -421,6 +421,7 @@ document.querySelectorAll(".tab").forEach(t => {
     if (t.dataset.tab === "bible") renderBible();
     if (t.dataset.tab === "english") renderEnglish();
     if (t.dataset.tab === "catechism") renderCatechism();
+    if (t.dataset.tab === "qt") renderQtArchive();
   };
 });
 
@@ -767,6 +768,41 @@ function renderResolution() {
   el.innerHTML = `
     <div class="res-kicker">오늘의 결심 : 조나단 에드워즈의 결심 ${res.n}문</div>
     <div class="res-text">"${res.t}"</div>`;
+}
+
+// ---------- QT 메시지 아카이브 ----------
+function getQtMessages() {
+  try {
+    return JSON.parse(localStorage.getItem("qt-messages") || "{}");
+  } catch { return {}; }
+}
+function saveQtMessage() {
+  const ta = document.getElementById("qtMessage");
+  const text = ta.value.trim();
+  if (!text) return;
+  const msgs = getQtMessages();
+  msgs[today] = text;
+  try { localStorage.setItem("qt-messages", JSON.stringify(msgs)); } catch {}
+  ta.value = "";
+  renderQtArchive();
+}
+function renderQtArchive() {
+  const wrap = document.getElementById("qtArchive");
+  if (!wrap) return;
+  const msgs = getQtMessages();
+  // 오늘 작성 중인 내용은 유지
+  const ta = document.getElementById("qtMessage");
+  if (ta && msgs[today] && !ta.value) ta.value = msgs[today];
+  const keys = Object.keys(msgs).sort().reverse();
+  if (!keys.length) {
+    wrap.innerHTML = '<p class="qt-note">아직 저장된 메시지가 없어요.</p>';
+    return;
+  }
+  wrap.innerHTML = keys.slice(0, 30).map(k => `
+    <div class="archive-item">
+      <div class="archive-date">${k}</div>
+      <div class="archive-text">${msgs[k].replace(/</g, "&lt;")}</div>
+    </div>`).join("");
 }
 
 // ---------- 탭에서 루틴 완료 처리 ----------

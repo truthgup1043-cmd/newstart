@@ -285,6 +285,22 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .toggle input:checked + .slider { background: var(--accent); }
 .toggle input:checked + .slider:before { transform: translateX(22px); }
 .toggle.disabled { opacity: 0.4; pointer-events: none; }
+/* QT 메시지 */
+.qt-message-card { margin: 14px 0; }
+.qt-message-card h3 { font-size: 16px; margin-bottom: 10px; }
+.qt-message-card textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px; font-size: 15px; font-family: inherit; resize: vertical;
+  margin-bottom: 10px; background: #fff;
+}
+.qt-message-card textarea:focus { outline: 2px solid #d9a441; border-color: #d9a441; }
+.qt-message-card .btn { width: 100%; }
+.qt-archive-card { margin-top: 14px; }
+.qt-archive-card h3 { font-size: 16px; margin-bottom: 10px; }
+.archive-item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.archive-item:last-child { border-bottom: none; }
+.archive-date { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.archive-text { font-size: 15px; line-height: 1.7; }
 /* 문답 플래시카드 */
 .cat-head { margin-bottom: 12px; }
 .cat-head h2 { font-size: 20px; }
