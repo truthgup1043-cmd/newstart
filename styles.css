@@ -165,9 +165,9 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .gospel-card .go { transition: transform 0.2s; }
 .gospel-card.open .go { transform: rotate(90deg); }
 .gospel-body { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 6px; }
-.gospel-body h4 { font-size: 15px; margin: 14px 0 8px; }
+.gospel-body h4 { font-size: 17px; margin: 14px 0 8px; }
 .gospel-body ul { margin: 0 0 6px 18px; }
-.gospel-body li { font-size: 14px; line-height: 1.75; margin-bottom: 6px; }
+.gospel-body li { font-size: 16px; line-height: 1.75; margin-bottom: 6px; }
 
 /* 성경 읽기 탭 */
 .bible-head { margin-bottom: 12px; }
@@ -193,7 +193,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .bible-passage.open .go { transform: rotate(90deg); }
 .bible-passage.current { border: 2px solid var(--green); }
 .bible-body { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
-.bible-text { font-size: 15px; line-height: 2; }
+.bible-text { font-size: 17px; line-height: 2; }
 .bible-verse sup { color: var(--muted); font-size: 11px; margin-right: 2px; }
 .bible-loading, .bible-error { color: var(--muted); font-size: 14px; padding: 12px 0; }
 .bible-done-btn { margin-top: 14px; width: 100%; }
