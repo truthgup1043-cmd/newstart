@@ -456,7 +456,7 @@ function renderGospel() {
       <div class="gospel-body">
         <ul>${e.points.map(p => `<li>${p}</li>`).join("")}</ul>
       </div>
-    </div>`).join("");
+    </div>${i === 0 ? `<button class="btn primary eng-done-btn" onclick="completeGospelRoutine()">오늘 복음 읽기 완료하기</button>` : ""}`).join("");
 
   document.getElementById("gospelSummary").innerHTML = sumHtml;
   document.getElementById("gospelList").innerHTML = listHtml;
