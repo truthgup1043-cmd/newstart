@@ -15,33 +15,61 @@
     <p class="date" id="todayLabel"></p>
   </header>
 
-  <section class="progress">
-    <div class="progress-text"><span id="doneCount">0</span>/4 완료</div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-  </section>
+  <nav class="tabs">
+    <button class="tab active" data-tab="routine">오늘의 루틴</button>
+    <button class="tab" data-tab="qt">QT 본문</button>
+  </nav>
 
-  <main id="routineList"></main>
+  <div class="tab-panel" id="panel-routine">
+    <section class="progress">
+      <div class="progress-text"><span id="doneCount">0</span>/4 완료</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </section>
 
-  <section class="stats">
-    <h2>이번 주</h2>
-    <div class="week" id="weekView"></div>
-  </section>
+    <main id="routineList"></main>
 
-  <section class="stats">
-    <h2>연속 기록</h2>
-    <div class="streaks" id="streakView"></div>
-  </section>
+    <section class="stats">
+      <h2>이번 주</h2>
+      <div class="week" id="weekView"></div>
+    </section>
 
-  <section class="stats">
-    <h2>통계</h2>
-    <div class="summary" id="summaryView"></div>
-    <h3>최근 30일 달성 추이</h3>
-    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
-    <h3>기도 시간 추이 (분)</h3>
-    <div class="chart-wrap"><canvas id="prayerChart"></canvas></div>
-    <h3>성경 읽기 추이 (장)</h3>
-    <div class="chart-wrap"><canvas id="bibleChart"></canvas></div>
-  </section>
+    <section class="stats">
+      <h2>연속 기록</h2>
+      <div class="streaks" id="streakView"></div>
+    </section>
+
+    <section class="stats">
+      <h2>통계</h2>
+      <div class="summary" id="summaryView"></div>
+      <h3>최근 30일 달성 추이</h3>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+      <h3>기도 시간 추이 (분)</h3>
+      <div class="chart-wrap"><canvas id="prayerChart"></canvas></div>
+      <h3>성경 읽기 추이 (장)</h3>
+      <div class="chart-wrap"><canvas id="bibleChart"></canvas></div>
+    </section>
+  </div>
+
+  <div class="tab-panel hidden" id="panel-qt">
+    <section class="qt-card">
+      <h2>오늘의 말씀</h2>
+      <p class="qt-ref" id="qtRef">불러오는 중...</p>
+      <p class="qt-text" id="qtText"></p>
+    </section>
+
+    <section class="stats">
+      <h2>매일성경</h2>
+      <a class="link-card" href="http://www.su.or.kr" target="_blank" rel="noopener">
+        <div class="emoji">📖</div>
+        <div class="info">
+          <div class="name">성서유니온 매일성경</div>
+          <div class="sub">오늘의 본문과 해설 보기</div>
+        </div>
+        <div class="go">›</div>
+      </a>
+      <p class="qt-note">매일성경 본문·해설은 저작권 보호를 받아 앱에 직접 담을 수 없어 홈페이지로 연결됩니다.</p>
+    </section>
+  </div>
 </div>
 <script src="app.js"></script>
 </body>

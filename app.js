@@ -297,5 +297,44 @@ function renderAll() {
 document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
+// ---------- 탭 ----------
+document.querySelectorAll(".tab").forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+    document.getElementById("panel-" + t.dataset.tab).classList.remove("hidden");
+  };
+});
+
+// ---------- QT 본문 ----------
+const LOGOS_API_KEY = "8e9eec47a9c942bc99c736454828606b";
+
+function renderQT(d) {
+  document.getElementById("qtRef").textContent = d.reference || "";
+  document.getElementById("qtText").textContent = d.text || "";
+}
+
+async function loadQT() {
+  const cacheKey = "qt-" + today;
+  try {
+    const cached = JSON.parse(localStorage.getItem(cacheKey));
+    if (cached && cached.reference) { renderQT(cached); return; }
+  } catch {}
+  try {
+    const res = await fetch("https://logos-api.com/api/verse/today", {
+      headers: { "X-API-KEY": LOGOS_API_KEY },
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
+    renderQT(data);
+  } catch (e) {
+    document.getElementById("qtRef").textContent = "오늘의 말씀을 불러오지 못했어요";
+    document.getElementById("qtText").textContent = "네트워크 연결을 확인해 주세요.";
+  }
+}
+
 renderAll();
 syncFromCloud();
+loadQT();
