@@ -36,7 +36,7 @@ const ROUTINES = [
     value: {
       optional: true,
       fields: [
-        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", timeRange: true },
+        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", presets: [4, 5, 6, 7, 8], def: 7 },
       ],
       doneText: s => s.sleep_hours != null ? `${s.sleep_hours}시간 수면` : "완료",
     } },
