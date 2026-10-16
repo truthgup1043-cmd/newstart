@@ -498,3 +498,12 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 
 /* 준비 중인 책 */
 .book-pending { font-size: 13px; color: var(--muted); padding: 8px 4px; flex-shrink: 0; }
+
+/* 리더 상단 타이머 */
+.reader-timer {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  padding: 0 4px;
+}
