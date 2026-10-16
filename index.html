@@ -18,8 +18,13 @@
 <body>
 <div class="app">
   <header>
-    <h1>하영시 앱</h1>
-    <p class="date" id="todayLabel"></p>
+    <div class="header-row">
+      <div>
+        <h1>하영시 앱</h1>
+        <p class="date" id="todayLabel"></p>
+      </div>
+      <button id="installBtn" class="install-btn hidden">📲 홈 화면에 추가</button>
+    </div>
   </header>
 
   <nav class="tabs">
@@ -86,5 +91,17 @@
 </div>
 <script src="qt.js"></script>
 <script src="app.js"></script>
+
+<div id="installGuide" class="modal hidden">
+  <div class="modal-card">
+    <h3>홈 화면에 추가하기</h3>
+    <ol class="guide-steps">
+      <li>사파리 하단의 <b>공유</b> 버튼을 눌러주세요</li>
+      <li><b>홈 화면에 추가</b>를 선택하세요</li>
+      <li>오른쪽 위 <b>추가</b>를 누르면 완료!</li>
+    </ol>
+    <button class="btn primary" id="guideClose">닫기</button>
+  </div>
+</div>
 </body>
 </html>

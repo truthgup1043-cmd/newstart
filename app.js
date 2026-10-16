@@ -389,3 +389,35 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch((e) => console.warn("SW 등록 실패:", e));
   });
 }
+
+// ---------- 홈 화면에 추가 버튼 ----------
+let deferredPrompt = null;
+const installBtn = document.getElementById("installBtn");
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.classList.remove("hidden");
+});
+
+if (!isStandalone) installBtn.classList.remove("hidden");
+
+installBtn.onclick = async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.classList.add("hidden");
+  } else {
+    // iOS 등: 직접 설치 안내
+    document.getElementById("installGuide").classList.remove("hidden");
+  }
+};
+document.getElementById("guideClose").onclick = () => {
+  document.getElementById("installGuide").classList.add("hidden");
+};
+document.getElementById("installGuide").onclick = (e) => {
+  if (e.target.id === "installGuide") e.target.classList.add("hidden");
+};
