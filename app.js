@@ -12,6 +12,8 @@ const ROUTINES = [
     } },
   { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5" },
   { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
+  { id: "gospel", name: "복음 읽기", emoji: "✝️", sub: "오늘의 복음 연구", color: "#b7791f" },
+  { id: "english", name: "영어 공부", emoji: "🔤", sub: "오늘의 영어", color: "#2a9d8f" },
   { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a",
     value: {
       optional: true,
@@ -519,6 +521,18 @@ function authSuccess(msg) {
   el.style.color = "#4a7c59";
 }
 let signupJustCompleted = false;
+// ---------- 탭에서 루틴 완료 처리 ----------
+function completeRoutineFromTab(routineId) {
+  if (!store[today]) store[today] = {};
+  if (store[today][routineId]) return;
+  store[today][routineId] = true;
+  cache(); renderAll();
+  saveRow(routineId, true);
+}
+function completeQtRoutine() { completeRoutineFromTab("meditation"); }
+function completeGospelRoutine() { completeRoutineFromTab("gospel"); }
+function completeEnglishRoutine() { completeRoutineFromTab("english"); renderEnglishDone(); }
+
 // ---------- URL 파라미터로 달리기 기록 자동 입력 (iOS 단축어용) ----------
 // 예: ?run_km=5.2&run_min=32
 function handleRunParams() {

@@ -55,16 +55,12 @@ function speakEnglish(text) {
   }
 }
 
-/* ---------- 학습 완료 체크 ---------- */
-function englishDoneKey() {
-  return "eng-done:" + new Date().toISOString().slice(0, 10);
-}
+/* ---------- 학습 완료 체크 (루틴 연동) ---------- */
 function isEnglishDone() {
-  return localStorage.getItem(englishDoneKey()) === "1";
+  return !!(store[today] && store[today]["english"]);
 }
 function markEnglishDone() {
-  try { localStorage.setItem(englishDoneKey(), "1"); } catch {}
-  renderEnglishDone();
+  completeEnglishRoutine();
 }
 function renderEnglishDone() {
   const btn = document.getElementById("engDoneBtn");

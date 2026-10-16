@@ -117,13 +117,34 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   position: sticky; top: 0; z-index: 20;
   background: var(--bg); padding: 10px 0;
 }
+/* 탭별 주황 계열 테마 컬러 */
+.tab[data-tab="routine"] { --tab-c: #e8833a; }
+.tab[data-tab="qt"] { --tab-c: #d9a441; }
+.tab[data-tab="gospel"] { --tab-c: #c96a2b; }
+.tab[data-tab="bible"] { --tab-c: #b87a3d; }
+.tab[data-tab="praise"] { --tab-c: #e0704a; }
+.tab[data-tab="english"] { --tab-c: #e8a33d; }
 .tab {
-  flex: 1; border: 1px solid var(--line); background: var(--card);
-  border-radius: 12px; padding: 12px; font-size: 15px; font-weight: 600;
-  cursor: pointer; color: var(--muted);
+  flex: 1; border: 1.5px solid var(--tab-c); background: #fff;
+  border-radius: 12px; padding: 12px; font-size: 15px; font-weight: 700;
+  cursor: pointer; color: var(--tab-c);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: background 0.15s, color 0.15s, transform 0.1s;
 }
-.tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tab.active {
+  background: linear-gradient(135deg, var(--tab-c), color-mix(in srgb, var(--tab-c) 78%, #7a3d00));
+  color: #fff; border-color: transparent;
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--tab-c) 45%, transparent);
+}
+.tab:active { transform: scale(0.97); }
 .tab-panel.hidden { display: none; }
+/* 패널 제목에 탭 컬러 적용 */
+#panel-routine h2 { color: #c96a1e; }
+#panel-qt h2 { color: #b8891f; }
+#panel-gospel h2 { color: #a8541f; }
+#panel-bible h2 { color: #9a6526; }
+#panel-praise h2 { color: #c25a38; }
+#panel-english h2 { color: #c07f1a; }
 
 /* 공용 카드 */
 .card {
@@ -222,7 +243,26 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tabs { display: flex; }
 .tabs .tab { flex: 1; }
 
-/* 좁은 화면 대응 */
+/* 오늘의 영어 탭 */
+.eng-head { margin-bottom: 12px; }
+.eng-head h2 { font-size: 20px; }
+.eng-sec { margin-bottom: 12px; }
+.eng-sec h3 { font-size: 16px; margin-bottom: 12px; }
+.eng-verse-ref { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.eng-verse-net { font-weight: 400; color: var(--muted); font-size: 12px; }
+.eng-verse-en { font-size: 17px; line-height: 1.9; margin-bottom: 8px; }
+.eng-verse-en sup { color: var(--muted); font-size: 11px; margin-right: 2px; }
+.eng-verse-ko { font-size: 15px; line-height: 1.9; color: var(--muted); border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+.eng-word-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.eng-word { font-size: 22px; font-weight: 800; }
+.eng-pron { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.eng-meaning { font-size: 17px; font-weight: 700; color: var(--accent); margin-bottom: 10px; }
+.eng-ex { font-size: 16px; line-height: 1.8; }
+.eng-exk { font-size: 14px; color: var(--muted); line-height: 1.7; margin-top: 4px; }
+.eng-speak { flex-shrink: 0; padding: 8px 12px; }
+.eng-speak-wide { margin-top: 14px; width: 100%; }
+.eng-done-btn { width: 100%; margin: 4px 0 12px; padding: 14px; font-size: 15px; }
+.eng-done-btn.done { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 @media (max-width: 380px) {
   .tab { padding: 12px 4px; font-size: 14px; }
   .app { padding: 20px 14px 48px; }
