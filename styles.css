@@ -510,3 +510,9 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   flex-shrink: 0;
   padding: 0 4px;
 }
+
+/* 도서 목록 진도 표시 */
+.book-progress { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.book-progress-bar { flex: 1; height: 4px; background: #eee; border-radius: 2px; overflow: hidden; max-width: 120px; }
+.book-progress-bar > div { height: 100%; background: var(--accent); }
+.book-progress span { font-size: 11px; color: var(--muted); }
