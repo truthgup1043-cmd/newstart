@@ -1,12 +1,58 @@
-/* 하영시 앱 — 포모도로 타이머 (25분 집중 / 5분 휴식 / 4세트마다 15분) */
+/* 하영시 앱 — 포모도로 타이머 (사용자 설정 가능) */
 
-const POMO_WORK = 25 * 60;
-const POMO_BREAK = 5 * 60;
-const POMO_LONG_BREAK = 15 * 60;
+function getPomoSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem("pomo-settings") || "{}");
+    return {
+      work: Math.max(1, Math.min(120, s.work || 25)),
+      brk: Math.max(1, Math.min(60, s.brk || 5)),
+      long: Math.max(1, Math.min(60, s.long || 15)),
+    };
+  } catch {
+    return { work: 25, brk: 5, long: 15 };
+  }
+}
+function pomoWorkSec() { return getPomoSettings().work * 60; }
+function pomoBreakSec() { return getPomoSettings().brk * 60; }
+function pomoLongSec() { return getPomoSettings().long * 60; }
+
+function savePomoSettings() {
+  const w = parseInt(document.getElementById("pomoWorkMin").value, 10);
+  const b = parseInt(document.getElementById("pomoBreakMin").value, 10);
+  const l = parseInt(document.getElementById("pomoLongMin").value, 10);
+  try {
+    localStorage.setItem("pomo-settings", JSON.stringify({
+      work: Math.max(1, Math.min(120, w || 25)),
+      brk: Math.max(1, Math.min(60, b || 5)),
+      long: Math.max(1, Math.min(60, l || 15)),
+    }));
+  } catch {}
+  // 현재 설정값을 입력란에 반영
+  loadPomoSettings();
+  // 타이머가 실행 중이 아니면 새 설정으로 리셋
+  if (!pomo.running) {
+    pomo.mode = "work";
+    pomo.remaining = pomoWorkSec();
+    renderPomodoro();
+  }
+  // 안내 문구 업데이트
+  updatePomoDesc();
+}
+function loadPomoSettings() {
+  const s = getPomoSettings();
+  document.getElementById("pomoWorkMin").value = s.work;
+  document.getElementById("pomoBreakMin").value = s.brk;
+  document.getElementById("pomoLongMin").value = s.long;
+}
+function updatePomoDesc() {
+  const s = getPomoSettings();
+  const el = document.getElementById("pomoDesc");
+  if (el) el.textContent = `${s.work}분 집중 → ${s.brk}분 휴식 · 4세트마다 ${s.long}분 휴식`;
+}
 
 let pomo = {
   mode: "work",       // work | break | longbreak
-  remaining: POMO_WORK,
+  remaining: pomoWorkSec(),
   cycle: 0,           // 완료한 집중 세트 수
   running: false,
   timerId: null,
@@ -17,10 +63,16 @@ function pomoModeLabel() {
   return pomo.mode === "work" ? "집중 시간" : pomo.mode === "break" ? "짧은 휴식" : "긴 휴식";
 }
 function pomoModeTotal() {
-  return pomo.mode === "work" ? POMO_WORK : pomo.mode === "break" ? POMO_BREAK : POMO_LONG_BREAK;
+  return pomo.mode === "work" ? pomoWorkSec() : pomo.mode === "break" ? pomoBreakSec() : pomoLongSec();
 }
 function openPomodoro() {
   document.getElementById("pomodoroModal").classList.remove("hidden");
+  loadPomoSettings();
+  updatePomoDesc();
+  // 설정이 바뀌었을 수 있으니 실행 중이 아닐 때 현재 모드에 맞게 보정
+  if (!pomo.running) {
+    pomo.remaining = pomoModeTotal();
+  }
   renderPomodoro();
 }
 function closePomodoro() {
@@ -82,10 +134,10 @@ function pomoComplete() {
   if (pomo.mode === "work") {
     pomo.cycle++;
     pomo.mode = (pomo.cycle % 4 === 0) ? "longbreak" : "break";
-    pomo.remaining = pomo.mode === "longbreak" ? POMO_LONG_BREAK : POMO_BREAK;
+    pomo.remaining = pomo.mode === "longbreak" ? pomoLongSec() : pomoBreakSec();
   } else {
     pomo.mode = "work";
-    pomo.remaining = POMO_WORK;
+    pomo.remaining = pomoWorkSec();
   }
   renderPomodoro();
 }
@@ -96,7 +148,7 @@ function skipPomodoro() {
 }
 function resetPomodoro() {
   clearInterval(pomo.timerId);
-  pomo = { mode: "work", remaining: POMO_WORK, cycle: 0, running: false, timerId: null, endTs: 0 };
+  pomo = { mode: "work", remaining: pomoWorkSec(), cycle: 0, running: false, timerId: null, endTs: 0 };
   renderPomodoro();
 }
 

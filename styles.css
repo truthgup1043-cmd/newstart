@@ -411,3 +411,13 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .pomo-cycle { font-size: 13px; color: var(--muted); margin-left: 6px; }
 .pomo-btns { display: flex; gap: 8px; justify-content: center; }
 .pomo-btns .btn { flex: 1; }
+
+/* 포모도로 설정 */
+.pomo-settings { margin-top: 12px; text-align: left; background: #fafafa; border-radius: 12px; padding: 12px; }
+.pomo-settings summary { font-size: 15px; font-weight: 700; cursor: pointer; padding: 4px; }
+.pomo-setting-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.pomo-setting-row label { font-size: 15px; }
+.pomo-setting-row input {
+  width: 80px; padding: 8px; font-size: 16px; text-align: center;
+  border: 1px solid var(--line); border-radius: 10px;
+}
