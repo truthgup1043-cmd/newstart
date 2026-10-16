@@ -283,10 +283,8 @@
         <div class="reader-book-title" id="readerBookTitle"></div>
         <div class="reader-chapter" id="readerChapter"></div>
       </div>
-      <button class="btn reader-hbtn" onclick="Reader.toggleToc()">☰</button>
-      <button class="btn reader-hbtn" onclick="Reader.toggleSettings()">가</button>
+      <button class="btn reader-hbtn" onclick="Reader.toggleSettings()">⚙️ 독서설정</button>
     </div>
-    <div class="reader-toc hidden" id="readerToc"></div>
     <div class="reader-settings hidden" id="readerSettings">
       <div class="reader-setting-row">
         <span>글자 크기</span>
@@ -301,15 +299,6 @@
         <div>
           <button class="btn reader-font-btn" data-font="serif" onclick="Reader.setFontFamily('serif')">명조</button>
           <button class="btn reader-font-btn" data-font="sans" onclick="Reader.setFontFamily('sans')">고딕</button>
-          <button class="btn reader-font-btn" data-font="round" onclick="Reader.setFontFamily('round')">둥근고딕</button>
-        </div>
-      </div>
-      <div class="reader-setting-row">
-        <span>테마</span>
-        <div>
-          <button class="btn reader-theme-btn" data-theme="light" onclick="Reader.setTheme('light')">☀️ 밝게</button>
-          <button class="btn reader-theme-btn" data-theme="sepia" onclick="Reader.setTheme('sepia')">📜 세피아</button>
-          <button class="btn reader-theme-btn" data-theme="dark" onclick="Reader.setTheme('dark')">🌙 어둡게</button>
         </div>
       </div>
     </div>
