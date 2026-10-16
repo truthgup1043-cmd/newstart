@@ -1,5 +1,5 @@
 // 하영시 앱 서비스 워커 — 앱 셸 오프라인 캐시
-const CACHE = "hayoungshi-v12";
+const CACHE = "hayoungshi-v13";
 const ASSETS = [
   "./",
   "index.html",
@@ -13,7 +13,10 @@ const ASSETS = [
   "english.js",
   "resolutions.js",
   "catechism.js",
-  "catechism_guides.js",
+  "catechism_guides_1.js",
+  "catechism_guides_2.js",
+  "catechism_guides_3.js",
+  "catechism_guides_4.js",
   "manifest.json",
   "icon-192.png",
   "icon-512.png",
