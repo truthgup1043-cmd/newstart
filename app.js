@@ -701,7 +701,7 @@ function renderResolution() {
   const res = todayResolution();
   if (!res) { el.style.display = "none"; return; }
   el.innerHTML = `
-    <div class="res-kicker">오늘의 결심 · 조나단 에드워즈 (${res.n}/70)</div>
+    <div class="res-kicker">오늘의 결심 : 조나단 에드워즈의 결심 ${res.n}문</div>
     <div class="res-text">"${res.t}"</div>`;
 }
 
