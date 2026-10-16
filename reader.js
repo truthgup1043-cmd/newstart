@@ -8,6 +8,10 @@ const Reader = {
   pages: [],        // 현재 챕터의 페이지 배열
   fontSize: 17,
   fontFamily: "serif",
+  // 읽기 타이머
+  readStartTs: 0,
+  readElapsed: 0,
+  readTimerId: null,
 
   // 설정 로드/저장
   loadSettings() {
@@ -56,12 +60,60 @@ const Reader = {
     } catch { this.chapterIdx = 0; this.pageIdx = 0; }
     this.paginate();
     this.render();
+    // 읽기 타이머 시작
+    this.startReadTimer();
+  },
+
+  startReadTimer() {
+    this.stopReadTimer();
+    this.readStartTs = Date.now();
+    this.readElapsed = 0;
+    this.updateReadClock();
+    this.readTimerId = setInterval(() => this.updateReadClock(), 1000);
+  },
+
+  stopReadTimer() {
+    if (this.readTimerId) {
+      clearInterval(this.readTimerId);
+      this.readTimerId = null;
+    }
+  },
+
+  updateReadClock() {
+    if (!this.readStartTs) return;
+    this.readElapsed = Date.now() - this.readStartTs;
+    const s = Math.floor(this.readElapsed / 1000);
+    const m = String(Math.floor(s / 60)).padStart(2, "0");
+    const sec = String(s % 60).padStart(2, "0");
+    const el = document.getElementById("readerTimer");
+    if (el) el.textContent = `${m}:${sec}`;
   },
 
   close() {
     this.savePosition();
+    // 독서 기록 저장
+    this.saveReadingLog();
+    this.stopReadTimer();
+    this.readStartTs = 0;
     document.getElementById("readerModal").classList.add("hidden");
     document.getElementById("readerSettings").classList.add("hidden");
+  },
+
+  saveReadingLog() {
+    if (this.bookIdx < 0 || !this.readElapsed) return;
+    const minutes = Math.max(1, Math.round(this.readElapsed / 60000));
+    const book = BOOKS[this.bookIdx];
+    if (!book) return;
+    // 기록 저장
+    addReadingLog({ date: today, title: book.t, minutes });
+    // 독서 루틴에 누적
+    if (!store[today]) store[today] = {};
+    store[today]["reading"] = true;
+    store[today]["reading_minutes"] = (store[today]["reading_minutes"] || 0) + minutes;
+    cache(); renderAll();
+    saveRow("reading", true, { minutes: store[today]["reading_minutes"] });
+    renderReadingLog();
+    updateReadingToday();
   },
 
   savePosition() {
