@@ -8,7 +8,6 @@ const Reader = {
   pages: [],        // 현재 챕터의 페이지 배열
   fontSize: 17,
   fontFamily: "serif",
-  theme: "light",
 
   // 설정 로드/저장
   loadSettings() {
@@ -16,13 +15,12 @@ const Reader = {
       const s = JSON.parse(localStorage.getItem("reader-settings") || "{}");
       this.fontSize = s.fontSize || 17;
       this.fontFamily = s.fontFamily || "serif";
-      this.theme = s.theme || "light";
     } catch {}
   },
   saveSettings() {
     try {
       localStorage.setItem("reader-settings", JSON.stringify({
-        fontSize: this.fontSize, fontFamily: this.fontFamily, theme: this.theme
+        fontSize: this.fontSize, fontFamily: this.fontFamily
       }));
     } catch {}
   },
@@ -58,7 +56,6 @@ const Reader = {
     } catch { this.chapterIdx = 0; this.pageIdx = 0; }
     this.paginate();
     this.render();
-    this.applyTheme();
   },
 
   close() {
@@ -172,29 +169,6 @@ const Reader = {
     c.scrollTop = 0;
   },
 
-  goChapter(ci) {
-    if (ci < 0 || ci >= this.book.chapters.length) return;
-    this.chapterIdx = ci;
-    this.pageIdx = 0;
-    this.paginate();
-    this.render();
-    this.scrollTop();
-    document.getElementById("readerToc").classList.add("hidden");
-  },
-
-  toggleToc() {
-    const toc = document.getElementById("readerToc");
-    if (toc.classList.contains("hidden")) {
-      // 목차 렌더
-      toc.innerHTML = this.book.chapters.map((c, i) =>
-        `<div class="reader-toc-item${i === this.chapterIdx ? " active" : ""}" onclick="Reader.goChapter(${i})">${escapeHtml(c.title || `챕터 ${i + 1}`)}</div>`
-      ).join("");
-      toc.classList.remove("hidden");
-    } else {
-      toc.classList.add("hidden");
-    }
-  },
-
   toggleSettings() {
     document.getElementById("readerSettings").classList.toggle("hidden");
   },
@@ -213,25 +187,6 @@ const Reader = {
       b.classList.toggle("active", b.dataset.font === f));
     this.render();
     this.saveSettings();
-  },
-
-  setTheme(t) {
-    this.theme = t;
-    document.querySelectorAll(".reader-theme-btn").forEach(b =>
-      b.classList.toggle("active", b.dataset.theme === t));
-    this.applyTheme();
-    this.saveSettings();
-  },
-
-  applyTheme() {
-    const modal = document.getElementById("readerModal");
-    modal.className = "modal reader-modal theme-" + this.theme;
-    document.querySelectorAll(".reader-theme-btn").forEach(b =>
-      b.classList.toggle("active", b.dataset.theme === this.theme));
-    document.querySelectorAll(".reader-font-btn").forEach(b =>
-      b.classList.toggle("active", b.dataset.font === this.fontFamily));
-    const fsEl = document.getElementById("readerFontSize");
-    if (fsEl) fsEl.textContent = this.fontSize + "pt";
   },
 };
 
