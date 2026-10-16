@@ -146,14 +146,84 @@ const Reader = {
     } catch { return 0; }
   },
 
-  // 페이지 나누기 제거 — 전체 챕터를 스크롤로 표시
+  // 페이지 나누기: 화면 높이 기준 (여유 있게)
   paginate() {
     const ch = this.book.chapters[this.chapterIdx];
     if (!ch) { this.pages = []; return; }
-    // 전체 텍스트를 하나의 페이지로
     const paras = ch.text.split(/\n\n+/).filter(p => p.trim());
-    this.pages = [paras.map(p => `<p>${escapeHtml(p.trim())}</p>`).join("")];
-    this.pageIdx = 0;
+
+    const content = document.getElementById("readerContent");
+    // 85%만 사용 (여유 공간 확보)
+    const availH = (content.clientHeight || 500) * 0.85;
+    const availW = content.clientWidth || 300;
+
+    // 측정용 숨김 div
+    let measurer = document.getElementById("readerMeasurer");
+    if (!measurer) {
+      measurer = document.createElement("div");
+      measurer.id = "readerMeasurer";
+      measurer.style.cssText = "position:absolute;visibility:hidden;top:0;left:0;pointer-events:none;";
+      document.body.appendChild(measurer);
+    }
+    measurer.style.width = availW + "px";
+    measurer.style.fontSize = this.fontSize + "px";
+    measurer.style.lineHeight = "2";
+    measurer.style.fontFamily = this.fontFamily === "serif"
+      ? '"Noto Serif KR", "Batang", serif'
+      : '-apple-system, "Pretendard", sans-serif';
+
+    const pages = [];
+    let curPage = [];
+    let curH = 0;
+
+    const measureH = (text) => {
+      measurer.innerHTML = `<p style="margin:0 0 1.2em;text-align:justify;">${escapeHtml(text.trim())}</p>`;
+      return measurer.offsetHeight;
+    };
+
+    for (const p of paras) {
+      const ph = measureH(p);
+      // 문단이 페이지를 초과하면 문장 단위로 분할
+      if (ph > availH) {
+        if (curPage.length) { pages.push(curPage); curPage = []; curH = 0; }
+        // 문장을 하나씩 추가하며 페이지 채우기
+        const sentences = p.match(/[^.!?。]+[.!?。]+["']?/g) || [p];
+        let chunk = [];
+        let chunkH = 0;
+        for (const s of sentences) {
+          const sh = measureH(s);
+          if (chunkH + sh > availH && chunk.length) {
+            pages.push(chunk);
+            chunk = [s];
+            chunkH = sh;
+          } else {
+            chunk.push(s);
+            chunkH += sh;
+          }
+        }
+        if (chunk.length) {
+          // 마지막 조각은 다음 페이지와 합칠 수 있도록 curPage에
+          curPage = chunk;
+          curH = chunkH;
+        }
+        continue;
+      }
+      if (curH + ph > availH && curPage.length) {
+        pages.push(curPage);
+        curPage = [p];
+        curH = ph;
+      } else {
+        curPage.push(p);
+        curH += ph;
+      }
+    }
+    if (curPage.length) pages.push(curPage);
+
+    this.pages = pages.length ? pages.map(pageParas =>
+      pageParas.map(p => `<p>${escapeHtml(p.trim())}</p>`).join("")
+    ) : [""];
+    if (this.pageIdx >= this.pages.length) this.pageIdx = this.pages.length - 1;
+    if (this.pageIdx < 0) this.pageIdx = 0;
   },
 
   render() {
@@ -167,10 +237,26 @@ const Reader = {
     // 헤더/푸터
     document.getElementById("readerChapter").textContent =
       ch ? ch.title || `챕터 ${this.chapterIdx + 1}` : "";
+    const totalPages = this.pages.length;
     const totalCh = this.book.chapters.length;
     document.getElementById("readerPageInfo").textContent =
-      `챕터 ${this.chapterIdx + 1} / ${totalCh}`;
-    const pct = totalCh ? Math.round(((this.chapterIdx + 1) / totalCh) * 100) : 0;
+      `${this.pageIdx + 1}/${totalPages} · ${this.chapterIdx + 1}/${totalCh}장`;
+    // 진행률: 챕터 + 페이지 기준
+    let done = 0, all = 0;
+    this.book.chapters.forEach((c, ci) => {
+      // 현재 챕터의 실제 페이지 수 사용, 나머지는 글자수 비율로 추정
+      let est;
+      if (ci === this.chapterIdx) {
+        est = totalPages;
+      } else {
+        const curLen = this.book.chapters[this.chapterIdx].text.length || 1;
+        est = Math.max(1, Math.round((c.text.length / curLen) * totalPages));
+      }
+      if (ci < this.chapterIdx) done += est;
+      else if (ci === this.chapterIdx) done += this.pageIdx;
+      all += est;
+    });
+    const pct = all ? Math.min(100, Math.round((done / all) * 100)) : 0;
     document.getElementById("readerProgress").style.width = pct + "%";
     document.getElementById("readerProgressText").textContent = pct + "%";
 
@@ -201,8 +287,11 @@ const Reader = {
   },
 
   nextPage() {
-    // 다음 챕터로
-    if (this.chapterIdx < this.book.chapters.length - 1) {
+    if (this.pageIdx < this.pages.length - 1) {
+      this.pageIdx++;
+      this.render();
+      this.scrollTop();
+    } else if (this.chapterIdx < this.book.chapters.length - 1) {
       this.chapterIdx++;
       this.pageIdx = 0;
       this.paginate();
@@ -212,11 +301,14 @@ const Reader = {
   },
 
   prevPage() {
-    // 이전 챕터로
-    if (this.chapterIdx > 0) {
+    if (this.pageIdx > 0) {
+      this.pageIdx--;
+      this.render();
+      this.scrollTop();
+    } else if (this.chapterIdx > 0) {
       this.chapterIdx--;
-      this.pageIdx = 0;
       this.paginate();
+      this.pageIdx = this.pages.length - 1;
       this.render();
       this.scrollTop();
     }
@@ -248,7 +340,10 @@ const Reader = {
   },
 };
 
-// 리더 초기화 (탭존 제거됨 — 스크롤 방식)
+// 리더 초기화: 탭 영역 클릭
 document.addEventListener("DOMContentLoaded", () => {
-  // 스크롤 방식이므로 별도 초기화 불필요
+  const pz = document.getElementById("readerPrevZone");
+  const nz = document.getElementById("readerNextZone");
+  if (pz) pz.onclick = () => Reader.prevPage();
+  if (nz) nz.onclick = () => Reader.nextPage();
 });
