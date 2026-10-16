@@ -399,6 +399,7 @@ document.querySelectorAll(".tab").forEach(t => {
     document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
     document.getElementById("panel-" + t.dataset.tab).classList.remove("hidden");
     if (t.dataset.tab === "bible") renderBible();
+    if (t.dataset.tab === "english") renderEnglish();
   };
 });
 
@@ -462,7 +463,7 @@ renderGospel();
 
 // ---------- 추천 찬양 ----------
 function renderPraise() {
-  document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매주 갱신`;
+  document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매일 갱신`;
   document.getElementById("praisePicks").innerHTML = PRAISE_PICKS.map((p, i) => `
     <a class="link-card" href="${p.url}" target="_blank" rel="noopener" data-praise-idx="${i}">
       <div class="emoji">🎵</div>

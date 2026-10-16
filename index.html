@@ -49,6 +49,7 @@
     <button class="tab" data-tab="gospel">복음</button>
     <button class="tab" data-tab="bible">성경</button>
     <button class="tab" data-tab="praise">찬양</button>
+    <button class="tab" data-tab="english">영어</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -120,9 +121,33 @@
   <div class="tab-panel hidden" id="panel-praise">
     <section class="stats">
       <h2>추천 찬양</h2>
+      <p class="qt-note" style="margin-bottom:12px">매일 새로운 찬양을 추천해드려요. 곡을 눌러 들으면 루틴 탭의 찬양이 자동으로 체크돼요.</p>
       <p class="qt-note" style="margin-bottom:12px" id="praiseUpdated"></p>
       <div id="praisePicks"></div>
     </section>
+  </div>
+  <div class="tab-panel hidden" id="panel-english">
+    <section class="card eng-head">
+      <div class="eng-title-row">
+        <div>
+          <h2 style="margin:0">오늘의 영어</h2>
+          <p class="qt-note">Day <span id="engDayNum">1</span> · 하루 5분 영어</p>
+        </div>
+      </div>
+    </section>
+    <section class="card eng-sec">
+      <h3>📖 오늘의 영어 성경 구절</h3>
+      <div id="engVerse"></div>
+    </section>
+    <section class="card eng-sec">
+      <h3>🔤 오늘의 단어</h3>
+      <div id="engWord"></div>
+    </section>
+    <section class="card eng-sec">
+      <h3>💬 오늘의 표현</h3>
+      <div id="engExpr"></div>
+    </section>
+    <button class="btn primary eng-done-btn" id="engDoneBtn" onclick="markEnglishDone()">오늘 공부 완료하기</button>
   </div>
   <div class="tab-panel hidden" id="panel-gospel">
     <section class="stats">
@@ -162,6 +187,7 @@
 <script src="praise.js"></script>
 <script src="mcheyne.js"></script>
 <script src="bible.js"></script>
+<script src="english.js"></script>
 
 <div id="installGuide" class="modal hidden">
   <div class="modal-card">
