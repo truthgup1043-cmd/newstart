@@ -161,7 +161,7 @@ async function confirmPicker() {
 }
 
 function doneCount(key) {
-  return ROUTINES.filter(r => store[key] && store[key][r.id]).length;
+  return visibleRoutines().filter(r => store[key] && store[key][r.id]).length;
 }
 function streak(id) {
   let n = 0, k = today;
@@ -172,13 +172,15 @@ function streak(id) {
 
 // ---------- 렌더 ----------
 function renderRoutines() {
+  const vis = visibleRoutines();
   const done = doneCount(today);
   document.getElementById("doneCount").textContent = done;
-  document.getElementById("progressFill").style.width = (done / ROUTINES.length * 100) + "%";
+  document.getElementById("totalCount").textContent = vis.length;
+  document.getElementById("progressFill").style.width = (vis.length ? done / vis.length * 100 : 0) + "%";
 
   const list = document.getElementById("routineList");
   list.innerHTML = "";
-  ROUTINES.forEach(r => {
+  vis.forEach(r => {
     const isDone = !!(store[today] && store[today][r.id]);
     const el = document.createElement("div");
     const showPicker = r.value && pickerFor === r.id && !isDone;
@@ -261,7 +263,7 @@ function renderWeek() {
     el.className = "day" + (k === today ? " today" : "");
     el.innerHTML = `<div class="dow">${dows[i]}</div>
       <div>${Number(k.slice(8))}</div>
-      <div class="dots">${ROUTINES.map(r =>
+      <div class="dots">${visibleRoutines().map(r =>
         `<span class="dot${store[k] && store[k][r.id] ? " on" : ""}" style="${store[k] && store[k][r.id] ? "background:" + r.color : ""}"></span>`).join("")}</div>`;
     week.appendChild(el);
   }
@@ -270,7 +272,7 @@ function renderWeek() {
 function renderStreaks() {
   const sv = document.getElementById("streakView");
   sv.innerHTML = "";
-  ROUTINES.forEach(r => {
+  visibleRoutines().forEach(r => {
     const el = document.createElement("div");
     el.className = "streak";
     el.innerHTML = `<span>${r.emoji} ${r.name}</span><b>${streak(r.id)}일 연속</b>`;
@@ -299,7 +301,7 @@ function renderStats() {
 
   const sv = document.getElementById("summaryView");
   sv.innerHTML = "";
-  ROUTINES.forEach(r => {
+  visibleRoutines().forEach(r => {
     const n = keys.filter(k => store[k] && store[k][r.id]).length;
     const pct = Math.round(n / 30 * 100);
     let extra = "";
@@ -342,7 +344,7 @@ function renderStats() {
     type: "bar",
     data: {
       labels,
-      datasets: ROUTINES.map(r => ({
+      datasets: visibleRoutines().map(r => ({
         label: r.name,
         data: keys.map(k => (store[k] && store[k][r.id]) ? 1 : 0),
         backgroundColor: r.color,
@@ -581,10 +583,51 @@ function renderTabToggles() {
     };
   });
 }
+// ---------- 루틴 표시/숨김 ----------
+function getRoutineVisibility() {
+  try {
+    const v = JSON.parse(localStorage.getItem("routine-visibility") || "{}");
+    const out = {};
+    ROUTINES.forEach(r => { out[r.id] = v[r.id] !== false; });
+    return out;
+  } catch {
+    const out = {};
+    ROUTINES.forEach(r => { out[r.id] = true; });
+    return out;
+  }
+}
+function visibleRoutines() {
+  const vis = getRoutineVisibility();
+  return ROUTINES.filter(r => vis[r.id] !== false);
+}
+function renderRoutineToggles() {
+  const vis = getRoutineVisibility();
+  const wrap = document.getElementById("routineToggles");
+  wrap.innerHTML = "";
+  ROUTINES.forEach(r => {
+    const row = document.createElement("div");
+    row.className = "tab-toggle-row";
+    row.innerHTML = `<span>${r.emoji} ${r.name}</span>
+      <label class="toggle">
+        <input type="checkbox" data-routine="${r.id}" ${vis[r.id] ? "checked" : ""}>
+        <span class="slider"></span>
+      </label>`;
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    cb.onchange = () => {
+      const vis = getRoutineVisibility();
+      vis[cb.dataset.routine] = cb.checked;
+      try { localStorage.setItem("routine-visibility", JSON.stringify(vis)); } catch {}
+      renderAll();
+    };
+  });
+}
 function initSettings() {
   applyTabVisibility();
   document.getElementById("settingsBtn").onclick = () => {
     renderTabToggles();
+    renderRoutineToggles();
     document.getElementById("settingsModal").classList.remove("hidden");
   };
   document.getElementById("settingsClose").onclick = () => {
