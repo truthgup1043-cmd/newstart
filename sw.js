@@ -11,6 +11,7 @@ const ASSETS = [
   "mcheyne.js",
   "bible.js",
   "english.js",
+  "english_data.js",
   "resolutions.js",
   "catechism.js",
   "catechism_guides_1.js",
