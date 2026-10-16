@@ -1,19 +1,15 @@
-// 루틴앱 — 매일 루틴 기록
+// 루틴앱 — Supabase 연동 버전
+const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
+
 const ROUTINES = [
   { id: "prayer", name: "새벽기도", emoji: "🙏", sub: "하루를 기도로 시작" },
   { id: "bible",  name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도" },
   { id: "run",    name: "달리기",   emoji: "🏃", sub: "몸도 함께 단련" },
 ];
 
-const KEY = "routine-app-v1";
-
-function load() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
-  catch { return {}; }
-}
-function save(data) {
-  localStorage.setItem(KEY, JSON.stringify(data));
-}
+const CACHE_KEY = "routine-app-v1";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // YYYY-MM-DD (로컬 기준)
 function dayKey(d = new Date()) {
@@ -24,18 +20,43 @@ function dayKey(d = new Date()) {
 }
 function addDays(key, n) {
   const [y, m, d] = key.split("-").map(Number);
-  const dt = new Date(y, m - 1, d + n);
-  return dayKey(dt);
+  return dayKey(new Date(y, m - 1, d + n));
 }
 
-let store = load();
+let store = {};
+try { store = JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; } catch {}
 const today = dayKey();
 if (!store[today]) store[today] = {};
 
-function toggle(id) {
-  store[today][id] = !store[today][id];
-  save(store);
+function cache() {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(store)); } catch {}
+}
+
+// 클라우드에서 전체 기록 불러오기
+async function syncFromCloud() {
+  const { data, error } = await sb.from("completions").select("day, routine, done");
+  if (error) { console.warn("클라우드 동기화 실패, 로컬 캐시 사용:", error.message); return; }
+  store = {};
+  data.forEach(r => {
+    if (!store[r.day]) store[r.day] = {};
+    store[r.day][r.routine] = r.done;
+  });
+  if (!store[today]) store[today] = {};
+  cache();
   render();
+}
+
+async function toggle(id) {
+  const next = !(store[today] && store[today][id]);
+  store[today][id] = next;
+  cache();
+  render();
+  // 클라우드에 저장 (upsert)
+  const { error } = await sb.from("completions").upsert(
+    { day: today, routine: id, done: next },
+    { onConflict: "day,routine" }
+  );
+  if (error) console.warn("클라우드 저장 실패:", error.message);
 }
 
 function doneCount(key) {
@@ -44,7 +65,6 @@ function doneCount(key) {
 
 function streak(id) {
   let n = 0, k = today;
-  // 오늘 안 했으면 어제부터 계산
   if (!(store[k] && store[k][id])) k = addDays(k, -1);
   while (store[k] && store[k][id]) { n++; k = addDays(k, -1); }
   return n;
@@ -69,7 +89,6 @@ function render() {
     list.appendChild(el);
   });
 
-  // 이번 주 (월~일)
   const week = document.getElementById("weekView");
   week.innerHTML = "";
   const now = new Date();
@@ -86,7 +105,6 @@ function render() {
     week.appendChild(el);
   }
 
-  // 연속 기록
   const sv = document.getElementById("streakView");
   sv.innerHTML = "";
   ROUTINES.forEach(r => {
@@ -101,3 +119,4 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 render();
+syncFromCloud();
