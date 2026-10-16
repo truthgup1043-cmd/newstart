@@ -427,3 +427,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .book-preview-frame { flex: 1; width: 100%; border: 1px solid var(--line); border-radius: 12px; min-height: 400px; }
 .book-btns { display: flex; gap: 6px; flex-shrink: 0; }
 .book-view-btn { padding: 8px 12px; font-size: 14px; }
+
+/* 집중 음악 버튼 */
+.music-toggle-btn { width: 100%; margin-top: 10px; }
+.music-toggle-btn.on { background: #e8f5e9; border-color: #4a9d5e; color: #2e7d32; }
