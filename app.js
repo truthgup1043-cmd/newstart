@@ -3,7 +3,7 @@ const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
 
 const ROUTINES = [
-  { id: "prayer", name: "새벽기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
+  { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
     value: { key: "prayer_minutes", dbCol: "minutes", unit: "분", presets: [10, 20, 30, 60], def: 30, doneText: v => `오늘 ${v}분 기도` } },
   { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5",
     value: { key: "bible_chapters", dbCol: "chapters", unit: "장", presets: [1, 2, 3, 5, 10], def: 3, doneText: v => `오늘 ${v}장 읽음` } },
