@@ -13,6 +13,7 @@ const ROUTINES = [
     } },
   { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5" },
   { id: "gospel", name: "복음 읽기", emoji: "✝️", sub: "오늘의 복음 연구", color: "#b7791f" },
+  { id: "catechism", name: "문답 공부", emoji: "❓", sub: "오늘의 문답", color: "#a05a2c" },
   { id: "sleep", name: "수면", emoji: "😴", sub: "푹 쉬기", color: "#5568b0",
     value: {
       fields: [
@@ -402,6 +403,7 @@ document.querySelectorAll(".tab").forEach(t => {
     document.getElementById("panel-" + t.dataset.tab).classList.remove("hidden");
     if (t.dataset.tab === "bible") renderBible();
     if (t.dataset.tab === "english") renderEnglish();
+    if (t.dataset.tab === "catechism") renderCatechism();
   };
 });
 
@@ -527,6 +529,7 @@ const TABS_CONFIG = [
   { id: "qt", name: "QT" },
   { id: "bible", name: "성경" },
   { id: "gospel", name: "복음" },
+  { id: "catechism", name: "문답" },
   { id: "english", name: "영어" },
   { id: "praise", name: "찬양" },
 ];
@@ -590,6 +593,51 @@ function initSettings() {
   document.getElementById("settingsModal").onclick = (e) => {
     if (e.target.id === "settingsModal") e.target.classList.add("hidden");
   };
+}
+
+// ---------- 오늘의 문답 (소요리문답 플래시카드, 날짜별 랜덤) ----------
+function todayCatechism() {
+  if (typeof CATECHISM === "undefined" || !CATECHISM.length) return null;
+  let h = 0;
+  const s = "cat:" + today;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  h |= 0; h = (h + 0x6D2B79F5) | 0;
+  let t = Math.imul(h ^ (h >>> 15), 1 | h);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  const r = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  return CATECHISM[Math.floor(r * CATECHISM.length)];
+}
+function renderCatechism() {
+  const el = document.getElementById("catCard");
+  if (!el) return;
+  const c = todayCatechism();
+  if (!c) { el.style.display = "none"; return; }
+  el.innerHTML = `
+    <div class="flash-inner" id="flashInner" onclick="this.classList.toggle('flipped')">
+      <div class="flash-face flash-front">
+        <div class="flash-kicker">제${c.n}문 · 눌러서 답 보기</div>
+        <div class="flash-q">${c.q}</div>
+      </div>
+      <div class="flash-face flash-back">
+        <div class="flash-kicker">제${c.n}문 · 답</div>
+        <div class="flash-a">${c.a}</div>
+      </div>
+    </div>`;
+  renderCatDone();
+}
+function isCatDone() {
+  return !!(store[today] && store[today]["catechism"]);
+}
+function renderCatDone() {
+  const btn = document.getElementById("catDoneBtn");
+  if (!btn) return;
+  const done = isCatDone();
+  btn.textContent = done ? "오늘 문답 완료 ✓" : "오늘 문답 완료하기";
+  btn.classList.toggle("done", done);
+}
+function completeCatRoutine() {
+  completeRoutineFromTab("catechism");
+  renderCatDone();
 }
 
 // ---------- 오늘의 결심 (에드워즈 70가지 결심문, 날짜별 랜덤) ----------

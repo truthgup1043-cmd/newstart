@@ -49,6 +49,7 @@
     <button class="tab" data-tab="qt">QT</button>
     <button class="tab" data-tab="bible">성경</button>
     <button class="tab" data-tab="gospel">복음</button>
+    <button class="tab" data-tab="catechism">문답</button>
     <button class="tab" data-tab="english">영어</button>
     <button class="tab" data-tab="praise">찬양</button>
   </nav>
@@ -129,6 +130,16 @@
       <div id="praisePicks"></div>
     </section>
   </div>
+  <div class="tab-panel hidden" id="panel-catechism">
+    <section class="card cat-head">
+      <h2 style="margin:0 0 4px">오늘의 문답</h2>
+      <p class="qt-note">웨스트민스터 소요리문답 107문 중 하루 한 문답</p>
+    </section>
+    <div class="flash-wrap">
+      <div class="flash-card" id="catCard"></div>
+    </div>
+    <button class="btn primary eng-done-btn" id="catDoneBtn" onclick="completeCatRoutine()">오늘 문답 완료하기</button>
+  </div>
   <div class="tab-panel hidden" id="panel-english">
     <section class="card eng-head">
       <div class="eng-title-row">
@@ -191,6 +202,7 @@
 <script src="mcheyne.js"></script>
 <script src="bible.js"></script>
 <script src="english.js"></script>
+<script src="catechism.js"></script>
 <script src="resolutions.js"></script>
 
 <div id="installGuide" class="modal hidden">

@@ -146,6 +146,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="routine"] { --tab-c: #e8833a; }
 .tab[data-tab="qt"] { --tab-c: #d9a441; }
 .tab[data-tab="gospel"] { --tab-c: #c96a2b; }
+.tab[data-tab="catechism"] { --tab-c: #a05a2c; }
 .tab[data-tab="bible"] { --tab-c: #b87a3d; }
 .tab[data-tab="praise"] { --tab-c: #e0704a; }
 .tab[data-tab="english"] { --tab-c: #e8a33d; }
@@ -167,6 +168,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 #panel-routine h2 { color: #c96a1e; }
 #panel-qt h2 { color: #b8891f; }
 #panel-gospel h2 { color: #a8541f; }
+#panel-catechism h2 { color: #7d441f; }
 #panel-bible h2 { color: #9a6526; }
 #panel-praise h2 { color: #c25a38; }
 #panel-english h2 { color: #c07f1a; }
@@ -282,6 +284,28 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .toggle input:checked + .slider { background: var(--accent); }
 .toggle input:checked + .slider:before { transform: translateX(22px); }
 .toggle.disabled { opacity: 0.4; pointer-events: none; }
+/* 문답 플래시카드 */
+.cat-head { margin-bottom: 12px; }
+.cat-head h2 { font-size: 20px; }
+.flash-wrap { perspective: 1200px; margin-bottom: 14px; }
+.flash-card { cursor: pointer; }
+.flash-inner {
+  display: grid;
+  transition: transform 0.5s; transform-style: preserve-3d;
+  min-height: 220px;
+}
+.flash-inner.flipped { transform: rotateY(180deg); }
+.flash-face {
+  grid-area: 1 / 1;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  padding: 24px 20px; display: flex; flex-direction: column; justify-content: center;
+  box-shadow: 0 2px 12px rgba(160,90,44,0.10);
+}
+.flash-back { transform: rotateY(180deg); background: linear-gradient(135deg, #fdf6ec, #fef9f0); }
+.flash-kicker { font-size: 13px; font-weight: 700; color: #a05a2c; margin-bottom: 12px; text-align: center; }
+.flash-q { font-size: 19px; font-weight: 700; line-height: 1.7; text-align: center; }
+.flash-a { font-size: 16px; line-height: 1.9; }
 /* 오늘의 결심 카드 */
 .resolution-card {
   background: linear-gradient(135deg, #fdf6ec, #fef9f0);
