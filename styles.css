@@ -86,6 +86,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   border-top: 1px dashed var(--line);
 }
 .picker-label { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+.picker-label .opt { font-weight: 400; font-size: 12px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
 .chip {
   border: 1px solid var(--line); background: #fff; border-radius: 99px;
@@ -96,6 +97,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   border: 1px solid var(--line); border-radius: 99px; padding: 8px 14px;
   font-size: 14px; width: 130px;
 }
+.custom.wide { width: 170px; }
 .picker-actions { display: flex; gap: 8px; }
 .btn {
   border: 1px solid var(--line); background: #fff; border-radius: 10px;

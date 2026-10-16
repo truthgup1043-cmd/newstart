@@ -1,14 +1,38 @@
-// 루틴앱 — Supabase 연동 버전 (기도 시간·성경 장수 기록 + 통계 그래프)
+// 루틴앱 — Supabase 연동 버전 (기도 시간·성경 장수·러닝 기록 + 통계 그래프)
 const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
+const LOGOS_API_KEY = "8e9eec47a9c942bc99c736454828606b";
 
 const ROUTINES = [
   { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
-    value: { key: "prayer_minutes", dbCol: "minutes", unit: "분", presets: [10, 20, 30, 60], def: 30, doneText: v => `오늘 ${v}분 기도` } },
+    value: {
+      fields: [
+        { key: "prayer_minutes", dbCol: "minutes", label: "기도한 시간", unit: "분", presets: [10, 20, 30, 60], def: 30 },
+      ],
+      doneText: s => s.prayer_minutes != null ? `오늘 ${s.prayer_minutes}분 기도` : "완료",
+    } },
   { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5",
-    value: { key: "bible_chapters", dbCol: "chapters", unit: "장", presets: [1, 2, 3, 5, 10], def: 3, doneText: v => `오늘 ${v}장 읽음` } },
+    value: {
+      fields: [
+        { key: "bible_chapters", dbCol: "chapters", label: "읽은 장수", unit: "장", presets: [1, 2, 3, 5, 10], def: 3 },
+      ],
+      doneText: s => s.bible_chapters != null ? `오늘 ${s.bible_chapters}장 읽음` : "완료",
+    } },
   { id: "meditation", name: "성경묵상", emoji: "💭", sub: "말씀을 마음에 새기기", color: "#8a6fbf" },
-  { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a" },
+  { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a",
+    value: {
+      optional: true,
+      fields: [
+        { key: "run_km", dbCol: "km", label: "키로수", unit: "km", input: true },
+        { key: "run_minutes", dbCol: "run_minutes", label: "달린 시간", unit: "분", input: true },
+      ],
+      doneText: s => {
+        const parts = [];
+        if (s.run_km != null) parts.push(`${s.run_km}km`);
+        if (s.run_minutes != null) parts.push(`${s.run_minutes}분`);
+        return parts.length ? parts.join(" · ") : "완료";
+      },
+    } },
 ];
 
 const CACHE_KEY = "routine-app-v1";
@@ -30,22 +54,26 @@ try { store = JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; } catch {}
 const today = dayKey();
 if (!store[today]) store[today] = {};
 
-let pickerFor = null;   // 수량 선택기 펼친 루틴 id
-let pickedValue = null;
+let pickerFor = null;
+let picked = {};
 
 function cache() {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(store)); } catch {}
 }
 
+const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes"];
+
 async function syncFromCloud() {
-  const { data, error } = await sb.from("completions").select("day, routine, done, minutes, chapters");
+  const { data, error } = await sb.from("completions").select("day, routine, done, " + VALUE_COLS.join(","));
   if (error) { console.warn("클라우드 동기화 실패, 로컬 캐시 사용:", error.message); renderAll(); return; }
+  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes" };
   store = {};
   data.forEach(r => {
     if (!store[r.day]) store[r.day] = {};
     store[r.day][r.routine] = r.done;
-    if (r.routine === "prayer" && r.minutes != null) store[r.day].prayer_minutes = r.minutes;
-    if (r.routine === "bible" && r.chapters != null) store[r.day].bible_chapters = r.chapters;
+    Object.entries(colToKey).forEach(([col, key]) => {
+      if (r[col] != null) store[r.day][key] = r[col];
+    });
   });
   if (!store[today]) store[today] = {};
   cache();
@@ -53,8 +81,10 @@ async function syncFromCloud() {
 }
 
 async function saveRow(routineId, done, extra = {}) {
+  const base = { day: today, routine: routineId, done };
+  VALUE_COLS.forEach(c => base[c] = null);
   const { error } = await sb.from("completions").upsert(
-    { day: today, routine: routineId, done, minutes: null, chapters: null, ...extra },
+    { ...base, ...extra },
     { onConflict: "day,routine" }
   );
   if (error) console.warn("클라우드 저장 실패:", error.message);
@@ -65,13 +95,14 @@ async function toggle(id) {
   if (r.value) {
     if (store[today][id]) {
       store[today][id] = false;
-      delete store[today][r.value.key];
+      r.value.fields.forEach(f => delete store[today][f.key]);
       pickerFor = null;
       cache(); renderAll();
       await saveRow(id, false);
     } else {
       pickerFor = (pickerFor === id) ? null : id;
-      pickedValue = r.value.def;
+      picked = {};
+      r.value.fields.forEach(f => { if (f.def != null) picked[f.key] = f.def; });
       renderRoutines();
     }
     return;
@@ -84,14 +115,26 @@ async function toggle(id) {
 async function confirmPicker() {
   const r = ROUTINES.find(x => x.id === pickerFor);
   if (!r || !r.value) return;
-  const input = document.getElementById("customValue");
-  let v = pickedValue;
-  if (input && input.value) v = Math.max(1, parseInt(input.value, 10) || pickedValue);
+  const extra = {};
+  r.value.fields.forEach(f => {
+    let v = null;
+    if (f.presets) {
+      const inp = document.getElementById(`custom-${f.key}`);
+      v = (inp && inp.value) ? Math.max(1, parseFloat(inp.value) || picked[f.key]) : picked[f.key];
+    } else if (f.input) {
+      const inp = document.getElementById(`input-${f.key}`);
+      v = (inp && inp.value !== "") ? parseFloat(inp.value) : null;
+      if (v != null && !(v > 0)) v = null;
+    }
+    if (v != null) {
+      store[today][f.key] = v;
+      extra[f.dbCol] = v;
+    }
+  });
   store[today][r.id] = true;
-  store[today][r.value.key] = v;
   pickerFor = null;
   cache(); renderAll();
-  await saveRow(r.id, true, { [r.value.dbCol]: v });
+  await saveRow(r.id, true, extra);
 }
 
 function doneCount(key) {
@@ -118,21 +161,29 @@ function renderRoutines() {
     el.className = "routine" + (isDone ? " done" : "");
 
     let sub = r.sub;
-    if (r.value && isDone && store[today][r.value.key] != null) {
-      sub = r.value.doneText(store[today][r.value.key]);
-    }
+    if (r.value && isDone) sub = r.value.doneText(store[today]);
 
     let picker = "";
     if (r.value && pickerFor === r.id && !isDone) {
-      const v = r.value;
+      const fieldsHtml = r.value.fields.map(f => {
+        if (f.presets) {
+          return `
+            <div class="picker-label">${f.label}</div>
+            <div class="chips">
+              ${f.presets.map(p =>
+                `<button class="chip${p === picked[f.key] ? " sel" : ""}" data-f="${f.key}" data-v="${p}">${p}${f.unit}</button>`).join("")}
+              <input id="custom-${f.key}" class="custom" type="number" min="1" placeholder="직접 입력(${f.unit})">
+            </div>`;
+        }
+        return `
+          <div class="picker-label">${f.label} <span class="opt">(선택)</span></div>
+          <div class="chips">
+            <input id="input-${f.key}" class="custom wide" type="number" min="0" step="any" placeholder="${f.unit} 입력">
+          </div>`;
+      }).join("");
       picker = `
         <div class="picker" onclick="event.stopPropagation()">
-          <div class="picker-label">${r.id === "prayer" ? "기도한 시간" : "읽은 장수"}</div>
-          <div class="chips">
-            ${v.presets.map(p =>
-              `<button class="chip${p === pickedValue ? " sel" : ""}" data-v="${p}">${p}${v.unit}</button>`).join("")}
-            <input id="customValue" class="custom" type="number" min="1" placeholder="직접 입력(${v.unit})">
-          </div>
+          ${fieldsHtml}
           <div class="picker-actions">
             <button class="btn primary" id="pickerSave">저장</button>
             <button class="btn" id="pickerCancel">취소</button>
@@ -151,9 +202,11 @@ function renderRoutines() {
       el.querySelectorAll(".chip").forEach(c => {
         c.onclick = e => {
           e.stopPropagation();
-          pickedValue = Number(c.dataset.v);
-          document.getElementById("customValue").value = "";
-          el.querySelectorAll(".chip").forEach(x => x.classList.remove("sel"));
+          const fk = c.dataset.f;
+          picked[fk] = Number(c.dataset.v);
+          const inp = document.getElementById(`custom-${fk}`);
+          if (inp) inp.value = "";
+          el.querySelectorAll(`.chip[data-f="${fk}"]`).forEach(x => x.classList.remove("sel"));
           c.classList.add("sel");
         };
       });
@@ -192,7 +245,7 @@ function renderStreaks() {
   });
 }
 
-let trendChart = null, prayerChart = null, bibleChart = null;
+let trendChart = null, prayerChart = null, bibleChart = null, runChart = null;
 
 function last30() {
   const keys = [];
@@ -200,9 +253,11 @@ function last30() {
   return keys;
 }
 
-function avgOf(keys, key) {
+function avgOf(keys, key, decimals = 0) {
   const vals = keys.map(k => (store[k] && store[k][key]) || 0).filter(v => v > 0);
-  return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+  if (!vals.length) return null;
+  const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+  return decimals ? Number(avg.toFixed(decimals)) : Math.round(avg);
 }
 
 function renderStats() {
@@ -215,13 +270,35 @@ function renderStats() {
     const n = keys.filter(k => store[k] && store[k][r.id]).length;
     const pct = Math.round(n / 30 * 100);
     let extra = "";
-    if (r.id === "prayer") extra = ` · 평균 ${avgOf(keys, "prayer_minutes")}분`;
-    if (r.id === "bible") extra = ` · 평균 ${avgOf(keys, "bible_chapters")}장`;
+    if (r.id === "prayer") {
+      const a = avgOf(keys, "prayer_minutes");
+      if (a != null) extra = ` · 평균 ${a}분`;
+    }
+    if (r.id === "bible") {
+      const a = avgOf(keys, "bible_chapters");
+      if (a != null) extra = ` · 평균 ${a}장`;
+    }
+    if (r.id === "run") {
+      const parts = [];
+      const km = avgOf(keys, "run_km", 1);
+      const mins = avgOf(keys, "run_minutes");
+      if (km != null) parts.push(`평균 ${km}km`);
+      if (mins != null) parts.push(`평균 ${mins}분`);
+      if (parts.length) extra = " · " + parts.join(" ");
+    }
     const el = document.createElement("div");
     el.className = "streak";
     el.innerHTML = `<span>${r.emoji} ${r.name}</span><b>${pct}% (${n}/30일)${extra}</b>`;
     sv.appendChild(el);
   });
+
+  const baseOpts = {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      x: { ticks: { maxTicksLimit: 8, font: { size: 10 } } },
+      y: { beginAtZero: true, ticks: { font: { size: 10 } } },
+    },
+  };
 
   if (trendChart) trendChart.destroy();
   trendChart = new Chart(document.getElementById("trendChart"), {
@@ -235,7 +312,7 @@ function renderStats() {
       })),
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
+      ...baseOpts,
       scales: {
         x: { stacked: true, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
         y: { stacked: true, beginAtZero: true, max: 4, ticks: { stepSize: 1, font: { size: 10 } } },
@@ -244,47 +321,29 @@ function renderStats() {
     },
   });
 
-  if (prayerChart) prayerChart.destroy();
-  prayerChart = new Chart(document.getElementById("prayerChart"), {
-    type: "bar",
-    data: {
-      labels,
-      datasets: [{
-        label: "기도 시간(분)",
-        data: keys.map(k => (store[k] && store[k].prayer_minutes) || 0),
-        backgroundColor: "#4a7c59", borderRadius: 3,
-      }],
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      scales: {
-        x: { ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-        y: { beginAtZero: true, ticks: { font: { size: 10 } } },
+  const singleBar = (id, label, color, key, stepSize) => {
+    const ch = { trendChart, prayerChart, bibleChart, runChart }[id];
+    if (ch) ch.destroy();
+    return new Chart(document.getElementById(id), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [{ label, data: keys.map(k => (store[k] && store[k][key]) || 0), backgroundColor: color, borderRadius: 3 }],
       },
-      plugins: { legend: { display: false } },
-    },
-  });
+      options: {
+        ...baseOpts,
+        scales: {
+          x: baseOpts.scales.x,
+          y: { beginAtZero: true, ticks: { stepSize, font: { size: 10 } } },
+        },
+        plugins: { legend: { display: false } },
+      },
+    });
+  };
 
-  if (bibleChart) bibleChart.destroy();
-  bibleChart = new Chart(document.getElementById("bibleChart"), {
-    type: "bar",
-    data: {
-      labels,
-      datasets: [{
-        label: "읽은 장수",
-        data: keys.map(k => (store[k] && store[k].bible_chapters) || 0),
-        backgroundColor: "#4a6fa5", borderRadius: 3,
-      }],
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      scales: {
-        x: { ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } } },
-      },
-      plugins: { legend: { display: false } },
-    },
-  });
+  prayerChart = singleBar("prayerChart", "기도 시간(분)", "#4a7c59", "prayer_minutes");
+  bibleChart = singleBar("bibleChart", "읽은 장수", "#4a6fa5", "bible_chapters", 1);
+  runChart = singleBar("runChart", "러닝 거리(km)", "#d98e4a", "run_km");
 }
 
 function renderAll() {
@@ -308,8 +367,6 @@ document.querySelectorAll(".tab").forEach(t => {
 });
 
 // ---------- QT 본문 ----------
-const LOGOS_API_KEY = "8e9eec47a9c942bc99c736454828606b";
-
 function renderQT(d) {
   document.getElementById("qtRef").textContent = d.reference || "";
   document.getElementById("qtText").textContent = d.text || "";
