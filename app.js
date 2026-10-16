@@ -673,6 +673,26 @@ function renderCatechism() {
       </div>
     </div>`;
   renderCatDone();
+  renderCatGuides(c.n);
+}
+const GUIDE_NAMES = {
+  watson: "토마스 왓슨",
+  flavel: "존 플라벨",
+  williamson: "G. I. 윌리엄슨"
+};
+function renderCatGuides(n) {
+  const wrap = document.getElementById("catGuides");
+  if (!wrap) return;
+  if (typeof CATECHISM_GUIDES === "undefined" || !CATECHISM_GUIDES[n]) {
+    wrap.innerHTML = "";
+    return;
+  }
+  const g = CATECHISM_GUIDES[n];
+  wrap.innerHTML = ["watson", "flavel", "williamson"].map(k => `
+    <div class="guide">
+      <div class="guide-name">${GUIDE_NAMES[k]}의 해설</div>
+      <div class="guide-text">${g[k]}</div>
+    </div>`).join("");
 }
 function isCatDone() {
   return !!(store[today] && store[today]["catechism"]);
