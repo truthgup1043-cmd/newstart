@@ -407,6 +407,7 @@ document.querySelectorAll(".tab").forEach(t => {
     t.classList.add("active");
     document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
     document.getElementById("panel-" + t.dataset.tab).classList.remove("hidden");
+    if (t.dataset.tab === "bible") renderBible();
   };
 });
 
@@ -482,6 +483,22 @@ function renderPraise() {
     </a>`).join("");
 }
 renderPraise();
+
+// ---------- 성경 읽기 탭 초기화 ----------
+document.getElementById("biblePrevDay").onclick = () => {
+  if (bibleViewDay > 1) { bibleViewDay--; renderBible(); }
+};
+document.getElementById("bibleNextDay").onclick = () => {
+  if (bibleViewDay < 365) { bibleViewDay++; renderBible(); }
+};
+document.getElementById("bibleTodayBtn").onclick = () => {
+  bibleViewDay = bibleProg.plan_day; renderBible();
+};
+document.getElementById("bibleTrans").onchange = (e) => {
+  setBibleTrans(e.target.value);
+  renderBible();
+};
+loadBibleProgress();
 
 renderAll();
 syncFromCloud();

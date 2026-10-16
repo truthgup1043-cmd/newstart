@@ -31,6 +31,7 @@
     <button class="tab active" data-tab="routine">루틴</button>
     <button class="tab" data-tab="qt">묵상</button>
     <button class="tab" data-tab="gospel">복음</button>
+    <button class="tab" data-tab="bible">성경</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -115,10 +116,36 @@
       <div id="gospelList"></div>
     </section>
   </div>
+  <div class="tab-panel hidden" id="panel-bible">
+    <section class="card bible-head">
+      <div class="bible-dayrow">
+        <button class="btn" id="biblePrevDay">‹</button>
+        <div class="bible-dayinfo">
+          <div class="bible-day">맥체인 Day <span id="bibleDayNum">1</span></div>
+          <div class="bible-dateref" id="bibleDateRef"></div>
+        </div>
+        <button class="btn" id="bibleNextDay">›</button>
+      </div>
+      <div class="bible-controls">
+        <label>번역
+          <select id="bibleTrans">
+            <option value="KRV">개역한글</option>
+            <option value="RNKSV">새번역</option>
+            <option value="NET">NET (영어)</option>
+          </select>
+        </label>
+        <button class="btn" id="bibleTodayBtn" style="display:none">오늘로</button>
+      </div>
+      <p class="qt-note">읽은 본문에 "읽었어요"를 누르면 다음에 멈췄던 부분부터 이어져요.</p>
+    </section>
+    <div id="biblePassages"></div>
+  </div>
 </div>
 <script src="qt.js"></script>
 <script src="gospel.js"></script>
 <script src="praise.js"></script>
+<script src="mcheyne.js"></script>
+<script src="bible.js"></script>
 
 <div id="installGuide" class="modal hidden">
   <div class="modal-card">

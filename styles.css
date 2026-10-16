@@ -168,3 +168,34 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .gospel-body h4 { font-size: 15px; margin: 14px 0 8px; }
 .gospel-body ul { margin: 0 0 6px 18px; }
 .gospel-body li { font-size: 14px; line-height: 1.75; margin-bottom: 6px; }
+
+/* 성경 읽기 탭 */
+.bible-head { margin-bottom: 12px; }
+.bible-dayrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.bible-dayrow .btn { min-width: 44px; }
+.bible-dayinfo { text-align: center; }
+.bible-day { font-size: 18px; font-weight: 800; }
+.bible-dateref { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.bible-controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.bible-controls label { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.bible-controls select {
+  border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px;
+  font-size: 14px; background: #fff;
+}
+.bible-passage { margin-bottom: 12px; }
+.bible-passage-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.bible-ref { font-size: 16px; font-weight: 700; }
+.bible-check { color: var(--green); font-weight: 800; }
+.bible-passage.done .bible-ref { color: var(--muted); }
+.bible-passage .bible-body { display: none; }
+.bible-passage.open .bible-body { display: block; }
+.bible-passage .go { transition: transform 0.2s; }
+.bible-passage.open .go { transform: rotate(90deg); }
+.bible-passage.current { border: 2px solid var(--green); }
+.bible-body { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+.bible-text { font-size: 15px; line-height: 2; }
+.bible-verse sup { color: var(--muted); font-size: 11px; margin-right: 2px; }
+.bible-loading, .bible-error { color: var(--muted); font-size: 14px; padding: 12px 0; }
+.bible-done-btn { margin-top: 14px; width: 100%; }
+.tabs { display: flex; }
+.tabs .tab { flex: 1; }
