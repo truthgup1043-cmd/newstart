@@ -125,24 +125,39 @@ const Reader = {
     if (this.bookIdx < 0 || !this.book) return;
     try {
       const pos = JSON.parse(localStorage.getItem("reader-pos") || "{}");
+      // 글자수 기준 진도 계산
+      let totalChars = 0;
+      let readChars = 0;
+      this.book.chapters.forEach((ch, ci) => {
+        const len = ch.text.length;
+        totalChars += len;
+        if (ci < this.chapterIdx) {
+          readChars += len;
+        } else if (ci === this.chapterIdx) {
+          // 현재 챕터에서 읽은 분량 추정
+          const chPages = this.pages.length || 1;
+          readChars += Math.round((this.pageIdx / chPages) * len);
+        }
+      });
       pos[this.bookIdx] = {
         c: this.chapterIdx,
         d: this.pageIdx,
         total: this.book.chapters.length,
+        readChars,
+        totalChars,
         updated: Date.now()
       };
       localStorage.setItem("reader-pos", JSON.stringify(pos));
     } catch {}
   },
 
-  // 진도율 계산 (0-100)
+  // 진도율 계산 (0-100) — 글자수 기준
   getProgress(bookIdx) {
     try {
       const pos = JSON.parse(localStorage.getItem("reader-pos") || "{}");
       const p = pos[bookIdx];
-      if (!p || !p.total) return 0;
-      // 챕터 기준으로 계산
-      return Math.min(100, Math.round((p.c / p.total) * 100));
+      if (!p || !p.totalChars) return 0;
+      return Math.min(100, Math.round((p.readChars / p.totalChars) * 100));
     } catch { return 0; }
   },
 
