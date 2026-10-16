@@ -146,79 +146,14 @@ const Reader = {
     } catch { return 0; }
   },
 
-  // 페이지 나누기: 실제 렌더링 높이 기준
+  // 페이지 나누기 제거 — 전체 챕터를 스크롤로 표시
   paginate() {
     const ch = this.book.chapters[this.chapterIdx];
     if (!ch) { this.pages = []; return; }
+    // 전체 텍스트를 하나의 페이지로
     const paras = ch.text.split(/\n\n+/).filter(p => p.trim());
-
-    const content = document.getElementById("readerContent");
-    const availH = content.clientHeight || 500;
-    const availW = content.clientWidth || 300;
-
-    // 측정용 숨김 div
-    let measurer = document.getElementById("readerMeasurer");
-    if (!measurer) {
-      measurer = document.createElement("div");
-      measurer.id = "readerMeasurer";
-      measurer.style.cssText = "position:absolute;visibility:hidden;top:0;left:0;pointer-events:none;";
-      document.body.appendChild(measurer);
-    }
-    measurer.style.width = availW + "px";
-    measurer.style.fontSize = this.fontSize + "px";
-    measurer.style.lineHeight = "2";
-    measurer.className = "font-" + this.fontFamily;
-    measurer.style.fontFamily = this.fontFamily === "serif"
-      ? '"Noto Serif KR", "Batang", serif'
-      : '-apple-system, "Pretendard", sans-serif';
-
-    const pages = [];
-    let curPage = [];
-    let curH = 0;
-
-    // 문단 높이 측정 헬퍼
-    const measureH = (text) => {
-      measurer.innerHTML = `<p style="margin-bottom:1.2em;text-align:justify;">${escapeHtml(text.trim())}</p>`;
-      return measurer.offsetHeight;
-    };
-
-    for (const p of paras) {
-      const ph = measureH(p);
-      // 문단 하나가 한 페이지를 초과하면 강제로 자르기 (문장 단위)
-      if (ph > availH) {
-        // 현재 페이지 마무리
-        if (curPage.length) { pages.push(curPage); curPage = []; curH = 0; }
-        // 긴 문단을 문장 단위로 쪼개기
-        const sentences = p.split(/(?<=[.!?。])/);
-        let chunk = "", chunkH = 0;
-        for (const s of sentences) {
-          const sh = measureH(chunk + s);
-          if (sh > availH && chunk) {
-            pages.push([chunk]); chunk = s; chunkH = measureH(s);
-          } else {
-            chunk += s; chunkH = sh;
-          }
-        }
-        if (chunk.trim()) pages.push([chunk]);
-        continue;
-      }
-      if (curH + ph > availH && curPage.length) {
-        pages.push(curPage);
-        curPage = [p];
-        curH = ph;
-      } else {
-        curPage.push(p);
-        curH += ph;
-      }
-    }
-    if (curPage.length) pages.push(curPage);
-
-    // 페이지를 HTML 문자열로 변환
-    this.pages = pages.length ? pages.map(pageParas =>
-      pageParas.map(p => `<p>${escapeHtml(p.trim())}</p>`).join("")
-    ) : [""];
-    if (this.pageIdx >= this.pages.length) this.pageIdx = this.pages.length - 1;
-    if (this.pageIdx < 0) this.pageIdx = 0;
+    this.pages = [paras.map(p => `<p>${escapeHtml(p.trim())}</p>`).join("")];
+    this.pageIdx = 0;
   },
 
   render() {
@@ -232,11 +167,10 @@ const Reader = {
     // 헤더/푸터
     document.getElementById("readerChapter").textContent =
       ch ? ch.title || `챕터 ${this.chapterIdx + 1}` : "";
-    const totalPages = this.pages.length;
+    const totalCh = this.book.chapters.length;
     document.getElementById("readerPageInfo").textContent =
-      `${this.pageIdx + 1} / ${totalPages}`;
-    // 전체 진행률 (현재까지 읽은 페이지 / 전체 추정 페이지)
-    const pct = this.calcTotalProgress();
+      `챕터 ${this.chapterIdx + 1} / ${totalCh}`;
+    const pct = totalCh ? Math.round(((this.chapterIdx + 1) / totalCh) * 100) : 0;
     document.getElementById("readerProgress").style.width = pct + "%";
     document.getElementById("readerProgressText").textContent = pct + "%";
 
@@ -267,11 +201,8 @@ const Reader = {
   },
 
   nextPage() {
-    if (this.pageIdx < this.pages.length - 1) {
-      this.pageIdx++;
-      this.render();
-      this.scrollTop();
-    } else if (this.chapterIdx < this.book.chapters.length - 1) {
+    // 다음 챕터로
+    if (this.chapterIdx < this.book.chapters.length - 1) {
       this.chapterIdx++;
       this.pageIdx = 0;
       this.paginate();
@@ -281,14 +212,11 @@ const Reader = {
   },
 
   prevPage() {
-    if (this.pageIdx > 0) {
-      this.pageIdx--;
-      this.render();
-      this.scrollTop();
-    } else if (this.chapterIdx > 0) {
+    // 이전 챕터로
+    if (this.chapterIdx > 0) {
       this.chapterIdx--;
+      this.pageIdx = 0;
       this.paginate();
-      this.pageIdx = this.pages.length - 1;
       this.render();
       this.scrollTop();
     }
@@ -320,23 +248,7 @@ const Reader = {
   },
 };
 
-// 스와이프로 페이지 넘김
+// 리더 초기화 (탭존 제거됨 — 스크롤 방식)
 document.addEventListener("DOMContentLoaded", () => {
-  const content = document.getElementById("readerContent");
-  if (!content) return;
-  let sx = 0, sy = 0;
-  content.addEventListener("touchstart", e => {
-    sx = e.touches[0].clientX; sy = e.touches[0].clientY;
-  }, { passive: true });
-  content.addEventListener("touchend", e => {
-    const dx = e.changedTouches[0].clientX - sx;
-    const dy = e.changedTouches[0].clientY - sy;
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) Reader.nextPage();
-      else Reader.prevPage();
-    }
-  }, { passive: true });
-  // 탭 영역 클릭
-  document.getElementById("readerPrevZone").onclick = () => Reader.prevPage();
-  document.getElementById("readerNextZone").onclick = () => Reader.nextPage();
+  // 스크롤 방식이므로 별도 초기화 불필요
 });

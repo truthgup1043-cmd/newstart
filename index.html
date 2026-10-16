@@ -319,11 +319,10 @@
       </div>
     </div>
     <div class="reader-body">
-      <div class="reader-tapzone left" id="readerPrevZone"></div>
       <div class="reader-content" id="readerContent"></div>
-      <div class="reader-tapzone right" id="readerNextZone"></div>
     </div>
     <div class="reader-footer">
+      <button class="btn reader-nav" onclick="Reader.prevPage()">‹ 이전 챕터</button>
       <div class="reader-progress-wrap">
         <div class="reader-progress-bar"><div id="readerProgress"></div></div>
         <div class="reader-page-row">
@@ -331,6 +330,7 @@
           <span id="readerProgressText"></span>
         </div>
       </div>
+      <button class="btn reader-nav" onclick="Reader.nextPage()">다음 챕터 ›</button>
     </div>
   </div>
 </div>
