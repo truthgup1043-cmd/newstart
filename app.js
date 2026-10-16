@@ -633,6 +633,12 @@ function initSettings() {
   document.getElementById("settingsClose").onclick = () => {
     document.getElementById("settingsModal").classList.add("hidden");
   };
+  // 바깥 영역 탭하면 닫기
+  document.getElementById("settingsModal").addEventListener("click", e => {
+    if (e.target.id === "settingsModal") {
+      e.target.classList.add("hidden");
+    }
+  });
   document.getElementById("settingsModal").onclick = (e) => {
     if (e.target.id === "settingsModal") e.target.classList.add("hidden");
   };
