@@ -1,14 +1,15 @@
-// 루틴앱 — Supabase 연동 버전 (기도 시간 기록 + 통계 그래프)
+// 루틴앱 — Supabase 연동 버전 (기도 시간·성경 장수 기록 + 통계 그래프)
 const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
 
 const ROUTINES = [
-  { id: "prayer",     name: "새벽기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59", hasMinutes: true },
-  { id: "bible",      name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도",   color: "#4a6fa5" },
+  { id: "prayer", name: "새벽기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
+    value: { key: "prayer_minutes", dbCol: "minutes", unit: "분", presets: [10, 20, 30, 60], def: 30, doneText: v => `오늘 ${v}분 기도` } },
+  { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5",
+    value: { key: "bible_chapters", dbCol: "chapters", unit: "장", presets: [1, 2, 3, 5, 10], def: 3, doneText: v => `오늘 ${v}장 읽음` } },
   { id: "meditation", name: "성경묵상", emoji: "💭", sub: "말씀을 마음에 새기기", color: "#8a6fbf" },
-  { id: "run",        name: "달리기",   emoji: "🏃", sub: "몸도 함께 단련",       color: "#d98e4a" },
+  { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a" },
 ];
-const PRAYER_PRESETS = [10, 20, 30, 60];
 
 const CACHE_KEY = "routine-app-v1";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -29,30 +30,31 @@ try { store = JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; } catch {}
 const today = dayKey();
 if (!store[today]) store[today] = {};
 
-let prayerOpen = false;   // 기도 시간 선택기 펼침 여부
-let pickedMinutes = 30;
+let pickerFor = null;   // 수량 선택기 펼친 루틴 id
+let pickedValue = null;
 
 function cache() {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(store)); } catch {}
 }
 
 async function syncFromCloud() {
-  const { data, error } = await sb.from("completions").select("day, routine, done, minutes");
+  const { data, error } = await sb.from("completions").select("day, routine, done, minutes, chapters");
   if (error) { console.warn("클라우드 동기화 실패, 로컬 캐시 사용:", error.message); renderAll(); return; }
   store = {};
   data.forEach(r => {
     if (!store[r.day]) store[r.day] = {};
     store[r.day][r.routine] = r.done;
     if (r.routine === "prayer" && r.minutes != null) store[r.day].prayer_minutes = r.minutes;
+    if (r.routine === "bible" && r.chapters != null) store[r.day].bible_chapters = r.chapters;
   });
   if (!store[today]) store[today] = {};
   cache();
   renderAll();
 }
 
-async function saveRow(routineId, done, minutes = null) {
+async function saveRow(routineId, done, extra = {}) {
   const { error } = await sb.from("completions").upsert(
-    { day: today, routine: routineId, done, minutes },
+    { day: today, routine: routineId, done, minutes: null, chapters: null, ...extra },
     { onConflict: "day,routine" }
   );
   if (error) console.warn("클라우드 저장 실패:", error.message);
@@ -60,17 +62,16 @@ async function saveRow(routineId, done, minutes = null) {
 
 async function toggle(id) {
   const r = ROUTINES.find(x => x.id === id);
-  if (r.hasMinutes) {
+  if (r.value) {
     if (store[today][id]) {
-      // 완료 취소
       store[today][id] = false;
-      delete store[today].prayer_minutes;
-      prayerOpen = false;
+      delete store[today][r.value.key];
+      pickerFor = null;
       cache(); renderAll();
-      await saveRow(id, false, null);
+      await saveRow(id, false);
     } else {
-      // 시간 선택기 펼치기
-      prayerOpen = !prayerOpen;
+      pickerFor = (pickerFor === id) ? null : id;
+      pickedValue = r.value.def;
       renderRoutines();
     }
     return;
@@ -80,15 +81,17 @@ async function toggle(id) {
   await saveRow(id, !!store[today][id]);
 }
 
-async function confirmPrayer() {
-  const input = document.getElementById("customMinutes");
-  let m = pickedMinutes;
-  if (input && input.value) m = Math.max(1, parseInt(input.value, 10) || pickedMinutes);
-  store[today].prayer = true;
-  store[today].prayer_minutes = m;
-  prayerOpen = false;
+async function confirmPicker() {
+  const r = ROUTINES.find(x => x.id === pickerFor);
+  if (!r || !r.value) return;
+  const input = document.getElementById("customValue");
+  let v = pickedValue;
+  if (input && input.value) v = Math.max(1, parseInt(input.value, 10) || pickedValue);
+  store[today][r.id] = true;
+  store[today][r.value.key] = v;
+  pickerFor = null;
   cache(); renderAll();
-  await saveRow("prayer", true, m);
+  await saveRow(r.id, true, { [r.value.dbCol]: v });
 }
 
 function doneCount(key) {
@@ -115,23 +118,24 @@ function renderRoutines() {
     el.className = "routine" + (isDone ? " done" : "");
 
     let sub = r.sub;
-    if (r.id === "prayer" && isDone && store[today].prayer_minutes) {
-      sub = `오늘 ${store[today].prayer_minutes}분 기도`;
+    if (r.value && isDone && store[today][r.value.key] != null) {
+      sub = r.value.doneText(store[today][r.value.key]);
     }
 
     let picker = "";
-    if (r.hasMinutes && prayerOpen && !isDone) {
+    if (r.value && pickerFor === r.id && !isDone) {
+      const v = r.value;
       picker = `
         <div class="picker" onclick="event.stopPropagation()">
-          <div class="picker-label">기도한 시간</div>
+          <div class="picker-label">${r.id === "prayer" ? "기도한 시간" : "읽은 장수"}</div>
           <div class="chips">
-            ${PRAYER_PRESETS.map(m =>
-              `<button class="chip${m === pickedMinutes ? " sel" : ""}" data-m="${m}">${m}분</button>`).join("")}
-            <input id="customMinutes" class="custom" type="number" min="1" placeholder="직접 입력(분)">
+            ${v.presets.map(p =>
+              `<button class="chip${p === pickedValue ? " sel" : ""}" data-v="${p}">${p}${v.unit}</button>`).join("")}
+            <input id="customValue" class="custom" type="number" min="1" placeholder="직접 입력(${v.unit})">
           </div>
           <div class="picker-actions">
-            <button class="btn primary" id="prayerSave">저장</button>
-            <button class="btn" id="prayerCancel">취소</button>
+            <button class="btn primary" id="pickerSave">저장</button>
+            <button class="btn" id="pickerCancel">취소</button>
           </div>
         </div>`;
     }
@@ -147,14 +151,14 @@ function renderRoutines() {
       el.querySelectorAll(".chip").forEach(c => {
         c.onclick = e => {
           e.stopPropagation();
-          pickedMinutes = Number(c.dataset.m);
-          document.getElementById("customMinutes").value = "";
+          pickedValue = Number(c.dataset.v);
+          document.getElementById("customValue").value = "";
           el.querySelectorAll(".chip").forEach(x => x.classList.remove("sel"));
           c.classList.add("sel");
         };
       });
-      el.querySelector("#prayerSave").onclick = e => { e.stopPropagation(); confirmPrayer(); };
-      el.querySelector("#prayerCancel").onclick = e => { e.stopPropagation(); prayerOpen = false; renderRoutines(); };
+      el.querySelector("#pickerSave").onclick = e => { e.stopPropagation(); confirmPicker(); };
+      el.querySelector("#pickerCancel").onclick = e => { e.stopPropagation(); pickerFor = null; renderRoutines(); };
     }
   });
 }
@@ -188,7 +192,7 @@ function renderStreaks() {
   });
 }
 
-let trendChart = null, prayerChart = null;
+let trendChart = null, prayerChart = null, bibleChart = null;
 
 function last30() {
   const keys = [];
@@ -196,29 +200,29 @@ function last30() {
   return keys;
 }
 
+function avgOf(keys, key) {
+  const vals = keys.map(k => (store[k] && store[k][key]) || 0).filter(v => v > 0);
+  return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+}
+
 function renderStats() {
   const keys = last30();
   const labels = keys.map(k => k.slice(5).replace("-", "/"));
 
-  // 요약
   const sv = document.getElementById("summaryView");
   sv.innerHTML = "";
   ROUTINES.forEach(r => {
     const n = keys.filter(k => store[k] && store[k][r.id]).length;
     const pct = Math.round(n / 30 * 100);
     let extra = "";
-    if (r.id === "prayer") {
-      const mins = keys.map(k => (store[k] && store[k].prayer_minutes) || 0).filter(v => v > 0);
-      const avg = mins.length ? Math.round(mins.reduce((a, b) => a + b, 0) / mins.length) : 0;
-      extra = ` · 평균 ${avg}분`;
-    }
+    if (r.id === "prayer") extra = ` · 평균 ${avgOf(keys, "prayer_minutes")}분`;
+    if (r.id === "bible") extra = ` · 평균 ${avgOf(keys, "bible_chapters")}장`;
     const el = document.createElement("div");
     el.className = "streak";
     el.innerHTML = `<span>${r.emoji} ${r.name}</span><b>${pct}% (${n}/30일)${extra}</b>`;
     sv.appendChild(el);
   });
 
-  // 달성 추이 (스택 바)
   if (trendChart) trendChart.destroy();
   trendChart = new Chart(document.getElementById("trendChart"), {
     type: "bar",
@@ -240,7 +244,6 @@ function renderStats() {
     },
   });
 
-  // 기도 시간 추이
   if (prayerChart) prayerChart.destroy();
   prayerChart = new Chart(document.getElementById("prayerChart"), {
     type: "bar",
@@ -249,8 +252,7 @@ function renderStats() {
       datasets: [{
         label: "기도 시간(분)",
         data: keys.map(k => (store[k] && store[k].prayer_minutes) || 0),
-        backgroundColor: "#4a7c59",
-        borderRadius: 3,
+        backgroundColor: "#4a7c59", borderRadius: 3,
       }],
     },
     options: {
@@ -258,6 +260,27 @@ function renderStats() {
       scales: {
         x: { ticks: { maxTicksLimit: 8, font: { size: 10 } } },
         y: { beginAtZero: true, ticks: { font: { size: 10 } } },
+      },
+      plugins: { legend: { display: false } },
+    },
+  });
+
+  if (bibleChart) bibleChart.destroy();
+  bibleChart = new Chart(document.getElementById("bibleChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "읽은 장수",
+        data: keys.map(k => (store[k] && store[k].bible_chapters) || 0),
+        backgroundColor: "#4a6fa5", borderRadius: 3,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { ticks: { maxTicksLimit: 8, font: { size: 10 } } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } } },
       },
       plugins: { legend: { display: false } },
     },

@@ -15,10 +15,11 @@
 ## 기능
 - 오늘의 루틴 체크 (탭 한 번)
 - 새벽기도: 기도 시간 선택 (10/20/30/60분 또는 직접 입력)
+- 성경 읽기: 읽은 장수 선택 (1/2/3/5/10장 또는 직접 입력)
 - 진행률 표시
 - 이번 주 기록 (월~일)
 - 루틴별 연속 기록
-- 통계: 최근 30일 달성률, 달성 추이 그래프, 기도 시간 추이 그래프
+- 통계: 최근 30일 달성률, 달성 추이 그래프, 기도 시간 추이 그래프, 성경 읽기 추이 그래프
 
 ## 백엔드 (Supabase)
-`completions` 테이블: day(text) · routine(text) · done(boolean) · minutes(integer, 기도 시간) · updated_at
+`completions` 테이블: day(text) · routine(text) · done(boolean) · minutes(integer, 기도 시간) · chapters(integer, 읽은 장수) · updated_at
