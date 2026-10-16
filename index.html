@@ -138,6 +138,29 @@
       <h2 style="margin:0 0 4px">📚 독서</h2>
       <p class="qt-note" id="readingToday">오늘 읽은 시간: 0분</p>
     </section>
+    <section class="card" id="personalReadingCard">
+      <h3 style="margin:0 0 8px">📝 개인독서</h3>
+      <p class="qt-note" style="margin-bottom:10px">가지고 있는 책을 읽을 때 사용하세요.</p>
+      <div id="personalReadingIdle">
+        <button class="btn primary" onclick="startPersonalReading()">▶ 개인독서 시작</button>
+      </div>
+      <div id="personalReadingActive" class="hidden">
+        <div class="reading-clock" id="personalClock" style="font-size:32px;text-align:center;margin:8px 0">00:00:00</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button class="btn" id="personalPauseBtn" onclick="togglePersonalPause()">⏸ 일시정지</button>
+          <button class="btn primary" onclick="finishPersonalReading()">⏹ 마무리</button>
+        </div>
+      </div>
+      <div id="personalReadingForm" class="hidden" style="margin-top:12px">
+        <p class="qt-note" id="personalResult" style="margin-bottom:10px"></p>
+        <input type="text" id="personalTitle" placeholder="도서명" style="width:100%;padding:10px;margin-bottom:8px;border:1px solid var(--line);border-radius:8px;font-size:15px">
+        <input type="text" id="personalAuthor" placeholder="저자" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid var(--line);border-radius:8px;font-size:15px">
+        <div style="display:flex;gap:8px">
+          <button class="btn primary" onclick="savePersonalReading()">💾 저장</button>
+          <button class="btn" onclick="cancelPersonalReading()">취소</button>
+        </div>
+      </div>
+    </section>
     <div id="bookShelves"></div>
     <section class="card">
       <h3>📖 독서 기록</h3>
