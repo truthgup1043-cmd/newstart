@@ -55,6 +55,12 @@ function pickEnglishVoice() {
     return voices.find(v => v.lang === "en-US") || voices.find(v => v.lang.toLowerCase().indexOf("en") === 0) || null;
   } catch { return null; }
 }
+let engSpeaking = false;
+function updateVerseSpeakBtn() {
+  const btn = document.getElementById("engVerseSpeak");
+  if (!btn) return;
+  btn.textContent = engSpeaking ? "⏹ 멈추기" : "🔊 영어로 듣기";
+}
 function speakEnglish(text) {
   try {
     speechSynthesis.cancel();
@@ -64,9 +70,22 @@ function speakEnglish(text) {
     u.pitch = 1.0;
     const v = pickEnglishVoice();
     if (v) u.voice = v;
+    u.onend = () => { engSpeaking = false; updateVerseSpeakBtn(); };
+    u.onerror = () => { engSpeaking = false; updateVerseSpeakBtn(); };
+    engSpeaking = true;
+    updateVerseSpeakBtn();
     speechSynthesis.speak(u);
   } catch (e) {
     console.warn("TTS 실패:", e.message);
+  }
+}
+function toggleVerseSpeak(text) {
+  if (engSpeaking) {
+    try { speechSynthesis.cancel(); } catch {}
+    engSpeaking = false;
+    updateVerseSpeakBtn();
+  } else {
+    speakEnglish(text);
   }
 }
 // iOS는 음성 목록을 비동기로 불러오므로 미리 워밍업
@@ -143,7 +162,7 @@ function renderEnglish() {
       ${verses[0].ko ? `<div class="eng-verse-ko">${verses.map(v => v.ko).join(" ")}</div>` : ""}
       <p class="qt-note" style="margin-top:12px">💡 이 구절을 암송해보세요. 소리 내어 3번 읽고, 눈을 감고 말해보기. 오늘 하루 이 말씀을 마음에 새겨요.</p>
       <button class="btn eng-speak-wide" id="engVerseSpeak">🔊 영어로 듣기</button>`;
-    document.getElementById("engVerseSpeak").onclick = () => speakEnglish(fullText);
+    document.getElementById("engVerseSpeak").onclick = () => toggleVerseSpeak(fullText);
   }).catch(() => {
     vEl.innerHTML = `<p class="bible-error">구절을 불러오지 못했어요. 네트워크를 확인해주세요.</p>`;
   });
