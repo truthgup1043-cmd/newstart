@@ -404,7 +404,7 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 // ---------- 탭 ----------
-const TAB_ORDER = ["routine", "qt", "bible", "gospel", "catechism", "english", "praise", "reading"];
+const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise"];
 function goToTab(tabId) {
   const btn = document.querySelector('.tab[data-tab="' + tabId + '"]');
   if (btn) btn.click();
@@ -555,10 +555,10 @@ const TABS_CONFIG = [
   { id: "qt", name: "QT" },
   { id: "bible", name: "성경" },
   { id: "gospel", name: "복음" },
+  { id: "reading", name: "독서" },
   { id: "catechism", name: "문답" },
   { id: "english", name: "영어" },
   { id: "praise", name: "찬양" },
-  { id: "reading", name: "독서" },
 ];
 function getTabVisibility() {
   try {
