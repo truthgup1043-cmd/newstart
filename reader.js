@@ -32,12 +32,16 @@ const Reader = {
     this.loadSettings();
     this.bookIdx = idx;
     const meta = BOOKS[idx];
+    if (!meta.ready) {
+      alert("📚 이 책은 아직 준비 중이에요.");
+      return;
+    }
     // 로딩 표시
     document.getElementById("readerModal").classList.remove("hidden");
     document.getElementById("readerContent").innerHTML = '<p class="reader-loading">책을 여는 중…</p>';
     document.getElementById("readerBookTitle").textContent = meta.t;
     try {
-      const res = await fetch(`books/book_${idx}.json`);
+      const res = await fetch(`books/${meta.file}.json`);
       if (!res.ok) throw new Error("load fail");
       this.book = await res.json();
     } catch (e) {

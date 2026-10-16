@@ -35,7 +35,9 @@ function renderBookShelves() {
                   <div class="book-title">${escapeHtml(b.t)}</div>
                 </div>
                 <div class="book-btns">
-                  <button class="btn book-view-btn" onclick="Reader.open(${idx})">📄 원문</button>
+                  ${b.ready
+                    ? `<button class="btn book-view-btn" onclick="Reader.open(${idx})">📄 원문</button>`
+                    : `<span class="book-pending">준비 중</span>`}
                   <button class="btn book-read-btn" onclick="startReading(${idx})">📖 읽기</button>
                 </div>
               </div>`;

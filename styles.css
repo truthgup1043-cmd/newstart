@@ -495,3 +495,6 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .reader-modal.theme-dark .reader-settings { background: #222; }
 .reader-modal.theme-dark .reader-toc-item { border-color: #333; color: #d8d8d8; }
 .reader-modal.theme-dark .btn { background: #2a2a2a; color: #fff; border-color: #444; }
+
+/* 준비 중인 책 */
+.book-pending { font-size: 13px; color: var(--muted); padding: 8px 4px; flex-shrink: 0; }
