@@ -307,6 +307,13 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .flash-kicker { font-size: 13px; font-weight: 700; color: #a05a2c; margin-bottom: 12px; text-align: center; }
 .flash-q { font-size: 19px; font-weight: 700; line-height: 1.7; text-align: center; }
 .flash-a { font-size: 16px; line-height: 1.9; }
+/* 문답 해설가 */
+.cat-guides { margin-top: 16px; }
+.cat-guides h3 { font-size: 17px; margin-bottom: 12px; color: #7d441f; }
+.guide { margin-bottom: 16px; }
+.guide:last-child { margin-bottom: 0; }
+.guide-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.guide-text { font-size: 14px; line-height: 1.85; color: var(--ink); }
 /* 오늘의 결심 카드 */
 .resolution-card {
   background: linear-gradient(135deg, #fdf6ec, #fef9f0);
