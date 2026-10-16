@@ -29,10 +29,13 @@ function renderBookShelves() {
         <div class="book-list">
           ${books.map((b) => {
             const idx = BOOKS.indexOf(b);
+            const pct = (typeof Reader !== "undefined" && Reader.getProgress)
+              ? Reader.getProgress(idx) : 0;
             return `
               <div class="book-item">
                 <div class="book-info">
                   <div class="book-title">${escapeHtml(b.t)}</div>
+                  ${pct > 0 ? `<div class="book-progress"><div class="book-progress-bar"><div style="width:${pct}%"></div></div><span>${pct}%</span></div>` : ""}
                 </div>
                 <div class="book-btns">
                   <button class="btn book-read-btn" onclick="Reader.open(${idx})">📖 읽기</button>
