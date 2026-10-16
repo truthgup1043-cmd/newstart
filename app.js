@@ -3,6 +3,7 @@ const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
 
 const ROUTINES = [
+  { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
   { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
     value: {
       fields: [
@@ -11,9 +12,14 @@ const ROUTINES = [
       doneText: s => s.prayer_minutes != null ? `오늘 ${s.prayer_minutes}분 기도` : "완료",
     } },
   { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5" },
-  { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
   { id: "gospel", name: "복음 읽기", emoji: "✝️", sub: "오늘의 복음 연구", color: "#b7791f" },
-  { id: "english", name: "영어 공부", emoji: "🔤", sub: "오늘의 영어", color: "#2a9d8f" },
+  { id: "sleep", name: "수면", emoji: "😴", sub: "푹 쉬기", color: "#5568b0",
+    value: {
+      fields: [
+        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", presets: [4, 5, 6, 7, 8], def: 7 },
+      ],
+      doneText: s => s.sleep_hours != null ? `오늘 ${s.sleep_hours}시간 수면` : "완료",
+    } },
   { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a",
     value: {
       optional: true,
@@ -28,15 +34,8 @@ const ROUTINES = [
         return parts.length ? parts.join(" · ") : "완료";
       },
     } },
-  { id: "sleep", name: "수면", emoji: "😴", sub: "어젯밤 수면 시간", color: "#5568b0",
-    value: {
-      optional: true,
-      fields: [
-        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", presets: [4, 5, 6, 7, 8], def: 7 },
-      ],
-      doneText: s => s.sleep_hours != null ? `${s.sleep_hours}시간 수면` : "완료",
-    } },
-  { id: "praise", name: "찬양", emoji: "🎵", sub: "오늘의 찬양", color: "#c05a7a" },
+  { id: "english", name: "영어 공부", emoji: "🔤", sub: "오늘의 영어", color: "#2a9d8f" },
+  { id: "praise", name: "찬양", emoji: "🎵", sub: "마음으로 찬양", color: "#c05a7a" },
 ];
 
 let CACHE_KEY = "routine-app-v1";
@@ -522,6 +521,77 @@ function authSuccess(msg) {
   el.style.color = "#4a7c59";
 }
 let signupJustCompleted = false;
+// ---------- 탭 표시/숨김 설정 ----------
+const TABS_CONFIG = [
+  { id: "routine", name: "루틴", locked: true },
+  { id: "qt", name: "QT" },
+  { id: "bible", name: "성경" },
+  { id: "gospel", name: "복음" },
+  { id: "english", name: "영어" },
+  { id: "praise", name: "찬양" },
+];
+function getTabVisibility() {
+  try {
+    const v = JSON.parse(localStorage.getItem("tab-visibility") || "{}");
+    const out = {};
+    TABS_CONFIG.forEach(t => { out[t.id] = v[t.id] !== false; });
+    return out;
+  } catch { 
+    const out = {};
+    TABS_CONFIG.forEach(t => { out[t.id] = true; });
+    return out;
+  }
+}
+function applyTabVisibility() {
+  const vis = getTabVisibility();
+  let activeHidden = false;
+  document.querySelectorAll(".tab").forEach(btn => {
+    const id = btn.dataset.tab;
+    const show = vis[id] !== false;
+    btn.style.display = show ? "" : "none";
+    if (!show && btn.classList.contains("active")) activeHidden = true;
+  });
+  if (activeHidden) {
+    document.querySelector('.tab[data-tab="routine"]').click();
+  }
+}
+function renderTabToggles() {
+  const vis = getTabVisibility();
+  const wrap = document.getElementById("tabToggles");
+  wrap.innerHTML = "";
+  TABS_CONFIG.forEach(t => {
+    const row = document.createElement("div");
+    row.className = "tab-toggle-row";
+    row.innerHTML = `<span>${t.name}${t.locked ? ' <small style="color:var(--muted)">(항상 표시)</small>' : ''}</span>
+      <label class="toggle${t.locked ? ' disabled' : ''}">
+        <input type="checkbox" data-tab="${t.id}" ${vis[t.id] ? "checked" : ""} ${t.locked ? "disabled" : ""}>
+        <span class="slider"></span>
+      </label>`;
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    cb.onchange = () => {
+      const vis = getTabVisibility();
+      vis[cb.dataset.tab] = cb.checked;
+      try { localStorage.setItem("tab-visibility", JSON.stringify(vis)); } catch {}
+      applyTabVisibility();
+    };
+  });
+}
+function initSettings() {
+  applyTabVisibility();
+  document.getElementById("settingsBtn").onclick = () => {
+    renderTabToggles();
+    document.getElementById("settingsModal").classList.remove("hidden");
+  };
+  document.getElementById("settingsClose").onclick = () => {
+    document.getElementById("settingsModal").classList.add("hidden");
+  };
+  document.getElementById("settingsModal").onclick = (e) => {
+    if (e.target.id === "settingsModal") e.target.classList.add("hidden");
+  };
+}
+
 // ---------- 탭에서 루틴 완료 처리 ----------
 function completeRoutineFromTab(routineId) {
   if (!store[today]) store[today] = {};
@@ -626,6 +696,7 @@ document.getElementById("logoutBtn").onclick = async () => {
   await sb.auth.signOut();
 };
 initAuth();
+initSettings();
 
 // ---------- PWA: 서비스 워커 등록 + 자동 업데이트 ----------
 if ("serviceWorker" in navigator) {

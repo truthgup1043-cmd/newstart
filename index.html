@@ -37,6 +37,7 @@
         <p class="user-row" id="userRow" style="display:none"><span id="userEmail"></span> · <button id="logoutBtn" class="link-btn">로그아웃</button></p>
       </div>
       <div class="header-btns">
+        <button id="settingsBtn" class="install-btn" title="설정">⚙️</button>
         <button id="loginBtn" class="install-btn">로그인</button>
         <button id="installBtn" class="install-btn hidden">📲 홈 화면에 추가</button>
       </div>
@@ -46,10 +47,10 @@
   <nav class="tabs">
     <button class="tab active" data-tab="routine">루틴</button>
     <button class="tab" data-tab="qt">QT</button>
-    <button class="tab" data-tab="gospel">복음</button>
     <button class="tab" data-tab="bible">성경</button>
-    <button class="tab" data-tab="praise">찬양</button>
+    <button class="tab" data-tab="gospel">복음</button>
     <button class="tab" data-tab="english">영어</button>
+    <button class="tab" data-tab="praise">찬양</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -200,6 +201,15 @@
       <li>오른쪽 위 <b>추가</b>를 누르면 완료!</li>
     </ol>
     <button class="btn primary" id="guideClose">닫기</button>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>탭 설정</h3>
+    <p class="qt-note" style="margin-bottom:14px">보고 싶은 탭만 켜두세요. 루틴 탭은 항상 표시됩니다.</p>
+    <div id="tabToggles"></div>
+    <button class="btn primary" id="settingsClose" style="width:100%; margin-top:14px">닫기</button>
   </div>
 </div>
 
