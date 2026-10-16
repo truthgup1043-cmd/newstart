@@ -125,10 +125,12 @@ function isEnglishDone() {
 function markEnglishDone() {
   completeEnglishRoutine();
 }
-function completeDuolingo() {
-  // 듀로링고 열기 (앱이 설치되어 있으면 앱으로 연결됨)
+function goDuolingo() {
+  // 듀오링고 열기만 (앱이 설치되어 있으면 앱으로 연결됨)
   try { window.open("https://www.duolingo.com", "_blank", "noopener"); } catch {}
-  // 영어 루틴 완료 처리
+}
+function completeDuolingo() {
+  // 듀오링고 공부 완료 처리
   completeEnglishRoutine();
 }
 function renderEnglishDone() {

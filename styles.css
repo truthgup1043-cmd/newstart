@@ -308,6 +308,13 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   font-size: 16px; font-weight: 700;
 }
 .eng-duo-btn:active { background: #46a302; }
+.eng-duo-done-btn {
+  width: 100%; margin-top: 10px;
+  background: #fff; color: #58a302;
+  border: 2px solid #58cc02; border-radius: 14px; padding: 12px;
+  font-size: 16px; font-weight: 700;
+}
+.eng-duo-done-btn:active { background: #f0f9e8; }
 .cat-head { margin-bottom: 12px; }
 .cat-head h2 { font-size: 20px; }
 .flash-wrap { perspective: 1200px; margin-bottom: 14px; }
