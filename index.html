@@ -138,14 +138,6 @@
       <h2 style="margin:0 0 4px">📚 독서</h2>
       <p class="qt-note" id="readingToday">오늘 읽은 시간: 0분</p>
     </section>
-    <section class="card reading-timer-card hidden" id="readingTimerCard">
-      <h3 id="readingBookTitle" style="margin-bottom:8px"></h3>
-      <div class="reading-clock" id="readingClock">00:00:00</div>
-      <div class="reading-timer-btns">
-        <button class="btn" id="readingPauseBtn" onclick="toggleReadingPause()">⏸ 일시정지</button>
-        <button class="btn primary" onclick="stopReading()">⏹ 읽기 종료</button>
-      </div>
-    </section>
     <div id="bookShelves"></div>
     <section class="card">
       <h3>📖 독서 기록</h3>
@@ -283,6 +275,7 @@
         <div class="reader-book-title" id="readerBookTitle"></div>
         <div class="reader-chapter" id="readerChapter"></div>
       </div>
+      <span class="reader-timer" id="readerTimer">00:00</span>
       <button class="btn reader-hbtn" onclick="Reader.toggleSettings()">⚙️ 독서설정</button>
     </div>
     <div class="reader-settings hidden" id="readerSettings">
