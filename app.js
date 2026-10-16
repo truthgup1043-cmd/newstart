@@ -644,17 +644,33 @@ function initSettings() {
   };
 }
 
-// ---------- 오늘의 문답 (소요리문답 플래시카드, 날짜별 랜덤) ----------
-function todayCatechism() {
-  if (typeof CATECHISM === "undefined" || !CATECHISM.length) return null;
+// ---------- 오늘의 문답 (소요리+하이델베르크, 날짜별 랜덤) ----------
+function seededPick(seedStr, len) {
   let h = 0;
-  const s = "cat:" + today;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
   h |= 0; h = (h + 0x6D2B79F5) | 0;
   let t = Math.imul(h ^ (h >>> 15), 1 | h);
   t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
   const r = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  return CATECHISM[Math.floor(r * CATECHISM.length)];
+  return Math.floor(r * len);
+}
+function todayCatechism() {
+  const hasShorter = typeof CATECHISM !== "undefined" && CATECHISM.length;
+  const hasHeidel = typeof HEIDELBERG !== "undefined" && HEIDELBERG.length;
+  if (!hasShorter && !hasHeidel) return null;
+  // 소요리 vs 하이델베르크 선택 (날짜별 랜덤)
+  let useHeidel = false;
+  if (hasShorter && hasHeidel) {
+    useHeidel = seededPick("which:" + today, 2) === 1;
+  } else {
+    useHeidel = !!hasHeidel;
+  }
+  if (useHeidel) {
+    const c = HEIDELBERG[seededPick("heidel:" + today, HEIDELBERG.length)];
+    return { ...c, cat: "heidelberg", catName: "하이델베르크 요리문답" };
+  }
+  const c = CATECHISM[seededPick("cat:" + today, CATECHISM.length)];
+  return { ...c, cat: "shorter", catName: "웨스트민스터 소요리문답" };
 }
 function renderCatechism() {
   const el = document.getElementById("catCard");
@@ -664,34 +680,40 @@ function renderCatechism() {
   el.innerHTML = `
     <div class="flash-inner" id="flashInner" onclick="this.classList.toggle('flipped')">
       <div class="flash-face flash-front">
-        <div class="flash-kicker">제${c.n}문 · 눌러서 답 보기</div>
+        <div class="flash-kicker">${c.catName} 제${c.n}문 · 눌러서 답 보기</div>
         <div class="flash-q">${c.q}</div>
       </div>
       <div class="flash-face flash-back">
-        <div class="flash-kicker">제${c.n}문 · 답</div>
+        <div class="flash-kicker">${c.catName} 제${c.n}문 · 답</div>
         <div class="flash-a">${c.a}</div>
       </div>
     </div>`;
   renderCatDone();
-  renderCatGuides(c.n);
+  renderCatGuides(c);
 }
 const GUIDE_NAMES = {
   watson: "토마스 왓슨",
   flavel: "존 플라벨",
-  williamson: "G. I. 윌리엄슨"
+  williamson: "G. I. 윌리엄슨",
+  ursinus: "자카리아스 우르시누스",
+  deyoung: "케빈 드영",
+  kim: "김헌수"
 };
-function renderCatGuides(n) {
+const GUIDE_KEYS = {
+  shorter: ["watson", "flavel", "williamson"],
+  heidelberg: ["ursinus", "deyoung", "kim"]
+};
+function renderCatGuides(c) {
   const wrap = document.getElementById("catGuides");
   if (!wrap) return;
-  if (typeof CATECHISM_GUIDES === "undefined" || !CATECHISM_GUIDES[n]) {
-    wrap.innerHTML = "";
-    return;
-  }
-  const g = CATECHISM_GUIDES[n];
-  wrap.innerHTML = ["watson", "flavel", "williamson"].map(k => `
+  const guides = c.cat === "heidelberg"
+    ? (typeof HEIDELBERG_GUIDES !== "undefined" ? HEIDELBERG_GUIDES[c.n] : null)
+    : (typeof CATECHISM_GUIDES !== "undefined" ? CATECHISM_GUIDES[c.n] : null);
+  if (!guides) { wrap.innerHTML = ""; return; }
+  wrap.innerHTML = GUIDE_KEYS[c.cat].map(k => `
     <div class="guide">
       <div class="guide-name">${GUIDE_NAMES[k]}의 해설</div>
-      <div class="guide-text">${g[k]}</div>
+      <div class="guide-text">${guides[k]}</div>
     </div>`).join("");
 }
 function isCatDone() {
