@@ -114,15 +114,33 @@ const Reader = {
     saveRow("reading", true, { minutes: store[today]["reading_minutes"] });
     renderReadingLog();
     updateReadingToday();
+    // 도서 목록 진도 갱신
+    if (typeof renderBookShelves !== "undefined") renderBookShelves();
   },
 
   savePosition() {
-    if (this.bookIdx < 0) return;
+    if (this.bookIdx < 0 || !this.book) return;
     try {
       const pos = JSON.parse(localStorage.getItem("reader-pos") || "{}");
-      pos[this.bookIdx] = { c: this.chapterIdx, d: this.pageIdx };
+      pos[this.bookIdx] = {
+        c: this.chapterIdx,
+        d: this.pageIdx,
+        total: this.book.chapters.length,
+        updated: Date.now()
+      };
       localStorage.setItem("reader-pos", JSON.stringify(pos));
     } catch {}
+  },
+
+  // 진도율 계산 (0-100)
+  getProgress(bookIdx) {
+    try {
+      const pos = JSON.parse(localStorage.getItem("reader-pos") || "{}");
+      const p = pos[bookIdx];
+      if (!p || !p.total) return 0;
+      // 챕터 기준으로 계산
+      return Math.min(100, Math.round((p.c / p.total) * 100));
+    } catch { return 0; }
   },
 
   // 페이지 나누기 (문단 단위, 한 화면에 들어가도록)
