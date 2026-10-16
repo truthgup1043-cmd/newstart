@@ -50,6 +50,92 @@ function escapeHtml(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+// ---------- 개인독서 ----------
+let personalState = null; // { startTs, elapsed, paused, timerId }
+
+function startPersonalReading() {
+  if (personalState) return;
+  personalState = { startTs: Date.now(), elapsed: 0, paused: false, timerId: null };
+  document.getElementById("personalReadingIdle").classList.add("hidden");
+  document.getElementById("personalReadingForm").classList.add("hidden");
+  document.getElementById("personalReadingActive").classList.remove("hidden");
+  document.getElementById("personalPauseBtn").textContent = "⏸ 일시정지";
+  personalState.timerId = setInterval(updatePersonalClock, 1000);
+  updatePersonalClock();
+}
+function updatePersonalClock() {
+  if (!personalState || personalState.paused) return;
+  personalState.elapsed = Date.now() - personalState.startTs;
+  const s = Math.floor(personalState.elapsed / 1000);
+  const h = String(Math.floor(s / 3600)).padStart(2, "0");
+  const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+  const sec = String(s % 60).padStart(2, "0");
+  document.getElementById("personalClock").textContent = `${h}:${m}:${sec}`;
+}
+function togglePersonalPause() {
+  if (!personalState) return;
+  const btn = document.getElementById("personalPauseBtn");
+  if (personalState.paused) {
+    personalState.startTs = Date.now() - personalState.elapsed;
+    personalState.paused = false;
+    btn.textContent = "⏸ 일시정지";
+  } else {
+    personalState.elapsed = Date.now() - personalState.startTs;
+    personalState.paused = true;
+    btn.textContent = "▶ 계속 읽기";
+  }
+}
+function finishPersonalReading() {
+  if (!personalState) return;
+  clearInterval(personalState.timerId);
+  personalState.elapsed = personalState.paused
+    ? personalState.elapsed
+    : Date.now() - personalState.startTs;
+  const minutes = Math.max(1, Math.round(personalState.elapsed / 60000));
+  personalState.minutes = minutes;
+  document.getElementById("personalReadingActive").classList.add("hidden");
+  document.getElementById("personalReadingForm").classList.remove("hidden");
+  document.getElementById("personalResult").textContent = `📚 ${minutes}분 읽었어요. 책 정보를 입력해주세요.`;
+  document.getElementById("personalTitle").value = "";
+  document.getElementById("personalAuthor").value = "";
+  setTimeout(() => document.getElementById("personalTitle").focus(), 100);
+}
+function savePersonalReading() {
+  if (!personalState) return;
+  const title = document.getElementById("personalTitle").value.trim();
+  const author = document.getElementById("personalAuthor").value.trim();
+  if (!title) {
+    alert("도서명을 입력해주세요.");
+    document.getElementById("personalTitle").focus();
+    return;
+  }
+  const minutes = personalState.minutes;
+  const displayTitle = author ? `${title} - ${author}` : title;
+  // 기록 저장
+  addReadingLog({ date: today, title: displayTitle, minutes, personal: true });
+  // 독서 루틴에 누적
+  if (!store[today]) store[today] = {};
+  store[today]["reading"] = true;
+  store[today]["reading_minutes"] = (store[today]["reading_minutes"] || 0) + minutes;
+  cache(); renderAll();
+  saveRow("reading", true, { minutes: store[today]["reading_minutes"] });
+  // UI 정리
+  resetPersonalUI();
+  renderReadingLog();
+  updateReadingToday();
+}
+function cancelPersonalReading() {
+  if (personalState && personalState.timerId) clearInterval(personalState.timerId);
+  personalState = null;
+  resetPersonalUI();
+}
+function resetPersonalUI() {
+  personalState = null;
+  document.getElementById("personalReadingActive").classList.add("hidden");
+  document.getElementById("personalReadingForm").classList.add("hidden");
+  document.getElementById("personalReadingIdle").classList.remove("hidden");
+}
+
 // ---------- 오늘 읽은 시간 / 기록 ----------
 function updateReadingToday() {
   const el = document.getElementById("readingToday");
@@ -67,7 +153,7 @@ function renderReadingLog() {
   }
   wrap.innerHTML = log.slice(0, 20).map(e => `
     <div class="archive-item">
-      <div class="archive-date">${e.date} · ${e.minutes}분</div>
+      <div class="archive-date">${e.personal ? "📝 " : ""}${e.date} · ${e.minutes}분</div>
       <div class="archive-text">${escapeHtml(e.title)}</div>
     </div>`).join("");
 }
