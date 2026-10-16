@@ -350,7 +350,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   margin-bottom: 14px;
 }
 .res-kicker { font-size: 12px; font-weight: 700; color: #c96a1e; margin-bottom: 8px; }
-.res-text { font-size: 20px; line-height: 1.8; color: #1b5e20; }
+.res-text { font-size: 20px; line-height: 1.8; color: #1b5e20; font-weight: 700; }
 .eng-head { margin-bottom: 12px; }
 .eng-head h2 { font-size: 20px; }
 .eng-sec { margin-bottom: 12px; }
