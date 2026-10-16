@@ -20,7 +20,8 @@ async function fetchEnglishVerse() {
   } catch {}
   const res = await fetch("https://labs.bible.org/api/?passage=votd&type=json");
   if (!res.ok) throw new Error("votd " + res.status);
-  const verses = await res.json();
+  let verses = await res.json();
+  verses = verses.slice(0, 1); // 첫 구절만 (분량 조절)
   // 한글 대조 (새번역)
   for (const v of verses) {
     const bookNum = (BIBLE_BOOKS[v.bookname] || [])[0];
@@ -43,17 +44,38 @@ async function fetchEnglishVerse() {
 }
 
 /* ---------- TTS (폰에서 영어로 읽어주기) ---------- */
+function pickEnglishVoice() {
+  try {
+    const voices = speechSynthesis.getVoices() || [];
+    const prefs = ["Samantha", "Google US English", "Google UK English Female", "Zira", "Aria", "Jenny"];
+    for (const p of prefs) {
+      const v = voices.find(v => v.name.indexOf(p) !== -1 && v.lang.toLowerCase().indexOf("en") === 0);
+      if (v) return v;
+    }
+    return voices.find(v => v.lang === "en-US") || voices.find(v => v.lang.toLowerCase().indexOf("en") === 0) || null;
+  } catch { return null; }
+}
 function speakEnglish(text) {
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "en-US";
-    u.rate = 0.9;
+    u.rate = 0.92;
+    u.pitch = 1.0;
+    const v = pickEnglishVoice();
+    if (v) u.voice = v;
     speechSynthesis.speak(u);
   } catch (e) {
     console.warn("TTS 실패:", e.message);
   }
 }
+// iOS는 음성 목록을 비동기로 불러오므로 미리 워밍업
+try {
+  if (typeof speechSynthesis !== "undefined") {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+} catch {}
 
 /* ---------- 학습 완료 체크 (루틴 연동) ---------- */
 function isEnglishDone() {
