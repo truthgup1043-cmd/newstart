@@ -27,15 +27,17 @@ function renderBookShelves() {
       <section class="card book-shelf">
         <h3>${g} <span class="shelf-count">${books.length}권</span></h3>
         <div class="book-list">
-          ${books.map((b, i) => {
+          ${books.map((b) => {
             const idx = BOOKS.indexOf(b);
             return `
               <div class="book-item">
                 <div class="book-info">
                   <div class="book-title">${escapeHtml(b.t)}</div>
-                  ${b.a ? `<div class="book-author">${escapeHtml(b.a)}</div>` : ""}
                 </div>
-                <button class="btn book-read-btn" onclick="startReading(${idx})">📖 읽기</button>
+                <div class="book-btns">
+                  ${b.id ? `<button class="btn book-view-btn" onclick="openBookPreview(${idx})">📄 원문</button>` : ""}
+                  <button class="btn book-read-btn" onclick="startReading(${idx})">📖 읽기</button>
+                </div>
               </div>`;
           }).join("")}
         </div>
@@ -126,6 +128,25 @@ function renderReadingLog() {
       <div class="archive-date">${e.date} · ${e.minutes}분</div>
       <div class="archive-text">${escapeHtml(e.title)}</div>
     </div>`).join("");
+}
+
+// ---------- 원문 보기 (Drive 미리보기) ----------
+function openBookPreview(idx) {
+  const book = BOOKS[idx];
+  if (!book || !book.id) return;
+  const modal = document.getElementById("bookPreviewModal");
+  const frame = document.getElementById("bookPreviewFrame");
+  const title = document.getElementById("bookPreviewTitle");
+  const link = document.getElementById("bookPreviewLink");
+  title.textContent = book.t;
+  frame.src = `https://drive.google.com/file/d/${book.id}/preview`;
+  link.href = `https://drive.google.com/file/d/${book.id}/view`;
+  modal.classList.remove("hidden");
+}
+function closeBookPreview() {
+  const modal = document.getElementById("bookPreviewModal");
+  document.getElementById("bookPreviewFrame").src = "";
+  modal.classList.add("hidden");
 }
 
 // ---------- 탭 진입 시 ----------

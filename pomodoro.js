@@ -162,4 +162,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   const btn = document.getElementById("pomodoroBtn");
   if (btn) btn.onclick = openPomodoro;
+  const bpModal = document.getElementById("bookPreviewModal");
+  if (bpModal) {
+    bpModal.addEventListener("click", e => {
+      if (e.target === bpModal) closeBookPreview();
+    });
+  }
 });

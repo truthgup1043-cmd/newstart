@@ -272,6 +272,18 @@
   </div>
 </div>
 
+<!-- 책 원문 미리보기 모달 -->
+<div id="bookPreviewModal" class="modal hidden">
+  <div class="modal-card book-preview-card">
+    <h3 id="bookPreviewTitle" style="margin-bottom:8px"></h3>
+    <iframe id="bookPreviewFrame" class="book-preview-frame" title="책 미리보기"></iframe>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <a id="bookPreviewLink" href="#" target="_blank" rel="noopener" class="btn" style="flex:1;text-align:center;text-decoration:none">새 탭에서 열기</a>
+      <button class="btn" onclick="closeBookPreview()" style="flex:1">닫기</button>
+    </div>
+  </div>
+</div>
+
 <!-- 포모도로 모달 -->
 <div id="pomodoroModal" class="modal hidden">
   <div class="modal-card pomo-card">
