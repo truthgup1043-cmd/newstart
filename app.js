@@ -518,13 +518,41 @@ function authSuccess(msg) {
   el.style.color = "#4a7c59";
 }
 let signupJustCompleted = false;
+// ---------- URL 파라미터로 달리기 기록 자동 입력 (iOS 단축어용) ----------
+// 예: ?run_km=5.2&run_min=32
+function handleRunParams() {
+  let q;
+  try { q = new URLSearchParams(location.search); } catch { return; }
+  const km = parseFloat(q.get("run_km"));
+  const min = parseFloat(q.get("run_min"));
+  if (!(km > 0) && !(min > 0)) return;
+  history.replaceState(null, "", location.pathname); // 새로고침 중복 저장 방지
+  if (store[today]["run"]) return; // 이미 기록됨
+  store[today]["run"] = true;
+  const extra = {};
+  if (km > 0) {
+    store[today]["run_km"] = Math.round(km * 100) / 100;
+    extra.km = store[today]["run_km"];
+  }
+  if (min > 0) {
+    store[today]["run_minutes"] = Math.round(min);
+    extra.run_minutes = store[today]["run_minutes"];
+  }
+  cache(); renderAll();
+  saveRow("run", true, extra);
+}
+
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
   user = session?.user || null;
   loadLocal();
   updateAuthUI();
   renderAll();
-  if (user) { syncFromCloud(); loadBibleProgress(); }
+  if (user) {
+    await syncFromCloud();
+    loadBibleProgress();
+  }
+  handleRunParams();
   sb.auth.onAuthStateChange((_event, session) => {
     const u = session?.user || null;
     const changed = (!u !== !user) || (u && user && u.id !== user.id);
