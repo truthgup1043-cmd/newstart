@@ -16,12 +16,24 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
 <body>
-<div class="app">
+<div id="authScreen" class="auth-screen hidden">
+  <div class="auth-card">
+    <h1>🦁 하영시 앱</h1>
+    <p class="auth-sub">이메일로 로그인하고 기록을 시작하세요</p>
+    <input id="authEmail" type="email" placeholder="이메일" autocomplete="email">
+    <input id="authPw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <button class="btn primary auth-btn" id="authLogin">로그인</button>
+    <button class="btn auth-btn" id="authSignup">회원가입</button>
+    <p class="auth-err" id="authErr"></p>
+  </div>
+</div>
+<div class="app hidden">
   <header>
     <div class="header-row">
       <div>
         <h1>하영시 앱</h1>
         <p class="date" id="todayLabel"></p>
+        <p class="user-row"><span id="userEmail"></span> · <button id="logoutBtn" class="link-btn">로그아웃</button></p>
       </div>
       <button id="installBtn" class="install-btn hidden">📲 홈 화면에 추가</button>
     </div>

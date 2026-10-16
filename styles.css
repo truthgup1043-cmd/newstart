@@ -62,8 +62,8 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   padding: 8px 0; text-align: center; font-size: 12px;
 }
 .day .dow { color: var(--muted); font-size: 11px; }
-.day .dots { margin-top: 6px; display: flex; justify-content: center; gap: 3px; }
-.day .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.day .dots { margin-top: 6px; display: flex; justify-content: center; gap: 3px; flex-wrap: wrap; }
+.day .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line); flex-shrink: 0; }
 .day .dot.on { background: var(--accent); }
 .day.today { border-color: var(--accent); }
 
@@ -120,6 +120,31 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 }
 .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 .tab-panel.hidden { display: none; }
+
+/* 공용 카드 */
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 18px;
+}
+
+/* 로그인 */
+.auth-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.auth-screen.hidden { display: none; }
+.auth-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 32px 28px; width: 100%; max-width: 340px; text-align: center; }
+.auth-card h1 { font-size: 24px; margin-bottom: 8px; }
+.auth-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+.auth-card input {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  padding: 13px 14px; font-size: 16px; margin-bottom: 10px; background: #fff;
+}
+.auth-btn { width: 100%; margin-bottom: 8px; padding: 13px; font-size: 15px; }
+.auth-err { color: #c0392b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+.user-row { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.link-btn { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; padding: 0; }
+.app.hidden { display: none; }
 
 /* QT */
 .qt-card {
@@ -185,13 +210,13 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .bible-passage { margin-bottom: 12px; }
 .bible-passage-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .bible-ref { font-size: 16px; font-weight: 700; }
-.bible-check { color: var(--green); font-weight: 800; }
+.bible-check { color: var(--accent); font-weight: 800; }
 .bible-passage.done .bible-ref { color: var(--muted); }
 .bible-passage .bible-body { display: none; }
 .bible-passage.open .bible-body { display: block; }
 .bible-passage .go { transition: transform 0.2s; }
 .bible-passage.open .go { transform: rotate(90deg); }
-.bible-passage.current { border: 2px solid var(--green); }
+.bible-passage.current { border: 2px solid var(--accent); }
 .bible-body { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
 .bible-text { font-size: 17px; line-height: 2; }
 .bible-verse sup { color: var(--muted); font-size: 11px; margin-right: 2px; }
@@ -199,3 +224,11 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .bible-done-btn { margin-top: 14px; width: 100%; }
 .tabs { display: flex; }
 .tabs .tab { flex: 1; }
+
+/* 좁은 화면 대응 */
+@media (max-width: 380px) {
+  .tab { padding: 12px 4px; font-size: 14px; }
+  .app { padding: 20px 14px 48px; }
+  .routine { padding: 15px; gap: 10px; }
+  .routine .emoji { font-size: 26px; }
+}
