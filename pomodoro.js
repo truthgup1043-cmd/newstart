@@ -122,14 +122,26 @@ function togglePomodoro() {
 function pomoComplete() {
   clearInterval(pomo.timerId);
   pomo.running = false;
+  // 완료 알림음: 부드러운 종소리 (3음)
   try {
-    // 완료 알림음 (간단한 비프)
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 880; g.gain.value = 0.15;
-    o.start(); o.stop(ctx.currentTime + 0.4);
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+    notes.forEach((fq, i) => {
+      const t = ctx.currentTime + i * 0.35;
+      [1, 2, 3].forEach(mult => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = "sine";
+        o.frequency.value = fq * mult;
+        const vol = 0.18 / mult;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(vol, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 2.5);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(t); o.stop(t + 2.6);
+      });
+    });
   } catch {}
   if (pomo.mode === "work") {
     pomo.cycle++;
