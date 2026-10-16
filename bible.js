@@ -197,17 +197,20 @@ function renderBible() {
 
 async function markPassageRead(i) {
   if (bibleViewDay !== bibleProg.plan_day || i !== bibleProg.passage_idx) return;
+  const ref = MCHEYNE[bibleProg.plan_day - 1][i];
+  const ch = refChapters(ref);
   bibleProg.passage_idx++;
+  // 읽은 장수를 루틴에 바로 누적
+  store[today]["bible_chapters"] = (store[today]["bible_chapters"] || 0) + ch;
+  let done = !!store[today]["bible"];
   if (bibleProg.passage_idx >= 4) {
-    const totalCh = MCHEYNE[bibleProg.plan_day - 1].reduce((a, r) => a + refChapters(r), 0);
+    done = true;
+    store[today]["bible"] = true;
     bibleProg.plan_day = bibleProg.plan_day >= 365 ? 1 : bibleProg.plan_day + 1;
     bibleProg.passage_idx = 0;
-    // 성경 읽기 루틴 자동 완료
-    store[today]["bible"] = true;
-    store[today]["bible_chapters"] = totalCh;
-    cache(); renderAll();
-    await saveRow("bible", true, { chapters: totalCh });
   }
+  cache(); renderAll();
+  await saveRow("bible", done, { chapters: store[today]["bible_chapters"] });
   bibleViewDay = bibleProg.plan_day;
   await saveBibleProgress();
   renderBible();

@@ -468,8 +468,8 @@ renderGospel();
 // ---------- 추천 찬양 ----------
 function renderPraise() {
   document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매주 갱신`;
-  document.getElementById("praisePicks").innerHTML = PRAISE_PICKS.map(p => `
-    <a class="link-card" href="${p.url}" target="_blank" rel="noopener">
+  document.getElementById("praisePicks").innerHTML = PRAISE_PICKS.map((p, i) => `
+    <a class="link-card" href="${p.url}" target="_blank" rel="noopener" data-praise-idx="${i}">
       <div class="emoji">🎵</div>
       <div class="info">
         <div class="name">${p.title}</div>
@@ -477,6 +477,15 @@ function renderPraise() {
       </div>
       <div class="go">›</div>
     </a>`).join("");
+  document.querySelectorAll("[data-praise-idx]").forEach(a => {
+    a.onclick = () => {
+      if (!store[today]["praise"]) {
+        store[today]["praise"] = true;
+        cache(); renderAll();
+        saveRow("praise", true);
+      }
+    };
+  });
 }
 renderPraise();
 
