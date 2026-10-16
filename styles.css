@@ -128,23 +128,16 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 }
 
 /* 로그인 */
-.auth-screen {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-}
-.auth-screen.hidden { display: none; }
-.auth-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 32px 28px; width: 100%; max-width: 340px; text-align: center; }
-.auth-card h1 { font-size: 24px; margin-bottom: 8px; }
-.auth-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-.auth-card input {
+.header-btns { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.auth-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+.auth-input {
   width: 100%; border: 1px solid var(--line); border-radius: 12px;
   padding: 13px 14px; font-size: 16px; margin-bottom: 10px; background: #fff;
 }
 .auth-btn { width: 100%; margin-bottom: 8px; padding: 13px; font-size: 15px; }
-.auth-err { color: #c0392b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+.auth-err { color: #c0392b; font-size: 13px; margin: 8px 0; min-height: 18px; line-height: 1.5; }
 .user-row { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .link-btn { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; padding: 0; }
-.app.hidden { display: none; }
 
 /* QT */
 .qt-card {

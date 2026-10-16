@@ -104,15 +104,26 @@ let bibleViewDay = 1;
 
 async function loadBibleProgress() {
   try {
-    const { data } = await sb.from("bible_progress").select("*").eq("id", "main").maybeSingle();
-    if (data) bibleProg = { plan_day: data.plan_day, passage_idx: data.passage_idx };
-  } catch (e) { console.warn("진도 불러오기 실패:", e.message); }
+    const local = JSON.parse(localStorage.getItem("bibleProg" + (user ? ":" + user.id : "")));
+    if (local && local.plan_day) bibleProg = local;
+  } catch {}
   bibleViewDay = bibleProg.plan_day;
+  if (!user) return;
+  try {
+    const { data } = await sb.from("bible_progress").select("*").eq("id", user.id).maybeSingle();
+    if (data) {
+      bibleProg = { plan_day: data.plan_day, passage_idx: data.passage_idx };
+      bibleViewDay = bibleProg.plan_day;
+      try { localStorage.setItem("bibleProg:" + user.id, JSON.stringify(bibleProg)); } catch {}
+    }
+  } catch (e) { console.warn("진도 불러오기 실패:", e.message); }
 }
 async function saveBibleProgress() {
+  try { localStorage.setItem("bibleProg" + (user ? ":" + user.id : ""), JSON.stringify(bibleProg)); } catch {}
+  if (!user) return;
   try {
     await sb.from("bible_progress").upsert(
-      { id: "main", plan_day: bibleProg.plan_day, passage_idx: bibleProg.passage_idx, updated_at: new Date().toISOString() },
+      { id: user.id, plan_day: bibleProg.plan_day, passage_idx: bibleProg.passage_idx, updated_at: new Date().toISOString() },
       { onConflict: "id" }
     );
   } catch (e) { console.warn("진도 저장 실패:", e.message); }

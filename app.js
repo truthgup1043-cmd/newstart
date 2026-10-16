@@ -62,7 +62,7 @@ let store = {};
 const today = dayKey();
 
 function loadLocal() {
-  CACHE_KEY = "routine-app-v1:" + user.id;
+  CACHE_KEY = user ? "routine-app-v1:" + user.id : "routine-app-v1";
   try { store = JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; } catch { store = {}; }
   if (!store[today]) store[today] = {};
 }
@@ -496,36 +496,48 @@ document.getElementById("bibleTrans").onchange = (e) => {
 };
 loadBibleProgress();
 
-// ---------- 회원 인증 ----------
-function showAuthScreen() {
-  document.getElementById("authScreen").classList.remove("hidden");
-  document.querySelector(".app").classList.add("hidden");
+// ---------- 회원 인증 (선택사항) ----------
+function updateAuthUI() {
+  const loggedIn = !!user;
+  document.getElementById("loginBtn").style.display = loggedIn ? "none" : "";
+  document.getElementById("userRow").style.display = loggedIn ? "" : "none";
+  if (loggedIn) document.getElementById("userEmail").textContent = user.email;
 }
-function enterApp() {
-  loadLocal();
-  document.getElementById("authScreen").classList.add("hidden");
-  document.querySelector(".app").classList.remove("hidden");
-  document.getElementById("userEmail").textContent = user.email;
-  renderAll();
-  syncFromCloud();
-  loadBibleProgress();
+function authError(msg) {
+  document.getElementById("authErr").textContent = msg;
 }
 async function initAuth() {
   const { data: { session } } = await sb.auth.getSession();
   user = session?.user || null;
-  if (user) enterApp();
-  else showAuthScreen();
+  loadLocal();
+  updateAuthUI();
+  renderAll();
+  if (user) { syncFromCloud(); loadBibleProgress(); }
   sb.auth.onAuthStateChange((_event, session) => {
     const u = session?.user || null;
     const changed = (!u !== !user) || (u && user && u.id !== user.id);
     user = u;
-    if (changed) { if (user) enterApp(); else showAuthScreen(); }
+    if (changed) {
+      document.getElementById("authModal").classList.add("hidden");
+      authError("");
+      loadLocal();
+      updateAuthUI();
+      renderAll();
+      if (user) { syncFromCloud(); loadBibleProgress(); }
+      else { bibleProg = { plan_day: 1, passage_idx: 0 }; bibleViewDay = 1; }
+    }
   });
 }
-function authError(msg) {
-  const el = document.getElementById("authErr");
-  el.textContent = msg;
-}
+document.getElementById("loginBtn").onclick = () => {
+  authError("");
+  document.getElementById("authModal").classList.remove("hidden");
+};
+document.getElementById("authClose").onclick = () => {
+  document.getElementById("authModal").classList.add("hidden");
+};
+document.getElementById("authModal").onclick = (e) => {
+  if (e.target.id === "authModal") e.target.classList.add("hidden");
+};
 document.getElementById("authLogin").onclick = async () => {
   authError("");
   const email = document.getElementById("authEmail").value.trim();
@@ -540,9 +552,12 @@ document.getElementById("authSignup").onclick = async () => {
   const password = document.getElementById("authPw").value;
   if (!email || !password) { authError("이메일과 비밀번호를 입력해주세요."); return; }
   if (password.length < 6) { authError("비밀번호는 6자 이상이어야 해요."); return; }
-  const { error } = await sb.auth.signUp({ email, password });
-  if (error) authError("가입 실패: " + error.message);
-  // 이메일 확인이 꺼져 있으면 바로 로그인됨 (onAuthStateChange가 처리)
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) { authError("가입 실패: " + error.message); return; }
+  if (!data.session) {
+    authError("가입은 됐어요. 이메일로 온 확인 링크를 눌러 인증한 뒤 로그인해주세요.");
+  }
+  // 이메일 확인이 꺼져 있으면 세션이 바로 생겨 onAuthStateChange가 처리함
 };
 document.getElementById("logoutBtn").onclick = async () => {
   await sb.auth.signOut();
