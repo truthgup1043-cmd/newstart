@@ -35,7 +35,7 @@
 
   <div class="tab-panel" id="panel-routine">
     <section class="progress">
-      <div class="progress-text"><span id="doneCount">0</span>/5 완료</div>
+      <div class="progress-text"><span id="doneCount">0</span>/6 완료</div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </section>
 
@@ -64,6 +64,8 @@
       <div class="chart-wrap"><canvas id="runChart"></canvas></div>
       <h3>수면 시간 추이 (시간)</h3>
       <div class="chart-wrap"><canvas id="sleepChart"></canvas></div>
+      <h3>찬양 시간 추이 (분)</h3>
+      <div class="chart-wrap"><canvas id="praiseChart"></canvas></div>
     </section>
   </div>
 
@@ -98,6 +100,13 @@
       </a>
       <p class="qt-note">성경 본문 텍스트는 저작권 보호로 공식 사이트에도 게시되지 않아, 오늘의 큐티(본문 범위·해설) 페이지로 연결됩니다.</p>
     </section>
+
+    <section class="stats">
+      <h2>추천 찬양</h2>
+      <p class="qt-note" style="margin-bottom:12px" id="praiseUpdated"></p>
+      <div id="praisePicks"></div>
+    </section>
+  </div>
   <div class="tab-panel hidden" id="panel-gospel">
     <section class="stats">
       <h2>복음 연구</h2>
@@ -109,6 +118,7 @@
 </div>
 <script src="qt.js"></script>
 <script src="gospel.js"></script>
+<script src="praise.js"></script>
 
 <div id="installGuide" class="modal hidden">
   <div class="modal-card">

@@ -40,6 +40,13 @@ const ROUTINES = [
       ],
       doneText: s => s.sleep_hours != null ? `${s.sleep_hours}시간 수면` : "완료",
     } },
+  { id: "praise", name: "찬양", emoji: "🎵", sub: "마음으로 드리는 찬양", color: "#c05a7a",
+    value: {
+      fields: [
+        { key: "praise_minutes", dbCol: "praise_minutes", label: "찬양 시간", unit: "분", presets: [10, 20, 30] },
+      ],
+      doneText: s => `${s.praise_minutes}분 찬양`,
+    } },
 ];
 
 const CACHE_KEY = "routine-app-v1";
@@ -68,12 +75,12 @@ function cache() {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(store)); } catch {}
 }
 
-const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes", "sleep_hours"];
+const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes", "sleep_hours", "praise_minutes"];
 
 async function syncFromCloud() {
   const { data, error } = await sb.from("completions").select("day, routine, done, " + VALUE_COLS.join(","));
   if (error) { console.warn("클라우드 동기화 실패, 로컬 캐시 사용:", error.message); renderAll(); return; }
-  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes", sleep_hours: "sleep_hours" };
+  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes", sleep_hours: "sleep_hours", praise_minutes: "praise_minutes" };
   store = {};
   data.forEach(r => {
     if (!store[r.day]) store[r.day] = {};
@@ -272,7 +279,7 @@ function renderStreaks() {
   });
 }
 
-let trendChart = null, prayerChart = null, bibleChart = null, runChart = null, sleepChart = null;
+let trendChart = null, prayerChart = null, bibleChart = null, runChart = null, sleepChart = null, praiseChart = null;
 
 function last30() {
   const keys = [];
@@ -317,6 +324,10 @@ function renderStats() {
       const h = avgOf(keys, "sleep_hours", 1);
       if (h != null) extra = ` · 평균 ${h}시간`;
     }
+    if (r.id === "praise") {
+      const m = avgOf(keys, "praise_minutes");
+      if (m != null) extra = ` · 평균 ${m}분`;
+    }
     const el = document.createElement("div");
     el.className = "streak";
     el.innerHTML = `<span>${r.emoji} ${r.name}</span><b>${pct}% (${n}/30일)${extra}</b>`;
@@ -346,14 +357,14 @@ function renderStats() {
       ...baseOpts,
       scales: {
         x: { stacked: true, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-        y: { stacked: true, beginAtZero: true, max: 5, ticks: { stepSize: 1, font: { size: 10 } } },
+        y: { stacked: true, beginAtZero: true, max: 6, ticks: { stepSize: 1, font: { size: 10 } } },
       },
       plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11 } } } },
     },
   });
 
   const singleBar = (id, label, color, key, stepSize) => {
-    const ch = { trendChart, prayerChart, bibleChart, runChart, sleepChart }[id];
+    const ch = { trendChart, prayerChart, bibleChart, runChart, sleepChart, praiseChart }[id];
     if (ch) ch.destroy();
     return new Chart(document.getElementById(id), {
       type: "bar",
@@ -376,6 +387,7 @@ function renderStats() {
   bibleChart = singleBar("bibleChart", "읽은 장수", "#4a6fa5", "bible_chapters", 1);
   runChart = singleBar("runChart", "러닝 거리(km)", "#d98e4a", "run_km");
   sleepChart = singleBar("sleepChart", "수면 시간(시간)", "#5568b0", "sleep_hours");
+  praiseChart = singleBar("praiseChart", "찬양 시간(분)", "#c05a7a", "praise_minutes");
 }
 
 function renderAll() {
@@ -455,6 +467,21 @@ function renderGospel() {
   document.getElementById("gospelList").innerHTML = listHtml;
 }
 renderGospel();
+
+// ---------- 추천 찬양 ----------
+function renderPraise() {
+  document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매달 갱신`;
+  document.getElementById("praisePicks").innerHTML = PRAISE_PICKS.map(p => `
+    <a class="link-card" href="${p.url}" target="_blank" rel="noopener">
+      <div class="emoji">🎵</div>
+      <div class="info">
+        <div class="name">${p.title}</div>
+        <div class="sub">${p.artist}</div>
+      </div>
+      <div class="go">›</div>
+    </a>`).join("");
+}
+renderPraise();
 
 renderAll();
 syncFromCloud();
