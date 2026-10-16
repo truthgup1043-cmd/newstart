@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>루틴앱</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>루틴앱</h1>
+    <p class="date" id="todayLabel"></p>
+  </header>
+
+  <section class="progress">
+    <div class="progress-text"><span id="doneCount">0</span>/3 완료</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </section>
+
+  <main id="routineList"></main>
+
+  <section class="stats">
+    <h2>이번 주</h2>
+    <div class="week" id="weekView"></div>
+  </section>
+
+  <section class="stats">
+    <h2>연속 기록</h2>
+    <div class="streaks" id="streakView"></div>
+  </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

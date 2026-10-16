@@ -1,0 +1,76 @@
+:root {
+  --bg: #f7f5f0;
+  --card: #ffffff;
+  --ink: #2b2620;
+  --muted: #8a8177;
+  --accent: #4a7c59;
+  --accent-soft: #e8f0ea;
+  --line: #e8e2d8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+.app { max-width: 480px; margin: 0 auto; padding: 24px 20px 48px; }
+header h1 { font-size: 26px; letter-spacing: -0.5px; }
+.date { color: var(--muted); margin-top: 4px; font-size: 14px; }
+
+.progress { margin: 20px 0; }
+.progress-text { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.progress-bar {
+  height: 10px; background: var(--line); border-radius: 99px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #5c9a6d, var(--accent));
+  border-radius: 99px; transition: width 0.3s ease;
+}
+
+.routine {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; user-select: none;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+.routine:active { transform: scale(0.98); }
+.routine .emoji { font-size: 30px; }
+.routine .info { flex: 1; }
+.routine .name { font-size: 17px; font-weight: 700; }
+.routine .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.routine .check {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: transparent; flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.routine.done { background: var(--accent-soft); border-color: var(--accent); }
+.routine.done .check { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.stats { margin-top: 28px; }
+.stats h2 { font-size: 16px; margin-bottom: 12px; }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 0; text-align: center; font-size: 12px;
+}
+.day .dow { color: var(--muted); font-size: 11px; }
+.day .dots { margin-top: 6px; display: flex; justify-content: center; gap: 3px; }
+.day .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.day .dot.on { background: var(--accent); }
+.day.today { border-color: var(--accent); }
+
+.streaks { display: flex; flex-direction: column; gap: 8px; }
+.streak {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 15px;
+}
+.streak b { color: var(--accent); font-size: 17px; }
