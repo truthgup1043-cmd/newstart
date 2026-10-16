@@ -39,6 +39,31 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   cursor: pointer; user-select: none;
   transition: transform 0.1s ease, box-shadow 0.2s ease;
 }
+/* 루틴 2열 그리드 */
+#routineList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#routineList .routine {
+  margin-bottom: 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 10px 14px;
+  gap: 6px;
+  position: relative;
+}
+#routineList .routine .emoji { font-size: 32px; }
+#routineList .routine .info { flex: none; }
+#routineList .routine .name { font-size: 15px; }
+#routineList .routine .sub { font-size: 12px; }
+#routineList .routine .check {
+  position: absolute; top: 10px; right: 10px;
+  width: 28px; height: 28px; font-size: 15px;
+}
+#routineList .routine.has-picker { grid-column: 1 / -1; }
+#routineList .routine.has-picker .picker { width: 100%; text-align: left; }
 .routine:active { transform: scale(0.98); }
 .routine .emoji { font-size: 30px; }
 .routine .info { flex: 1; }

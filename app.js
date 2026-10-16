@@ -181,14 +181,15 @@ function renderRoutines() {
   ROUTINES.forEach(r => {
     const isDone = !!(store[today] && store[today][r.id]);
     const el = document.createElement("div");
-    el.className = "routine" + (isDone ? " done" : "");
+    const showPicker = r.value && pickerFor === r.id && !isDone;
+    el.className = "routine" + (isDone ? " done" : "") + (showPicker ? " has-picker" : "");
 
     let sub = r.sub;
     if (r.value && isDone) sub = r.value.doneText(store[today]);
     else if (r.id === "bible" && store[today]["bible_chapters"] != null) sub = `오늘 ${store[today]["bible_chapters"]}장 읽음`;
 
     let picker = "";
-    if (r.value && pickerFor === r.id && !isDone) {
+    if (showPicker) {
       const fieldsHtml = r.value.fields.map(f => {
         if (f.presets) {
           return `
