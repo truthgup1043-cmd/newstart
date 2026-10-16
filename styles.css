@@ -301,15 +301,15 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .archive-item:last-child { border-bottom: none; }
 .archive-date { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
 .archive-text { font-size: 15px; line-height: 1.7; }
+.eng-duo-row { display: flex; gap: 8px; margin-top: 10px; }
+.eng-duo-row .btn { flex: 1; margin-top: 0; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
 .eng-duo-btn {
-  width: 100%; margin-top: 10px;
   background: #58cc02; color: #fff;
   border: none; border-radius: 14px; padding: 14px;
   font-size: 16px; font-weight: 700;
 }
 .eng-duo-btn:active { background: #46a302; }
 .eng-duo-done-btn {
-  width: 100%; margin-top: 10px;
   background: #fff; color: #58a302;
   border: 2px solid #58cc02; border-radius: 14px; padding: 12px;
   font-size: 16px; font-weight: 700;

@@ -188,8 +188,10 @@
       <div id="engVerse"></div>
     </section>
     <button class="btn primary eng-done-btn" id="engDoneBtn" onclick="markEnglishDone()">오늘 공부 완료하기</button>
-    <button class="btn eng-duo-btn" id="engDuoGoBtn" onclick="goDuolingo()">🦉 듀오링고 가기</button>
-    <button class="btn eng-duo-done-btn" id="engDuoDoneBtn" onclick="completeDuolingo()">✅ 듀오링고로 공부 완료</button>
+    <div class="eng-duo-row">
+      <a href="https://www.duolingo.com" target="_blank" rel="noopener" class="btn eng-duo-btn" id="engDuoGoBtn">🦉 듀오링고 가기</a>
+      <button class="btn eng-duo-done-btn" id="engDuoDoneBtn" onclick="completeDuolingo()">✅ 공부 완료</button>
+    </div>
   </div>
   <div class="tab-panel hidden" id="panel-gospel">
     <section class="stats">
