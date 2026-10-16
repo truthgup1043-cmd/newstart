@@ -98,6 +98,12 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   font-size: 14px; width: 130px;
 }
 .custom.wide { width: 170px; }
+.time-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.time-field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.time-field input[type="time"] {
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+  font-size: 17px; background: #fff; min-width: 130px;
+}
 .picker-actions { display: flex; gap: 8px; }
 .btn {
   border: 1px solid var(--line); background: #fff; border-radius: 10px;

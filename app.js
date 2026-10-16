@@ -36,7 +36,7 @@ const ROUTINES = [
     value: {
       optional: true,
       fields: [
-        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", input: true },
+        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", timeRange: true },
       ],
       doneText: s => s.sleep_hours != null ? `${s.sleep_hours}시간 수면` : "완료",
     } },
@@ -119,6 +119,14 @@ async function toggle(id) {
   await saveRow(id, !!store[today][id]);
 }
 
+function sleepHours(bed, wake) {
+  const [bh, bm] = bed.split(":").map(Number);
+  const [wh, wm] = wake.split(":").map(Number);
+  let mins = (wh * 60 + wm) - (bh * 60 + bm);
+  if (mins <= 0) mins += 24 * 60; // 다음날 기상
+  return Math.round(mins / 6) / 10; // 소수 1자리 (시간)
+}
+
 async function confirmPicker() {
   const r = ROUTINES.find(x => x.id === pickerFor);
   if (!r || !r.value) return;
@@ -128,6 +136,10 @@ async function confirmPicker() {
     if (f.presets) {
       const inp = document.getElementById(`custom-${f.key}`);
       v = (inp && inp.value) ? Math.max(1, parseFloat(inp.value) || picked[f.key]) : picked[f.key];
+    } else if (f.timeRange) {
+      const bed = document.getElementById(`input-${f.key}_bed`).value;
+      const wake = document.getElementById(`input-${f.key}_wake`).value;
+      if (bed && wake) v = sleepHours(bed, wake);
     } else if (f.input) {
       const inp = document.getElementById(`input-${f.key}`);
       v = (inp && inp.value !== "") ? parseFloat(inp.value) : null;
@@ -180,6 +192,14 @@ function renderRoutines() {
               ${f.presets.map(p =>
                 `<button class="chip${p === picked[f.key] ? " sel" : ""}" data-f="${f.key}" data-v="${p}">${p}${f.unit}</button>`).join("")}
               <input id="custom-${f.key}" class="custom" type="number" min="1" placeholder="직접 입력(${f.unit})">
+            </div>`;
+        }
+        if (f.timeRange) {
+          return `
+            <div class="picker-label">${f.label} <span class="opt">(선택)</span></div>
+            <div class="time-row">
+              <label class="time-field">취침<input id="input-${f.key}_bed" type="time" value="23:00"></label>
+              <label class="time-field">기상<input id="input-${f.key}_wake" type="time" value="07:00"></label>
             </div>`;
         }
         return `
