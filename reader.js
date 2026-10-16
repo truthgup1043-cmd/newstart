@@ -125,10 +125,10 @@ const Reader = {
     } catch {}
   },
 
-  // 페이지 나누기 (문단 단위)
+  // 페이지 나누기 (문단 단위, 한 화면에 들어가도록)
   charsPerPage() {
-    // 폰트 크기에 따라 조절 (17px 기준 약 1100자)
-    return Math.round(1100 * (17 / this.fontSize));
+    // 스크롤 없이 한 화면에 표시 (17px 기준 약 800자)
+    return Math.round(800 * (17 / this.fontSize));
   },
 
   paginate() {
