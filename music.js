@@ -1,28 +1,31 @@
-/* 하영시 앱 — 집중 음악 (110 BPM 경쾌한 생성 음악, Web Audio) */
+/* 하영시 앱 — 집중 음악 (잔잔한 감성 팝, Web Audio) */
+/* 레퍼런스: 가사 없는 부드러운 팝 / 카페 음악 느낌 */
 
 const FocusMusic = {
   playing: false,
   ctx: null,
   master: null,
+  delaySend: null,
   timerId: null,
-  step: 0,          // 16분음표 스텝
+  step: 0,
   nextTime: 0,
-  bpm: 110,
+  bpm: 76,
 
-  // C-G-Am-F (밝은 팝 진행)
+  // Am - F - C - G (감성적인 진행)
   chords: [
-    [130.81, 164.81, 196.00],  // C3 E3 G3
-    [ 98.00, 123.47, 146.83],  // G2 B2 D3
-    [110.00, 130.81, 164.81],  // A2 C3 E3
-    [ 87.31, 110.00, 130.81],  // F2 A2 C3
+    [110.00, 130.81, 164.81, 220.00],  // Am
+    [ 87.31, 110.00, 130.81, 174.61],  // F
+    [130.81, 164.81, 196.00, 261.63],  // C
+    [ 98.00, 123.47, 146.83, 196.00],  // G
   ],
-  bassRoots: [65.41, 49.00, 55.00, 43.65], // C2 G1 A1 F1
-  // C 메이저 펜타토닉 멜로디 패턴 (2마디)
+  // 부드러운 아르페지오 패턴
+  arpPattern: [0, 1, 2, 3, 2, 1],
+  // sparse 감성 멜로디 (2마디, 여백 있게)
   melody: [
-    523.25, 0, 587.33, 659.25, 0, 587.33, 523.25, 0,
-    587.33, 659.25, 783.99, 0, 659.25, 587.33, 523.25, 0,
-    523.25, 0, 587.33, 659.25, 783.99, 0, 659.25, 587.33,
-    523.25, 587.33, 523.25, 0, 440.00, 0, 523.25, 0,
+    440.00, 0, 0, 523.25, 0, 0, 392.00, 0,
+    0, 0, 440.00, 0, 523.25, 0, 0, 0,
+    392.00, 0, 0, 440.00, 0, 0, 0, 0,
+    523.25, 0, 440.00, 0, 392.00, 0, 0, 0,
   ],
 
   ensureCtx() {
@@ -30,8 +33,22 @@ const FocusMusic = {
       const AC = window.AudioContext || window.webkitAudioContext;
       this.ctx = new AC();
       this.master = this.ctx.createGain();
-      this.master.gain.value = 0.5;
-      // 부드럽게 다듬기
+      this.master.gain.value = 0.4;
+      // 공간감을 위한 딜레이 (잔향 느낌)
+      this.delaySend = this.ctx.createGain();
+      this.delaySend.gain.value = 0.35;
+      const delay = this.ctx.createDelay(1.0);
+      delay.delayTime.value = 0.42;
+      const fb = this.ctx.createGain();
+      fb.gain.value = 0.35;
+      const dampen = this.ctx.createBiquadFilter();
+      dampen.type = "lowpass";
+      dampen.frequency.value = 1800;
+      this.delaySend.connect(delay);
+      delay.connect(dampen);
+      dampen.connect(fb);
+      fb.connect(delay);
+      delay.connect(this.master);
       const comp = this.ctx.createDynamicsCompressor();
       this.master.connect(comp);
       comp.connect(this.ctx.destination);
@@ -39,75 +56,99 @@ const FocusMusic = {
     if (this.ctx.state === "suspended") this.ctx.resume();
   },
 
-  tone(freq, t, dur, type, vol) {
+  // 부드러운 피아노 톤
+  piano(freq, t, dur, vol) {
     const o = this.ctx.createOscillator();
+    const o2 = this.ctx.createOscillator();
     const g = this.ctx.createGain();
-    o.type = type || "sine";
+    o.type = "sine";
+    o2.type = "triangle";
     o.frequency.value = freq;
+    o2.frequency.value = freq * 2;
+    const g2 = this.ctx.createGain();
+    g2.gain.value = 0.25;
+    // 어택을 부드럽게
     g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(vol, t + 0.02);
+    g.gain.linearRampToValueAtTime(vol, t + 0.08);
     g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-    o.connect(g); g.connect(this.master);
-    o.start(t); o.stop(t + dur + 0.05);
+    o.connect(g); o2.connect(g2); g2.connect(g);
+    g.connect(this.master);
+    g.connect(this.delaySend);
+    o.start(t); o2.start(t);
+    o.stop(t + dur + 0.1); o2.stop(t + dur + 0.1);
   },
 
-  noise(t, dur, vol, hpFreq) {
-    const len = Math.max(1, Math.floor(this.ctx.sampleRate * dur));
+  // 패드 (긴 어택의 따뜻한 코드)
+  pad(freqs, t, dur) {
+    freqs.forEach(fq => {
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      const f = this.ctx.createBiquadFilter();
+      o.type = "sawtooth";
+      o.frequency.value = fq;
+      o.detune.value = (Math.random() * 8) - 4;
+      f.type = "lowpass";
+      f.frequency.value = 900;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.035, t + dur * 0.4);
+      g.gain.linearRampToValueAtTime(0, t + dur);
+      o.connect(f); f.connect(g);
+      g.connect(this.master);
+      g.connect(this.delaySend);
+      o.start(t); o.stop(t + dur + 0.1);
+    });
+  },
+
+  // 아주 부드러운 셰이커 (8분음표, 거의 느껴지지 않게)
+  softTick(t, vol) {
+    const len = Math.floor(this.ctx.sampleRate * 0.05);
     const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
     const d = buf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
     const src = this.ctx.createBufferSource();
     src.buffer = buf;
     const f = this.ctx.createBiquadFilter();
-    f.type = "highpass"; f.frequency.value = hpFreq || 6000;
+    f.type = "highpass"; f.frequency.value = 8000;
     const g = this.ctx.createGain();
     g.gain.value = vol;
     src.connect(f); f.connect(g); g.connect(this.master);
     src.start(t);
   },
 
-  // 16분음표 한 스텝 스케줄
   scheduleStep(step, t) {
-    const bar = Math.floor(step / 16) % 4;      // 4마디 순환
+    const bar = Math.floor(step / 16) % 4;
     const s16 = step % 16;
-    const beat = Math.floor(s16 / 4);            // 0~3 박
-    const sub = s16 % 4;                         // 박 안 16분음표
+    const stepDur = 60 / this.bpm / 4;
+    const barDur = stepDur * 16;
 
-    // 킥: 1, 3박
-    if (sub === 0 && (beat === 0 || beat === 2)) {
-      this.tone(120, t, 0.18, "sine", 0.35);
-      this.tone(55, t, 0.22, "sine", 0.4);
+    // 패드: 매 마디 시작
+    if (s16 === 0) {
+      this.pad(this.chords[bar], t, barDur);
     }
-    // 스네어 느낌: 2, 4박
-    if (sub === 0 && (beat === 1 || beat === 3)) {
-      this.noise(t, 0.12, 0.12, 1800);
-      this.tone(190, t, 0.1, "triangle", 0.12);
+    // 아르페지오: 8분음표마다 부드럽게
+    if (s16 % 2 === 0) {
+      const arpIdx = this.arpPattern[(s16 / 2) % 6];
+      const fq = this.chords[bar][arpIdx];
+      this.piano(fq, t, stepDur * 3, 0.06);
     }
-    // 하이햇: 8분음표
-    if (sub % 2 === 0) {
-      this.noise(t, 0.04, sub === 0 ? 0.06 : 0.035, 7500);
-    }
-    // 베이스: 매 박 루트음
-    if (sub === 0) {
-      this.tone(this.bassRoots[bar], t, 0.42, "triangle", 0.22);
-    }
-    // 코드 스탭: 1박과 2박 뒤 (경쾌한 오프비트)
-    if ((beat === 0 && sub === 0) || (beat === 1 && sub === 2)) {
-      this.chords[bar].forEach(fq => {
-        this.tone(fq, t, 0.28, "triangle", 0.07);
-      });
-    }
-    // 멜로디
+    // 멜로디 (여백 있게)
     const m = this.melody[step % 32];
     if (m) {
-      this.tone(m, t, 0.22, "sine", 0.11);
-      this.tone(m * 2, t, 0.18, "sine", 0.03);
+      this.piano(m, t, stepDur * 6, 0.09);
+    }
+    // 셰이커: 4분음표마다 아주 작게
+    if (s16 % 4 === 2) {
+      this.softTick(t, 0.015);
+    }
+    // 낮은 베이스: 마디 시작과 중간
+    if (s16 === 0 || s16 === 8) {
+      this.piano(this.chords[bar][0] / 2, t, stepDur * 8, 0.08);
     }
   },
 
   scheduler() {
-    const stepDur = 60 / this.bpm / 4; // 16분음표 길이
-    while (this.nextTime < this.ctx.currentTime + 0.25) {
+    const stepDur = 60 / this.bpm / 4;
+    while (this.nextTime < this.ctx.currentTime + 0.3) {
       this.scheduleStep(this.step, this.nextTime);
       this.nextTime += stepDur;
       this.step++;
@@ -119,8 +160,8 @@ const FocusMusic = {
     if (this.playing) return;
     this.playing = true;
     this.step = 0;
-    this.nextTime = this.ctx.currentTime + 0.1;
-    this.timerId = setInterval(() => this.scheduler(), 80);
+    this.nextTime = this.ctx.currentTime + 0.15;
+    this.timerId = setInterval(() => this.scheduler(), 100);
     this.updateBtn();
   },
 
