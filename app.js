@@ -1,7 +1,6 @@
 // 루틴앱 — Supabase 연동 버전 (기도 시간·성경 장수·러닝 기록 + 통계 그래프)
 const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
-const LOGOS_API_KEY = "8e9eec47a9c942bc99c736454828606b";
 
 const ROUTINES = [
   { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
@@ -366,35 +365,23 @@ document.querySelectorAll(".tab").forEach(t => {
   };
 });
 
-// ---------- QT 본문 ----------
-function renderQT(d) {
-  document.getElementById("qtRef").textContent = d.reference || "";
-  document.getElementById("qtText").textContent = d.text || "";
+// ---------- QT 본문 (앱 내장 31일 순환) ----------
+let qtOffset = 0;
+
+function renderQT() {
+  const day = new Date().getDate(); // 1-31
+  const idx = (((day - 1 + qtOffset) % QT_VERSES.length) + QT_VERSES.length) % QT_VERSES.length;
+  const v = QT_VERSES[idx];
+  document.getElementById("qtRef").textContent = v.ref;
+  document.getElementById("qtText").textContent = v.text;
 }
 
-async function loadQT() {
-  const cacheKey = "qt-" + today;
-  try {
-    const cached = JSON.parse(localStorage.getItem(cacheKey));
-    if (cached && cached.reference) { renderQT(cached); return; }
-  } catch {}
-  try {
-    const res = await fetch("https://logos-api.com/api/verse/today", {
-      headers: { "X-API-KEY": LOGOS_API_KEY },
-    });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
-    renderQT(data);
-  } catch (e) {
-    document.getElementById("qtRef").textContent = "오늘의 말씀을 불러오지 못했어요";
-    document.getElementById("qtText").textContent = "네트워크 연결을 확인해 주세요.";
-  }
-}
+document.getElementById("qtPrev").onclick = () => { qtOffset--; renderQT(); };
+document.getElementById("qtNext").onclick = () => { qtOffset++; renderQT(); };
+renderQT();
 
 renderAll();
 syncFromCloud();
-loadQT();
 
 // ---------- PWA: 서비스 워커 등록 ----------
 if ("serviceWorker" in navigator) {
