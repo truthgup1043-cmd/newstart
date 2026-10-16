@@ -431,3 +431,67 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 /* 집중 음악 버튼 */
 .music-toggle-btn { width: 100%; margin-top: 10px; }
 .music-toggle-btn.on { background: #e8f5e9; border-color: #4a9d5e; color: #2e7d32; }
+
+/* 책 리더 */
+.reader-modal { padding: 0; }
+.reader-modal .modal-card { display: none; }
+.reader-wrap {
+  width: 100%; height: 100dvh; display: flex; flex-direction: column;
+  background: #fff; max-width: 700px; margin: 0 auto;
+}
+.reader-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.reader-titles { flex: 1; min-width: 0; }
+.reader-book-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reader-chapter { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reader-hbtn { padding: 8px 12px; font-size: 15px; flex-shrink: 0; }
+.reader-toc {
+  max-height: 40vh; overflow-y: auto; border-bottom: 1px solid var(--line);
+  background: #fafafa; flex-shrink: 0;
+}
+.reader-toc-item { padding: 12px 16px; font-size: 15px; border-bottom: 1px solid #eee; }
+.reader-toc-item.active { font-weight: 700; color: var(--accent); }
+.reader-settings {
+  border-bottom: 1px solid var(--line); background: #fafafa;
+  padding: 12px 16px; flex-shrink: 0;
+}
+.reader-setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.reader-setting-row:last-child { margin-bottom: 0; }
+.reader-setting-row > span { font-size: 15px; font-weight: 600; }
+.reader-font-btn.active, .reader-theme-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.reader-body { flex: 1; position: relative; overflow: hidden; display: flex; }
+.reader-content {
+  flex: 1; overflow-y: auto; padding: 24px 28px;
+  line-height: 2; -webkit-overflow-scrolling: touch;
+}
+.reader-content p { margin-bottom: 1.2em; text-align: justify; }
+.reader-content.font-serif { font-family: "Noto Serif KR", "Batang", serif; }
+.reader-content.font-sans { font-family: -apple-system, "Pretendard", sans-serif; }
+.reader-content.font-round { font-family: "NanumRound", "Rounded Mplus 1c", sans-serif; }
+.reader-loading { text-align: center; color: var(--muted); padding: 60px 20px; }
+.reader-tapzone { width: 44px; flex-shrink: 0; }
+.reader-footer {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-top: 1px solid var(--line); flex-shrink: 0;
+}
+.reader-nav { flex-shrink: 0; padding: 10px 16px; }
+.reader-progress-wrap { flex: 1; }
+.reader-progress-bar { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; }
+.reader-progress-bar > div { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+.reader-page-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 4px; }
+/* 리더 테마 */
+.reader-modal.theme-sepia .reader-wrap { background: #f4ecd8; }
+.reader-modal.theme-sepia .reader-content { color: #433422; }
+.reader-modal.theme-sepia .reader-header,
+.reader-modal.theme-sepia .reader-footer { border-color: #ddd0b8; }
+.reader-modal.theme-dark .reader-wrap { background: #1a1a1a; }
+.reader-modal.theme-dark .reader-content { color: #d8d8d8; }
+.reader-modal.theme-dark .reader-book-title { color: #fff; }
+.reader-modal.theme-dark .reader-header,
+.reader-modal.theme-dark .reader-footer { border-color: #333; }
+.reader-modal.theme-dark .reader-toc,
+.reader-modal.theme-dark .reader-settings { background: #222; }
+.reader-modal.theme-dark .reader-toc-item { border-color: #333; color: #d8d8d8; }
+.reader-modal.theme-dark .btn { background: #2a2a2a; color: #fff; border-color: #444; }

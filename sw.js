@@ -1,5 +1,5 @@
 // 하영시 앱 서비스 워커 — 앱 셸 오프라인 캐시
-const CACHE = "hayoungshi-v16";
+const CACHE = "hayoungshi-v17";
 const ASSETS = [
   "./",
   "index.html",
@@ -14,6 +14,7 @@ const ASSETS = [
   "english_data.js",
   "books.js",
   "reading.js",
+  "reader.js",
   "pomodoro.js",
   "music.js",
   "resolutions.js",

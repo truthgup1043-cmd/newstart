@@ -35,7 +35,7 @@ function renderBookShelves() {
                   <div class="book-title">${escapeHtml(b.t)}</div>
                 </div>
                 <div class="book-btns">
-                  ${b.id ? `<button class="btn book-view-btn" onclick="openBookPreview(${idx})">📄 원문</button>` : ""}
+                  <button class="btn book-view-btn" onclick="Reader.open(${idx})">📄 원문</button>
                   <button class="btn book-read-btn" onclick="startReading(${idx})">📖 읽기</button>
                 </div>
               </div>`;
