@@ -32,6 +32,14 @@ const ROUTINES = [
         return parts.length ? parts.join(" · ") : "완료";
       },
     } },
+  { id: "sleep", name: "수면", emoji: "😴", sub: "어젯밤 수면 시간", color: "#5568b0",
+    value: {
+      optional: true,
+      fields: [
+        { key: "sleep_hours", dbCol: "sleep_hours", label: "수면 시간", unit: "시간", input: true },
+      ],
+      doneText: s => s.sleep_hours != null ? `${s.sleep_hours}시간 수면` : "완료",
+    } },
 ];
 
 const CACHE_KEY = "routine-app-v1";
@@ -60,12 +68,12 @@ function cache() {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(store)); } catch {}
 }
 
-const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes"];
+const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes", "sleep_hours"];
 
 async function syncFromCloud() {
   const { data, error } = await sb.from("completions").select("day, routine, done, " + VALUE_COLS.join(","));
   if (error) { console.warn("클라우드 동기화 실패, 로컬 캐시 사용:", error.message); renderAll(); return; }
-  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes" };
+  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes", sleep_hours: "sleep_hours" };
   store = {};
   data.forEach(r => {
     if (!store[r.day]) store[r.day] = {};
@@ -244,7 +252,7 @@ function renderStreaks() {
   });
 }
 
-let trendChart = null, prayerChart = null, bibleChart = null, runChart = null;
+let trendChart = null, prayerChart = null, bibleChart = null, runChart = null, sleepChart = null;
 
 function last30() {
   const keys = [];
@@ -285,6 +293,10 @@ function renderStats() {
       if (mins != null) parts.push(`평균 ${mins}분`);
       if (parts.length) extra = " · " + parts.join(" ");
     }
+    if (r.id === "sleep") {
+      const h = avgOf(keys, "sleep_hours", 1);
+      if (h != null) extra = ` · 평균 ${h}시간`;
+    }
     const el = document.createElement("div");
     el.className = "streak";
     el.innerHTML = `<span>${r.emoji} ${r.name}</span><b>${pct}% (${n}/30일)${extra}</b>`;
@@ -314,14 +326,14 @@ function renderStats() {
       ...baseOpts,
       scales: {
         x: { stacked: true, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-        y: { stacked: true, beginAtZero: true, max: 4, ticks: { stepSize: 1, font: { size: 10 } } },
+        y: { stacked: true, beginAtZero: true, max: 5, ticks: { stepSize: 1, font: { size: 10 } } },
       },
       plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11 } } } },
     },
   });
 
   const singleBar = (id, label, color, key, stepSize) => {
-    const ch = { trendChart, prayerChart, bibleChart, runChart }[id];
+    const ch = { trendChart, prayerChart, bibleChart, runChart, sleepChart }[id];
     if (ch) ch.destroy();
     return new Chart(document.getElementById(id), {
       type: "bar",
@@ -343,6 +355,7 @@ function renderStats() {
   prayerChart = singleBar("prayerChart", "기도 시간(분)", "#4a7c59", "prayer_minutes");
   bibleChart = singleBar("bibleChart", "읽은 장수", "#4a6fa5", "bible_chapters", 1);
   runChart = singleBar("runChart", "러닝 거리(km)", "#d98e4a", "run_km");
+  sleepChart = singleBar("sleepChart", "수면 시간(시간)", "#5568b0", "sleep_hours");
 }
 
 function renderAll() {

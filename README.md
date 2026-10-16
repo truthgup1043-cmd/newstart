@@ -21,10 +21,11 @@
 - 기도: 기도 시간 선택 (10/20/30/60분 또는 직접 입력)
 - 성경 읽기: 읽은 장수 선택 (1/2/3/5/10장 또는 직접 입력)
 - 달리기: 키로수·달린 시간 선택 입력 (입력 안 해도 체크 가능)
+- 수면: 수면 시간 선택 입력 (입력 안 해도 체크 가능)
 - 진행률 표시
 - 이번 주 기록 (월~일)
 - 루틴별 연속 기록
-- 통계: 최근 30일 달성률, 달성 추이 그래프, 기도 시간 추이 그래프, 성경 읽기 추이 그래프, 러닝 거리 추이 그래프
+- 통계: 최근 30일 달성률, 달성 추이 그래프, 기도 시간 추이 그래프, 성경 읽기 추이 그래프, 러닝 거리 추이 그래프, 수면 시간 추이 그래프
 
 ## 백엔드 (Supabase)
-`completions` 테이블: day(text) · routine(text) · done(boolean) · minutes(integer, 기도 시간) · chapters(integer, 읽은 장수) · km(numeric, 러닝 거리) · run_minutes(integer, 러닝 시간) · updated_at
+`completions` 테이블: day(text) · routine(text) · done(boolean) · minutes(integer, 기도 시간) · chapters(integer, 읽은 장수) · km(numeric, 러닝 거리) · run_minutes(integer, 러닝 시간) · sleep_hours(numeric, 수면 시간) · updated_at
