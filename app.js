@@ -592,6 +592,28 @@ function initSettings() {
   };
 }
 
+// ---------- 오늘의 결심 (에드워즈 70가지 결심문, 날짜별 랜덤) ----------
+function todayResolution() {
+  if (typeof RESOLUTIONS === "undefined" || !RESOLUTIONS.length) return null;
+  const seedStr = today; // "2026-10-16"
+  let h = 0;
+  for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
+  h |= 0; h = (h + 0x6D2B79F5) | 0;
+  let t = Math.imul(h ^ (h >>> 15), 1 | h);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  const r = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  return RESOLUTIONS[Math.floor(r * RESOLUTIONS.length)];
+}
+function renderResolution() {
+  const el = document.getElementById("todayResolution");
+  if (!el) return;
+  const res = todayResolution();
+  if (!res) { el.style.display = "none"; return; }
+  el.innerHTML = `
+    <div class="res-kicker">오늘의 결심 · 조나단 에드워즈 (${res.n}/70)</div>
+    <div class="res-text">"${res.t}"</div>`;
+}
+
 // ---------- 탭에서 루틴 완료 처리 ----------
 function completeRoutineFromTab(routineId) {
   if (!store[today]) store[today] = {};
@@ -697,6 +719,7 @@ document.getElementById("logoutBtn").onclick = async () => {
 };
 initAuth();
 initSettings();
+renderResolution();
 
 // ---------- PWA: 서비스 워커 등록 + 자동 업데이트 ----------
 if ("serviceWorker" in navigator) {
