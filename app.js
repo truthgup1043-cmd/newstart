@@ -40,16 +40,11 @@ const ROUTINES = [
       ],
       doneText: s => s.sleep_hours != null ? `${s.sleep_hours}시간 수면` : "완료",
     } },
-  { id: "praise", name: "찬양", emoji: "🎵", sub: "마음으로 드리는 찬양", color: "#c05a7a",
-    value: {
-      fields: [
-        { key: "praise_minutes", dbCol: "praise_minutes", label: "찬양 시간", unit: "분", presets: [10, 20, 30] },
-      ],
-      doneText: s => `${s.praise_minutes}분 찬양`,
-    } },
+  { id: "praise", name: "찬양", emoji: "🎵", sub: "오늘의 찬양", color: "#c05a7a" },
 ];
 
-const CACHE_KEY = "routine-app-v1";
+let CACHE_KEY = "routine-app-v1";
+let user = null;
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function dayKey(d = new Date()) {
@@ -64,9 +59,13 @@ function addDays(key, n) {
 }
 
 let store = {};
-try { store = JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; } catch {}
 const today = dayKey();
-if (!store[today]) store[today] = {};
+
+function loadLocal() {
+  CACHE_KEY = "routine-app-v1:" + user.id;
+  try { store = JSON.parse(localStorage.getItem(CACHE_KEY)) || {}; } catch { store = {}; }
+  if (!store[today]) store[today] = {};
+}
 
 let pickerFor = null;
 let picked = {};
@@ -75,12 +74,13 @@ function cache() {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(store)); } catch {}
 }
 
-const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes", "sleep_hours", "praise_minutes"];
+const VALUE_COLS = ["minutes", "chapters", "km", "run_minutes", "sleep_hours"];
 
 async function syncFromCloud() {
-  const { data, error } = await sb.from("completions").select("day, routine, done, " + VALUE_COLS.join(","));
+  if (!user) return;
+  const { data, error } = await sb.from("completions").select("day, routine, done, " + VALUE_COLS.join(",")).eq("user_id", user.id);
   if (error) { console.warn("클라우드 동기화 실패, 로컬 캐시 사용:", error.message); renderAll(); return; }
-  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes", sleep_hours: "sleep_hours", praise_minutes: "praise_minutes" };
+  const colToKey = { minutes: "prayer_minutes", chapters: "bible_chapters", km: "run_km", run_minutes: "run_minutes", sleep_hours: "sleep_hours" };
   store = {};
   data.forEach(r => {
     if (!store[r.day]) store[r.day] = {};
@@ -95,7 +95,8 @@ async function syncFromCloud() {
 }
 
 async function saveRow(routineId, done, extra = {}) {
-  const base = { day: today, routine: routineId, done };
+  if (!user) return;
+  const base = { day: today, routine: routineId, done, user_id: user.id };
   VALUE_COLS.forEach(c => base[c] = null);
   const { error } = await sb.from("completions").upsert(
     { ...base, ...extra },
@@ -279,7 +280,7 @@ function renderStreaks() {
   });
 }
 
-let trendChart = null, prayerChart = null, bibleChart = null, runChart = null, sleepChart = null, praiseChart = null;
+let trendChart = null, prayerChart = null, bibleChart = null, runChart = null, sleepChart = null;
 
 function last30() {
   const keys = [];
@@ -324,10 +325,6 @@ function renderStats() {
       const h = avgOf(keys, "sleep_hours", 1);
       if (h != null) extra = ` · 평균 ${h}시간`;
     }
-    if (r.id === "praise") {
-      const m = avgOf(keys, "praise_minutes");
-      if (m != null) extra = ` · 평균 ${m}분`;
-    }
     const el = document.createElement("div");
     el.className = "streak";
     el.innerHTML = `<span>${r.emoji} ${r.name}</span><b>${pct}% (${n}/30일)${extra}</b>`;
@@ -364,7 +361,7 @@ function renderStats() {
   });
 
   const singleBar = (id, label, color, key, stepSize) => {
-    const ch = { trendChart, prayerChart, bibleChart, runChart, sleepChart, praiseChart }[id];
+    const ch = { trendChart, prayerChart, bibleChart, runChart, sleepChart }[id];
     if (ch) ch.destroy();
     return new Chart(document.getElementById(id), {
       type: "bar",
@@ -387,7 +384,6 @@ function renderStats() {
   bibleChart = singleBar("bibleChart", "읽은 장수", "#4a6fa5", "bible_chapters", 1);
   runChart = singleBar("runChart", "러닝 거리(km)", "#d98e4a", "run_km");
   sleepChart = singleBar("sleepChart", "수면 시간(시간)", "#5568b0", "sleep_hours");
-  praiseChart = singleBar("praiseChart", "찬양 시간(분)", "#c05a7a", "praise_minutes");
 }
 
 function renderAll() {
@@ -471,7 +467,7 @@ renderGospel();
 
 // ---------- 추천 찬양 ----------
 function renderPraise() {
-  document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매달 갱신`;
+  document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매주 갱신`;
   document.getElementById("praisePicks").innerHTML = PRAISE_PICKS.map(p => `
     <a class="link-card" href="${p.url}" target="_blank" rel="noopener">
       <div class="emoji">🎵</div>
@@ -500,8 +496,58 @@ document.getElementById("bibleTrans").onchange = (e) => {
 };
 loadBibleProgress();
 
-renderAll();
-syncFromCloud();
+// ---------- 회원 인증 ----------
+function showAuthScreen() {
+  document.getElementById("authScreen").classList.remove("hidden");
+  document.querySelector(".app").classList.add("hidden");
+}
+function enterApp() {
+  loadLocal();
+  document.getElementById("authScreen").classList.add("hidden");
+  document.querySelector(".app").classList.remove("hidden");
+  document.getElementById("userEmail").textContent = user.email;
+  renderAll();
+  syncFromCloud();
+  loadBibleProgress();
+}
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  user = session?.user || null;
+  if (user) enterApp();
+  else showAuthScreen();
+  sb.auth.onAuthStateChange((_event, session) => {
+    const u = session?.user || null;
+    const changed = (!u !== !user) || (u && user && u.id !== user.id);
+    user = u;
+    if (changed) { if (user) enterApp(); else showAuthScreen(); }
+  });
+}
+function authError(msg) {
+  const el = document.getElementById("authErr");
+  el.textContent = msg;
+}
+document.getElementById("authLogin").onclick = async () => {
+  authError("");
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPw").value;
+  if (!email || !password) { authError("이메일과 비밀번호를 입력해주세요."); return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) authError("로그인 실패: " + error.message);
+};
+document.getElementById("authSignup").onclick = async () => {
+  authError("");
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPw").value;
+  if (!email || !password) { authError("이메일과 비밀번호를 입력해주세요."); return; }
+  if (password.length < 6) { authError("비밀번호는 6자 이상이어야 해요."); return; }
+  const { error } = await sb.auth.signUp({ email, password });
+  if (error) authError("가입 실패: " + error.message);
+  // 이메일 확인이 꺼져 있으면 바로 로그인됨 (onAuthStateChange가 처리)
+};
+document.getElementById("logoutBtn").onclick = async () => {
+  await sb.auth.signOut();
+};
+initAuth();
 
 // ---------- PWA: 서비스 워커 등록 + 자동 업데이트 ----------
 if ("serviceWorker" in navigator) {
