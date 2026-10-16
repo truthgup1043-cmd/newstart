@@ -37,6 +37,13 @@ const ROUTINES = [
     } },
   { id: "english", name: "영어 공부", emoji: "🔤", sub: "오늘의 영어", color: "#2a9d8f" },
   { id: "praise", name: "찬양", emoji: "🎵", sub: "마음으로 찬양", color: "#c05a7a" },
+  { id: "reading", name: "독서", emoji: "📚", sub: "책 읽는 시간", color: "#6a5acd",
+    value: {
+      fields: [
+        { key: "reading_minutes", dbCol: "minutes", label: "읽은 시간", unit: "분", presets: [10, 20, 30, 60], def: 30 },
+      ],
+      doneText: s => s.reading_minutes != null ? `오늘 ${s.reading_minutes}분 독서` : "완료",
+    } },
 ];
 
 let CACHE_KEY = "routine-app-v1";
@@ -397,7 +404,7 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 // ---------- 탭 ----------
-const TAB_ORDER = ["routine", "qt", "bible", "gospel", "catechism", "english", "praise"];
+const TAB_ORDER = ["routine", "qt", "bible", "gospel", "catechism", "english", "praise", "reading"];
 function goToTab(tabId) {
   const btn = document.querySelector('.tab[data-tab="' + tabId + '"]');
   if (btn) btn.click();
@@ -422,6 +429,7 @@ document.querySelectorAll(".tab").forEach(t => {
     if (t.dataset.tab === "english") renderEnglish();
     if (t.dataset.tab === "catechism") renderCatechism();
     if (t.dataset.tab === "qt") renderQtArchive();
+    if (t.dataset.tab === "reading" && typeof renderReading === "function") renderReading();
   };
 });
 
@@ -550,6 +558,7 @@ const TABS_CONFIG = [
   { id: "catechism", name: "문답" },
   { id: "english", name: "영어" },
   { id: "praise", name: "찬양" },
+  { id: "reading", name: "독서" },
 ];
 function getTabVisibility() {
   try {

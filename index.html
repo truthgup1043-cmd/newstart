@@ -37,6 +37,7 @@
         <p class="user-row" id="userRow" style="display:none"><span id="userEmail"></span> · <button id="logoutBtn" class="link-btn">로그아웃</button></p>
       </div>
       <div class="header-btns">
+        <button id="pomodoroBtn" class="install-btn" title="포모도로 타이머">🍅</button>
         <button id="settingsBtn" class="install-btn" title="설정">⚙️</button>
         <button id="loginBtn" class="install-btn">로그인</button>
         <button id="installBtn" class="install-btn hidden">📲 홈 화면에 추가</button>
@@ -52,6 +53,7 @@
     <button class="tab" data-tab="catechism">문답</button>
     <button class="tab" data-tab="english">영어</button>
     <button class="tab" data-tab="praise">찬양</button>
+    <button class="tab" data-tab="reading">독서</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -131,6 +133,25 @@
       <div id="praisePicks"></div>
     </section>
   </div>
+  <div class="tab-panel hidden" id="panel-reading">
+    <section class="card">
+      <h2 style="margin:0 0 4px">📚 독서</h2>
+      <p class="qt-note" id="readingToday">오늘 읽은 시간: 0분</p>
+    </section>
+    <section class="card reading-timer-card hidden" id="readingTimerCard">
+      <h3 id="readingBookTitle" style="margin-bottom:8px"></h3>
+      <div class="reading-clock" id="readingClock">00:00:00</div>
+      <div class="reading-timer-btns">
+        <button class="btn" id="readingPauseBtn" onclick="toggleReadingPause()">⏸ 일시정지</button>
+        <button class="btn primary" onclick="stopReading()">⏹ 읽기 종료</button>
+      </div>
+    </section>
+    <div id="bookShelves"></div>
+    <section class="card">
+      <h3>📖 독서 기록</h3>
+      <div id="readingLog"></div>
+    </section>
+  </div>
   <div class="tab-panel hidden" id="panel-catechism">
     <section class="card cat-head">
       <h2 style="margin:0 0 4px">오늘의 문답</h2>
@@ -208,6 +229,9 @@
 <script src="praise.js"></script>
 <script src="mcheyne.js"></script>
 <script src="bible.js"></script>
+<script src="books.js"></script>
+<script src="reading.js"></script>
+<script src="pomodoro.js"></script>
 <script src="english_data.js"></script>
 <script src="english.js"></script>
 <script src="catechism.js"></script>
@@ -243,6 +267,29 @@
     <p class="qt-note" style="margin-bottom:14px">할 루틴만 켜두세요. 끈 루틴은 목록과 통계에서 빠집니다.</p>
     <div id="routineToggles"></div>
     <button class="btn primary" id="settingsClose" style="width:100%; margin-top:14px">닫기</button>
+  </div>
+</div>
+
+<!-- 포모도로 모달 -->
+<div id="pomodoroModal" class="modal hidden">
+  <div class="modal-card pomo-card">
+    <h3>🍅 포모도로</h3>
+    <div class="pomo-mode" id="pomoMode">집중 시간</div>
+    <div class="pomo-clock-wrap">
+      <svg class="pomo-ring" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="88" class="pomo-ring-bg"/>
+        <circle cx="100" cy="100" r="88" class="pomo-ring-fg" id="pomoRingFg"/>
+      </svg>
+      <div class="pomo-clock" id="pomoClock">25:00</div>
+    </div>
+    <div class="pomo-dots" id="pomoDots"></div>
+    <div class="pomo-btns">
+      <button class="btn primary" id="pomoStartBtn" onclick="togglePomodoro()">▶ 시작</button>
+      <button class="btn" onclick="skipPomodoro()">⏭ 건너뛰기</button>
+      <button class="btn" onclick="resetPomodoro()">↺ 초기화</button>
+    </div>
+    <p class="qt-note" style="margin-top:12px">25분 집중 → 5분 휴식 · 4세트마다 15분 휴식</p>
+    <button class="btn" onclick="closePomodoro()" style="width:100%;margin-top:8px">닫기</button>
   </div>
 </div>
 
