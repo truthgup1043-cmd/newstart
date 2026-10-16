@@ -200,17 +200,15 @@ async function markPassageRead(i) {
   const ref = MCHEYNE[bibleProg.plan_day - 1][i];
   const ch = refChapters(ref);
   bibleProg.passage_idx++;
-  // 읽은 장수를 루틴에 바로 누적
+  // 읽을 때마다 루틴에 장수 누적 + 완료 체크
+  store[today]["bible"] = true;
   store[today]["bible_chapters"] = (store[today]["bible_chapters"] || 0) + ch;
-  let done = !!store[today]["bible"];
   if (bibleProg.passage_idx >= 4) {
-    done = true;
-    store[today]["bible"] = true;
     bibleProg.plan_day = bibleProg.plan_day >= 365 ? 1 : bibleProg.plan_day + 1;
     bibleProg.passage_idx = 0;
   }
   cache(); renderAll();
-  await saveRow("bible", done, { chapters: store[today]["bible_chapters"] });
+  await saveRow("bible", true, { chapters: store[today]["bible_chapters"] });
   bibleViewDay = bibleProg.plan_day;
   await saveBibleProgress();
   renderBible();

@@ -10,13 +10,7 @@ const ROUTINES = [
       ],
       doneText: s => s.prayer_minutes != null ? `오늘 ${s.prayer_minutes}분 기도` : "완료",
     } },
-  { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5",
-    value: {
-      fields: [
-        { key: "bible_chapters", dbCol: "chapters", label: "읽은 장수", unit: "장", presets: [1, 2, 3, 5, 10], def: 3 },
-      ],
-      doneText: s => s.bible_chapters != null ? `오늘 ${s.bible_chapters}장 읽음` : "완료",
-    } },
+  { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5" },
   { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
   { id: "run", name: "달리기", emoji: "🏃", sub: "몸도 함께 단련", color: "#d98e4a",
     value: {
@@ -189,6 +183,7 @@ function renderRoutines() {
 
     let sub = r.sub;
     if (r.value && isDone) sub = r.value.doneText(store[today]);
+    else if (r.id === "bible" && store[today]["bible_chapters"] != null) sub = `오늘 ${store[today]["bible_chapters"]}장 읽음`;
 
     let picker = "";
     if (r.value && pickerFor === r.id && !isDone) {
