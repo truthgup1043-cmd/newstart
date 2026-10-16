@@ -397,6 +397,21 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 // ---------- 탭 ----------
+const TAB_ORDER = ["routine", "qt", "bible", "gospel", "catechism", "english", "praise"];
+function goToTab(tabId) {
+  const btn = document.querySelector('.tab[data-tab="' + tabId + '"]');
+  if (btn) btn.click();
+}
+function goToNextTab(fromTab) {
+  const vis = getTabVisibility();
+  const idx = TAB_ORDER.indexOf(fromTab);
+  for (let i = idx + 1; i < TAB_ORDER.length; i++) {
+    if (vis[TAB_ORDER[i]] !== false) {
+      goToTab(TAB_ORDER[i]);
+      return;
+    }
+  }
+}
 document.querySelectorAll(".tab").forEach(t => {
   t.onclick = () => {
     document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
@@ -729,6 +744,7 @@ function renderCatDone() {
 function completeCatRoutine() {
   completeRoutineFromTab("catechism");
   renderCatDone();
+  goToNextTab("catechism");
 }
 
 // ---------- 오늘의 결심 (에드워즈 70가지 결심문, 날짜별 랜덤) ----------
@@ -761,9 +777,9 @@ function completeRoutineFromTab(routineId) {
   cache(); renderAll();
   saveRow(routineId, true);
 }
-function completeQtRoutine() { completeRoutineFromTab("meditation"); }
-function completeGospelRoutine() { completeRoutineFromTab("gospel"); }
-function completeEnglishRoutine() { completeRoutineFromTab("english"); renderEnglishDone(); }
+function completeQtRoutine() { completeRoutineFromTab("meditation"); goToNextTab("qt"); }
+function completeGospelRoutine() { completeRoutineFromTab("gospel"); goToNextTab("gospel"); }
+function completeEnglishRoutine() { completeRoutineFromTab("english"); renderEnglishDone(); goToNextTab("english"); }
 
 // ---------- URL 파라미터로 달리기 기록 자동 입력 (iOS 단축어용) ----------
 // 예: ?run_km=5.2&run_min=32
