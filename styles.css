@@ -150,6 +150,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="bible"] { --tab-c: #b87a3d; }
 .tab[data-tab="praise"] { --tab-c: #e0704a; }
 .tab[data-tab="english"] { --tab-c: #e8a33d; }
+.tab[data-tab="reading"] { --tab-c: #d67e2e; }
 .tab {
   flex: 1; border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 12px; font-size: 15px; font-weight: 700;
