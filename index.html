@@ -28,8 +28,9 @@
   </header>
 
   <nav class="tabs">
-    <button class="tab active" data-tab="routine">오늘의 루틴</button>
-    <button class="tab" data-tab="qt">QT 본문</button>
+    <button class="tab active" data-tab="routine">루틴</button>
+    <button class="tab" data-tab="qt">묵상</button>
+    <button class="tab" data-tab="gospel">복음</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -89,9 +90,17 @@
       </a>
       <p class="qt-note">성경 본문 텍스트는 저작권 보호로 공식 사이트에도 게시되지 않아, 오늘의 큐티(본문 범위·해설) 페이지로 연결됩니다.</p>
     </section>
+  <div class="tab-panel hidden" id="panel-gospel">
+    <section class="stats">
+      <h2>복음 연구</h2>
+      <p class="qt-note" style="margin-bottom:12px">매일 아침의 복음 리서치 — 눌러서 펼쳐 읽기</p>
+      <div id="gospelSummary"></div>
+      <div id="gospelList"></div>
+    </section>
   </div>
 </div>
 <script src="qt.js"></script>
+<script src="gospel.js"></script>
 
 <div id="installGuide" class="modal hidden">
   <div class="modal-card">

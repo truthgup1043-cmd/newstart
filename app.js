@@ -413,6 +413,49 @@ document.getElementById("qtPrev").onclick = () => { qtOffset--; renderQT(); };
 document.getElementById("qtNext").onclick = () => { qtOffset++; renderQT(); };
 renderQT();
 
+// ---------- 복음 연구 탭 ----------
+function renderGospel() {
+  const d = GOSPEL_DATA;
+  const sumHtml = `
+    <div class="card gospel-card" id="gospelSummaryCard">
+      <div class="gospel-toggle" onclick="document.getElementById('gospelSummaryCard').classList.toggle('open')">
+        <div>
+          <div class="gospel-kicker">주제별 종합 정리</div>
+          <div class="gospel-title">${d.summary.title}</div>
+          <div class="gospel-meta">${d.summary.period}</div>
+        </div>
+        <div class="go">›</div>
+      </div>
+      <div class="gospel-body">
+        ${d.summary.sections.map(sec => `
+          <h4>${sec.h}</h4>
+          <ul>${sec.items.map(i => `<li>${i}</li>`).join("")}</ul>
+        `).join("")}
+        <h4>인물별 한 줄 요약</h4>
+        <ul>${d.summary.people.map(p => `<li><b>${p.name}</b> — ${p.line}</li>`).join("")}</ul>
+      </div>
+    </div>`;
+
+  const listHtml = d.entries.map((e, i) => `
+    <div class="card gospel-card${i === 0 ? " open" : ""}" id="ge-${i}">
+      <div class="gospel-toggle" onclick="document.getElementById('ge-${i}').classList.toggle('open')">
+        <div>
+          <div class="gospel-kicker">${e.date}</div>
+          <div class="gospel-title">${e.person}</div>
+          <div class="gospel-meta">${e.oneliner}</div>
+        </div>
+        <div class="go">›</div>
+      </div>
+      <div class="gospel-body">
+        <ul>${e.points.map(p => `<li>${p}</li>`).join("")}</ul>
+      </div>
+    </div>`).join("");
+
+  document.getElementById("gospelSummary").innerHTML = sumHtml;
+  document.getElementById("gospelList").innerHTML = listHtml;
+}
+renderGospel();
+
 renderAll();
 syncFromCloud();
 
