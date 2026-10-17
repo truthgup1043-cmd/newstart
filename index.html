@@ -113,6 +113,7 @@
         <div class="go">›</div>
       </a>
       <p class="qt-note">성경 본문 텍스트는 저작권 보호로 공식 사이트에도 게시되지 않아, 오늘의 큐티(본문 범위·해설) 페이지로 연결됩니다.</p>
+      <button class="btn" onclick="openQtGuide()" style="width:100%;margin-top:10px">📖 큐티가이드 — 큐티하는 방법 보기</button>
       <section class="card qt-message-card">
         <h3>오늘 나에게 주신 메시지</h3>
         <textarea id="qtMessage" rows="2" placeholder="한 문장으로 적어보세요"></textarea>
@@ -202,6 +203,18 @@
     <section class="card eng-sec">
       <h3>📖 오늘의 영어 성경 구절</h3>
       <div id="engVerse"></div>
+    </section>
+    <section class="card eng-sec">
+      <h3>🎧 받아쓰기</h3>
+      <div id="engDictation"></div>
+    </section>
+    <section class="card eng-sec">
+      <h3>🗣️ 따라 말하기</h3>
+      <div id="engSpeaking"></div>
+    </section>
+    <section class="card eng-sec">
+      <h3>✏️ 빈칸 채우기</h3>
+      <div id="engBlanks"></div>
     </section>
     <button class="btn primary eng-done-btn" id="engDoneBtn" onclick="markEnglishDone()">오늘 공부 완료하기</button>
     <div class="eng-duo-row">
@@ -347,6 +360,18 @@
     <div style="display:flex;gap:8px;margin-top:10px">
       <a id="bookPreviewLink" href="#" target="_blank" rel="noopener" class="btn" style="flex:1;text-align:center;text-decoration:none">새 탭에서 열기</a>
       <button class="btn" onclick="closeBookPreview()" style="flex:1">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 큐티가이드 모달 -->
+<div id="qtGuideModal" class="modal hidden">
+  <div class="modal-card">
+    <h3 style="margin-bottom:6px">📖 큐티가이드</h3>
+    <p class="qt-note" style="margin-bottom:12px">큐티(Quiet Time)하는 방법 — 성서유니온 『매일성경』 계열 가이드</p>
+    <div class="qt-guide-body" id="qtGuideBody"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn primary" onclick="closeQtGuide()" style="flex:1">닫기</button>
     </div>
   </div>
 </div>

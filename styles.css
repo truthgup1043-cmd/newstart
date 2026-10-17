@@ -209,6 +209,15 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .qt-note { font-size: 12px; color: var(--muted); line-height: 1.6; }
 .qt-nav { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
 
+/* 큐티가이드 모달 본문 */
+.qt-guide-body { font-size: 15px; line-height: 1.8; color: var(--ink); }
+.qt-guide-body h4 { font-size: 16px; font-weight: 800; margin: 18px 0 8px; }
+.qt-guide-body h4:first-child { margin-top: 0; }
+.qt-guide-body p { margin: 0 0 10px; }
+.qt-guide-body ol, .qt-guide-body ul { margin: 0 0 10px 20px; padding: 0; }
+.qt-guide-body li { margin-bottom: 6px; }
+.qt-guide-body ul ul, .qt-guide-body ol ul { margin-top: 6px; }
+
 /* 홈 화면 추가 */
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .install-btn {
@@ -370,6 +379,18 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .eng-speak-wide { margin-top: 14px; width: 100%; }
 .eng-done-btn { width: 100%; margin: 4px 0 12px; padding: 14px; font-size: 15px; }
 .eng-done-btn.done { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+/* 쓰기·말하기 연습 */
+.eng-practice-row { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+.eng-write-box { width: 100%; box-sizing: border-box; padding: 12px; font-size: 16px; line-height: 1.7; border: 1px solid var(--line); border-radius: 10px; font-family: inherit; resize: vertical; }
+.eng-score { font-size: 16px; margin: 10px 0 6px; }
+.eng-diff { font-size: 15px; line-height: 2; }
+.eng-wd { padding: 1px 3px; border-radius: 4px; }
+.eng-wd.ok { background: #e6f4ea; color: #1b5e20; }
+.eng-wd.ng { background: #fce8e6; color: #b3261e; }
+.eng-blank-text { font-size: 17px; line-height: 2.4; }
+.eng-blank { font-size: 16px; padding: 4px 8px; margin: 0 2px; border: 1px solid var(--line); border-bottom: 2px solid var(--accent); border-radius: 6px; font-family: inherit; text-align: center; }
+.eng-blank.ok { border-color: #1b5e20; background: #e6f4ea; }
+.eng-blank.ng { border-color: #b3261e; background: #fce8e6; }
 @media (max-width: 380px) {
   .tab { padding: 12px 4px; font-size: 14px; }
   .app { padding: 20px 14px 48px; }
