@@ -151,23 +151,9 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="praise"] { --tab-c: #e0704a; }
 .tab[data-tab="english"] { --tab-c: #e8a33d; }
 .tab[data-tab="reading"] { --tab-c: #d67e2e; }
-/* 루틴 탭: 모든 것의 종합 — 첫 줄 전체 차지, 항상 강조 표시 */
-.tab[data-tab="routine"] {
-  flex: 1 1 100%;
-  font-size: 17px; padding: 14px;
-  background: linear-gradient(135deg, #e8833a, #c96a1e);
-  color: #fff; border-color: transparent;
-  box-shadow: 0 3px 10px rgba(232,131,58,0.35);
-}
-.tab[data-tab="routine"].active {
-  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #e8833a, 0 3px 10px rgba(232,131,58,0.35);
-}
-/* 탭 행 배치: 루틴(1행 전체) / 2행 3개 / 3행 4개 */
-.tab[data-tab="qt"], .tab[data-tab="bible"], .tab[data-tab="gospel"] { flex: 1 1 calc(33.333% - 6px); }
-.tab[data-tab="reading"], .tab[data-tab="catechism"], .tab[data-tab="english"], .tab[data-tab="praise"] { flex: 1 1 calc(25% - 6px); }
 .tab {
   flex: 1 1 calc(25% - 6px); border: 1.5px solid var(--tab-c); background: #fff;
-  border-radius: 12px; padding: 12px; font-size: 15px; font-weight: 700;
+  border-radius: 12px; padding: 8px 4px; font-size: 14px; font-weight: 700;
   cursor: pointer; color: var(--tab-c);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   transition: background 0.15s, color 0.15s, transform 0.1s;
