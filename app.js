@@ -7,7 +7,7 @@ const ROUTINES = [
   { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
     value: {
       fields: [
-        { key: "prayer_minutes", dbCol: "minutes", label: "기도한 시간", unit: "분", presets: [5, 10, 20, 30, 60], def: 30 },
+        { key: "prayer_minutes", dbCol: "minutes", label: "기도한 시간 수동입력", unit: "분", presets: [5, 10, 20, 30, 60], def: 30 },
       ],
       doneText: s => s.prayer_minutes != null ? `오늘 ${s.prayer_minutes}분 기도` : "완료",
     } },
