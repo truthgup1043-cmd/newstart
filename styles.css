@@ -162,6 +162,9 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="routine"].active {
   box-shadow: 0 0 0 3px #fff, 0 0 0 6px #e8833a, 0 3px 10px rgba(232,131,58,0.35);
 }
+/* 탭 행 배치: 루틴(1행 전체) / 2행 3개 / 3행 4개 */
+.tab[data-tab="qt"], .tab[data-tab="bible"], .tab[data-tab="gospel"] { flex: 1 1 calc(33.333% - 6px); }
+.tab[data-tab="reading"], .tab[data-tab="catechism"], .tab[data-tab="english"], .tab[data-tab="praise"] { flex: 1 1 calc(25% - 6px); }
 .tab {
   flex: 1 1 calc(25% - 6px); border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 12px; font-size: 15px; font-weight: 700;
