@@ -117,6 +117,8 @@ const Reader = {
     saveRow("reading", true, { minutes: store[today]["reading_minutes"] });
     renderReadingLog();
     updateReadingToday();
+    // 최근 읽던 책 카드 갱신
+    if (typeof renderRecentReading !== "undefined") renderRecentReading();
     // 도서 목록 진도 갱신
     if (typeof renderBookShelves !== "undefined") renderBookShelves();
   },
@@ -142,6 +144,8 @@ const Reader = {
       pos[this.bookIdx] = {
         c: this.chapterIdx,
         d: this.pageIdx,
+        chTitle: this.book.chapters[this.chapterIdx]
+          ? (this.book.chapters[this.chapterIdx].title || "") : "",
         total: this.book.chapters.length,
         readChars,
         totalChars,

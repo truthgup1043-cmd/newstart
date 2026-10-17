@@ -378,6 +378,12 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   .routine .emoji { font-size: 26px; }
 }
 
+/* 최근 읽던 책 카드 */
+.recent-card { border: 2px solid var(--accent); }
+.recent-card h3 { font-size: 16px; margin-bottom: 8px; }
+.recent-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.recent-card .btn { margin-top: 10px; width: 100%; }
+
 /* 독서 탭 */
 .book-shelf { margin-bottom: 12px; }
 .book-shelf h3 { font-size: 16px; margin-bottom: 10px; }

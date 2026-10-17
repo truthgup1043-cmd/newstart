@@ -177,8 +177,38 @@ function closeBookPreview() {
   modal.classList.add("hidden");
 }
 
+// ---------- 최근 읽던 책 ----------
+function renderRecentReading() {
+  const wrap = document.getElementById("recentReading");
+  if (!wrap) return;
+  let pos = {};
+  try { pos = JSON.parse(localStorage.getItem("reader-pos") || "{}"); } catch {}
+  const entries = Object.keys(pos)
+    .map(k => ({ idx: parseInt(k, 10), p: pos[k] }))
+    .filter(e => e.p && e.p.updated && typeof BOOKS !== "undefined" && BOOKS[e.idx])
+    .sort((a, b) => b.p.updated - a.p.updated);
+  if (!entries.length) { wrap.innerHTML = ""; return; }
+  const { idx, p } = entries[0];
+  const book = BOOKS[idx];
+  const pct = (typeof Reader !== "undefined" && Reader.getProgress)
+    ? Reader.getProgress(idx) : 0;
+  const chLabel = p.chTitle
+    ? `${p.c + 1}장 · ${escapeHtml(p.chTitle)}`
+    : `${p.c + 1}장`;
+  wrap.innerHTML = `
+    <section class="card recent-card">
+      <h3>📌 최근 읽던 책</h3>
+      <div class="book-info">
+        <div class="book-title">${escapeHtml(book.t)}</div>
+        <div class="recent-meta">${chLabel} · ${pct}% 읽음</div>
+      </div>
+      <button class="btn primary" onclick="Reader.open(${idx})">▶ 이어 읽기</button>
+    </section>`;
+}
+
 // ---------- 탭 진입 시 ----------
 function renderReading() {
+  renderRecentReading();
   renderBookShelves();
   renderReadingLog();
   updateReadingToday();
