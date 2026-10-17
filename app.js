@@ -243,6 +243,7 @@ function renderRoutines() {
 
     if (picker) {
       el.querySelectorAll(".chip").forEach(c => {
+        if (c.closest("#prayerDurChips")) return; // 기도 타이머 칩은 prayer.js에서 별도 처리
         c.onclick = e => {
           e.stopPropagation();
           const fk = c.dataset.f;
