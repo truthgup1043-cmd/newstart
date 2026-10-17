@@ -138,7 +138,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 
 /* 탭 */
 .tabs {
-  display: flex; gap: 8px; margin: 16px 0 4px;
+  display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 4px;
   position: sticky; top: 0; z-index: 20;
   background: var(--bg); padding: 10px 0;
 }
@@ -151,8 +151,19 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="praise"] { --tab-c: #e0704a; }
 .tab[data-tab="english"] { --tab-c: #e8a33d; }
 .tab[data-tab="reading"] { --tab-c: #d67e2e; }
+/* 루틴 탭: 모든 것의 종합 — 첫 줄 전체 차지, 항상 강조 표시 */
+.tab[data-tab="routine"] {
+  flex: 1 1 100%;
+  font-size: 17px; padding: 14px;
+  background: linear-gradient(135deg, #e8833a, #c96a1e);
+  color: #fff; border-color: transparent;
+  box-shadow: 0 3px 10px rgba(232,131,58,0.35);
+}
+.tab[data-tab="routine"].active {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #e8833a, 0 3px 10px rgba(232,131,58,0.35);
+}
 .tab {
-  flex: 1; border: 1.5px solid var(--tab-c); background: #fff;
+  flex: 1 1 calc(25% - 6px); border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 12px; font-size: 15px; font-weight: 700;
   cursor: pointer; color: var(--tab-c);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -269,7 +280,6 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .bible-loading, .bible-error { color: var(--muted); font-size: 14px; padding: 12px 0; }
 .bible-done-btn { margin-top: 14px; width: 100%; }
 .tabs { display: flex; }
-.tabs .tab { flex: 1; }
 
 /* 설정 모달 */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
