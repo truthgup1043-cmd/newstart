@@ -348,12 +348,25 @@ function renderStats() {
     },
   };
 
+  // 데이터에 맞춰 y축 최대값을 동적으로 계산 (nice number로 올림)
+  const niceMax = (values, minMax = 5) => {
+    const m = Math.max(minMax, ...values);
+    const mag = Math.pow(10, Math.floor(Math.log10(m)));
+    const n = m / mag;
+    const nice = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10;
+    return Math.ceil(nice * mag * 1.15);
+  };
+
+  const routines = visibleRoutines();
+  const stackedTotals = keys.map(k => routines.filter(r => store[k] && store[k][r.id]).length);
+  const trendMax = Math.max(routines.length, ...stackedTotals);
+
   if (trendChart) trendChart.destroy();
   trendChart = new Chart(document.getElementById("trendChart"), {
     type: "bar",
     data: {
       labels,
-      datasets: visibleRoutines().map(r => ({
+      datasets: routines.map(r => ({
         label: r.name,
         data: keys.map(k => (store[k] && store[k][r.id]) ? 1 : 0),
         backgroundColor: r.color,
@@ -363,36 +376,37 @@ function renderStats() {
       ...baseOpts,
       scales: {
         x: { stacked: true, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-        y: { stacked: true, beginAtZero: true, max: 6, ticks: { stepSize: 1, font: { size: 10 } } },
+        y: { stacked: true, beginAtZero: true, max: trendMax, ticks: { stepSize: 1, font: { size: 10 } } },
       },
       plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 11 } } } },
     },
   });
 
-  const singleBar = (id, label, color, key, stepSize) => {
+  const singleBar = (id, label, color, key, stepSize, minMax) => {
     const ch = { trendChart, prayerChart, bibleChart, runChart, sleepChart }[id];
     if (ch) ch.destroy();
+    const data = keys.map(k => (store[k] && store[k][key]) || 0);
     return new Chart(document.getElementById(id), {
       type: "bar",
       data: {
         labels,
-        datasets: [{ label, data: keys.map(k => (store[k] && store[k][key]) || 0), backgroundColor: color, borderRadius: 3 }],
+        datasets: [{ label, data, backgroundColor: color, borderRadius: 3 }],
       },
       options: {
         ...baseOpts,
         scales: {
           x: baseOpts.scales.x,
-          y: { beginAtZero: true, ticks: { stepSize, font: { size: 10 } } },
+          y: { beginAtZero: true, max: niceMax(data, minMax), ticks: { stepSize, font: { size: 10 } } },
         },
         plugins: { legend: { display: false } },
       },
     });
   };
 
-  prayerChart = singleBar("prayerChart", "기도 시간(분)", "#4a7c59", "prayer_minutes");
-  bibleChart = singleBar("bibleChart", "읽은 장수", "#4a6fa5", "bible_chapters", 1);
-  runChart = singleBar("runChart", "러닝 거리(km)", "#d98e4a", "run_km");
-  sleepChart = singleBar("sleepChart", "수면 시간(시간)", "#5568b0", "sleep_hours");
+  prayerChart = singleBar("prayerChart", "기도 시간(분)", "#4a7c59", "prayer_minutes", undefined, 30);
+  bibleChart = singleBar("bibleChart", "읽은 장수", "#4a6fa5", "bible_chapters", 1, 5);
+  runChart = singleBar("runChart", "러닝 거리(km)", "#d98e4a", "run_km", undefined, 5);
+  sleepChart = singleBar("sleepChart", "수면 시간(시간)", "#5568b0", "sleep_hours", undefined, 10);
 }
 
 function renderAll() {
