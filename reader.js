@@ -12,6 +12,10 @@ const Reader = {
   readStartTs: 0,
   readElapsed: 0,
   readTimerId: null,
+  // 스와이프 감지용
+  touchStartX: 0,
+  touchStartY: 0,
+  suppressClick: false,
 
   // 설정 로드/저장
   loadSettings() {
@@ -357,12 +361,43 @@ const Reader = {
     this.render();
     this.saveSettings();
   },
+
+  // 스와이프로 페이지 넘기기 (기존 터치 탭은 그대로 유지)
+  initSwipe() {
+    const body = document.getElementById("readerBody");
+    if (!body || body.dataset.swipeInit) return;
+    body.dataset.swipeInit = "1";
+    body.addEventListener("touchstart", (e) => {
+      if (e.touches.length !== 1) return;
+      this.touchStartX = e.touches[0].clientX;
+      this.touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    body.addEventListener("touchend", (e) => {
+      if (e.changedTouches.length !== 1) return;
+      const dx = e.changedTouches[0].clientX - this.touchStartX;
+      const dy = e.changedTouches[0].clientY - this.touchStartY;
+      // 가로 60px 이상, 세로보다 가로가 뚜렷할 때만 스와이프로 인정
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        this.suppressClick = true;
+        setTimeout(() => { this.suppressClick = false; }, 400);
+        if (dx < 0) this.nextPage(); else this.prevPage();
+      }
+    }, { passive: true });
+    // 스와이프 직후 탭존 클릭이 중복으로 발생하는 것 방지
+    body.addEventListener("click", (e) => {
+      if (this.suppressClick) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }, true);
+  },
 };
 
-// 리더 초기화: 탭 영역 클릭
+// 리더 초기화: 탭 영역 클릭 + 스와이프
 document.addEventListener("DOMContentLoaded", () => {
   const pz = document.getElementById("readerPrevZone");
   const nz = document.getElementById("readerNextZone");
   if (pz) pz.onclick = () => Reader.prevPage();
   if (nz) nz.onclick = () => Reader.nextPage();
+  Reader.initSwipe();
 });
