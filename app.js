@@ -226,6 +226,7 @@ function renderRoutines() {
       picker = `
         <div class="picker" onclick="event.stopPropagation()">
           ${fieldsHtml}
+          ${r.id === "prayer" && typeof prayerTimerHtml === "function" ? prayerTimerHtml() : ""}
           <div class="picker-actions">
             <button class="btn primary" id="pickerSave">저장</button>
             <button class="btn" id="pickerCancel">취소</button>
