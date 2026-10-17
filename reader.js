@@ -179,6 +179,10 @@ const Reader = {
     // 85%만 사용 (여유 공간 확보)
     const availH = (content.clientHeight || 500) * 0.85;
     const availW = content.clientWidth || 300;
+    // 측정 오차 방지: 텍스트 실제 너비 = clientWidth - 좌우 패딩
+    const cs = getComputedStyle(content);
+    const padX = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+    const textW = Math.max(50, availW - padX);
 
     // 측정용 숨김 div
     let measurer = document.getElementById("readerMeasurer");
@@ -188,7 +192,7 @@ const Reader = {
       measurer.style.cssText = "position:absolute;visibility:hidden;top:0;left:0;pointer-events:none;";
       document.body.appendChild(measurer);
     }
-    measurer.style.width = availW + "px";
+    measurer.style.width = textW + "px";
     measurer.style.fontSize = this.fontSize + "px";
     measurer.style.lineHeight = "2";
     measurer.style.fontFamily = this.fontFamily === "serif"
@@ -383,21 +387,26 @@ const Reader = {
         if (dx < 0) this.nextPage(); else this.prevPage();
       }
     }, { passive: true });
-    // 스와이프 직후 탭존 클릭이 중복으로 발생하는 것 방지
+    // 스와이프 직후 클릭이 중복으로 발생하는 것 방지
     body.addEventListener("click", (e) => {
       if (this.suppressClick) {
         e.stopPropagation();
         e.preventDefault();
+        return;
       }
     }, true);
+    // 탭으로 페이지 넘기기 (좌 25% 이전 / 우 75% 다음) — 탭존은 터치를 막지 않음
+    body.addEventListener("click", (e) => {
+      if (e.target.closest("button")) return;
+      const rect = body.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      if (x < rect.width * 0.25) this.prevPage();
+      else this.nextPage();
+    });
   },
 };
 
-// 리더 초기화: 탭 영역 클릭 + 스와이프
+// 리더 초기화: 탭/스와이프 페이지 넘김
 document.addEventListener("DOMContentLoaded", () => {
-  const pz = document.getElementById("readerPrevZone");
-  const nz = document.getElementById("readerNextZone");
-  if (pz) pz.onclick = () => Reader.prevPage();
-  if (nz) nz.onclick = () => Reader.nextPage();
   Reader.initSwipe();
 });
