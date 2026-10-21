@@ -370,6 +370,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .eng-verse-en sup { color: var(--muted); font-size: 11px; margin-right: 2px; }
 .eng-verse-ko { font-size: 15px; line-height: 1.9; color: var(--muted); border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
 .eng-word-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.eng-item + .eng-item { border-top: 1px solid #f3e3cf; margin-top: 16px; padding-top: 16px; }
 .eng-word { font-size: 22px; font-weight: 800; }
 .eng-pron { font-size: 13px; color: var(--muted); margin-top: 4px; }
 .eng-meaning { font-size: 17px; font-weight: 700; color: var(--accent); margin-bottom: 10px; }

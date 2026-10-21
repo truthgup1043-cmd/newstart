@@ -408,10 +408,15 @@ function renderBlanks(verseText) {
 }
 
 /* ---------- 렌더 ---------- */
-function renderEnglishWord(w, fromVerse) {
-  const wEl = document.getElementById("engWord");
-  if (!w) { wEl.innerHTML = `<p class="bible-loading">단어 목록을 준비 중이에요.</p>`; return; }
-  wEl.innerHTML = `
+function dailyPick(arr, n, day) {
+  const len = Math.max((arr || []).length, 1);
+  const base = ((day - 1) * n) % len;
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(arr[(base + i) % len]);
+  return out;
+}
+function wordBlockHtml(w, fromVerse) {
+  return `<div class="eng-item">
     ${fromVerse ? `<p class="qt-note" style="margin-bottom:8px">📖 오늘 구절에서 뽑은 단어예요</p>` : ""}
     <div class="eng-word-row">
       <div>
@@ -422,32 +427,42 @@ function renderEnglishWord(w, fromVerse) {
     </div>
     <div class="eng-meaning">${w.m}</div>
     <div class="eng-ex">${w.ex}</div>
-    <div class="eng-exk">${w.exk}</div>`;
+    <div class="eng-exk">${w.exk}</div>
+  </div>`;
+}
+function renderEnglishWords(list) {
+  const wEl = document.getElementById("engWord");
+  if (!list || !list.length) { wEl.innerHTML = `<p class="bible-loading">단어 목록을 준비 중이에요.</p>`; return; }
+  wEl.innerHTML = list.map(it => wordBlockHtml(it.w, it.fromVerse)).join("");
   wEl.querySelectorAll(".eng-speak").forEach(b => {
     b.onclick = (ev) => { ev.stopPropagation(); speakEnglish(b.dataset.say); };
   });
 }
-function renderEnglishExpr(e, fromVerse) {
-  const eEl = document.getElementById("engExpr");
-  if (!e) { eEl.innerHTML = `<p class="bible-loading">표현 목록을 준비 중이에요.</p>`; return; }
+function exprBlockHtml(e, fromVerse) {
   if (fromVerse) {
-    eEl.innerHTML = `
+    return `<div class="eng-item">
       <p class="qt-note" style="margin-bottom:8px">📖 오늘 구절 속 표현이에요 (${e.ref})</p>
       <div class="eng-word-row">
         <div class="eng-word" style="font-size:17px">"${e.e}"</div>
         <button class="btn eng-speak" data-say="${e.e.replace(/"/g, "")}">🔊</button>
       </div>
-      <p class="qt-note" style="margin-top:8px">이 표현을 소리 내어 따라 읽어보세요.</p>`;
-  } else {
-    eEl.innerHTML = `
-      <div class="eng-word-row">
-        <div class="eng-word">${e.e}</div>
-        <button class="btn eng-speak" data-say="${e.e}">🔊</button>
-      </div>
-      <div class="eng-meaning">${e.m}</div>
-      <div class="eng-ex">${e.ex}</div>
-      <div class="eng-exk">${e.exk}</div>`;
+      <p class="qt-note" style="margin-top:8px">이 표현을 소리 내어 따라 읽어보세요.</p>
+    </div>`;
   }
+  return `<div class="eng-item">
+    <div class="eng-word-row">
+      <div class="eng-word">${e.e}</div>
+      <button class="btn eng-speak" data-say="${e.e}">🔊</button>
+    </div>
+    <div class="eng-meaning">${e.m}</div>
+    <div class="eng-ex">${e.ex}</div>
+    <div class="eng-exk">${e.exk}</div>
+  </div>`;
+}
+function renderEnglishExprs(list) {
+  const eEl = document.getElementById("engExpr");
+  if (!list || !list.length) { eEl.innerHTML = `<p class="bible-loading">표현 목록을 준비 중이에요.</p>`; return; }
+  eEl.innerHTML = list.map(it => exprBlockHtml(it.e, it.fromVerse)).join("");
   eEl.querySelectorAll(".eng-speak").forEach(b => {
     b.onclick = (ev) => { ev.stopPropagation(); speakEnglish(b.dataset.say); };
   });
@@ -466,15 +481,20 @@ function renderEnglish() {
   fetchEnglishVerse().then(verses => {
     const verseText = verses.map(v => v.text).join(" ");
 
-    // 단어: 구절에서 찾고, 없으면 일일 단어
+    // 단어: 구절에서 뽑은 단어 1개 + 일일 단어, 하루 3개
     const wv = findWordInVerse(verseText);
-    const w = wv || EN_WORDS[(day - 1) % Math.max(EN_WORDS.length, 1)];
-    renderEnglishWord(w, !!wv);
+    let wordList = dailyPick(EN_WORDS, 3, day).map(w => ({ w, fromVerse: false }));
+    if (wv) {
+      wordList = wordList.filter(it => it.w.w.toLowerCase() !== wv.w.toLowerCase());
+      wordList = [{ w: wv, fromVerse: true }, ...wordList].slice(0, 3);
+    }
+    renderEnglishWords(wordList);
 
-    // 표현: 구절에서 찾고, 없으면 일일 표현
+    // 표현: 구절에서 뽑은 표현 1개 + 일일 표현, 하루 2개
     const ev = findExprInVerse(verses);
-    const e = ev || EN_EXPR[(day - 1) % Math.max(EN_EXPR.length, 1)];
-    renderEnglishExpr(e, !!ev);
+    let exprList = dailyPick(EN_EXPR, 2, day).map(e => ({ e, fromVerse: false }));
+    if (ev) exprList = [{ e: ev, fromVerse: true }, exprList[0]];
+    renderEnglishExprs(exprList);
 
     // 성경 구절
     const fullText = verses.map(v => v.text).join(" ");
@@ -505,10 +525,8 @@ function renderEnglish() {
       <button class="btn eng-speak-wide" id="engVerseSpeak">🔊 영어로 듣기</button>`;
     updateVerseSpeakBtn();
     document.getElementById("engVerseSpeak").onclick = () => toggleVerseSpeak(fullText);
-    const w = EN_WORDS[(day - 1) % Math.max(EN_WORDS.length, 1)];
-    const e = EN_EXPR[(day - 1) % Math.max(EN_EXPR.length, 1)];
-    renderEnglishWord(w, false);
-    renderEnglishExpr(e, false);
+    renderEnglishWords(dailyPick(EN_WORDS, 3, day).map(w => ({ w, fromVerse: false })));
+    renderEnglishExprs(dailyPick(EN_EXPR, 2, day).map(e => ({ e, fromVerse: false })));
     engPracticeVerse = fullText;
     renderDictation(engPracticeVerse);
     renderSpeaking(engPracticeVerse);
