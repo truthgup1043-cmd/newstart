@@ -128,6 +128,8 @@ function showTtsError(msg) {
   tip.textContent = msg;
 }
 // 개선된 speak: 음성 로딩 대기 → 문장 분할 → 순차 재생
+// iOS 패치 (2026-10-25): 클릭 제스처 안에서 resume()으로 오디오 세션 깨우기,
+// cancel() 직후 짧은 지연으로 iOS의 speak 삼킴 현상 방지
 async function speakEnglish(text, opts = {}) {
   const onend = opts.onend || (() => { engSpeaking = false; updateVerseSpeakBtn(); });
   try {
@@ -136,7 +138,9 @@ async function speakEnglish(text, opts = {}) {
       onend();
       return;
     }
+    try { speechSynthesis.resume(); } catch {}
     speechSynthesis.cancel();
+    await new Promise(r => setTimeout(r, 200));
     stopEngResumeTimer();
     const voices = await waitForVoices();
     const v = pickEnglishVoice();
@@ -165,8 +169,8 @@ async function speakEnglish(text, opts = {}) {
       if (vv) u.voice = vv;
       u.onend = () => { idx++; speakNext(); };
       u.onerror = (e) => {
-        // interrupted(사용자 멈춤)는 정상 종료로 처리
-        if (e && e.error === "interrupted") { stopEngResumeTimer(); onend(); return; }
+        // interrupted(사용자 멈춤) / canceled(iOS에서 cancel() 시 발생)는 정상 종료로 처리
+        if (e && (e.error === "interrupted" || e.error === "canceled")) { stopEngResumeTimer(); onend(); return; }
         failed = true;
         stopEngResumeTimer();
         showTtsError("⚠️ 음성 재생에 실패했어요. (기기 음소거/무음 모드인지 확인해주세요)");
