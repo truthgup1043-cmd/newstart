@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-10-26";
+const PRAISE_UPDATED = "2026-10-27";
 const PRAISE_PICKS = [
-  { title: "내 영혼이 은총 입어", artist: "THE GRACE", url: "https://www.youtube.com/watch?v=kflgSn8xjsc" },
-  { title: "살아계신 주", artist: "연세중앙교회", url: "https://www.youtube.com/watch?v=dNL7qi9tWBs" },
-  { title: "하나님은 너를 지키시는 자", artist: "황은택", url: "https://www.youtube.com/watch?v=ouwMOJSHpGc" },
-  { title: "감사와 찬양 드리며", artist: "제이어스", url: "https://www.youtube.com/watch?v=IhfEn71j3Vk" },
-  { title: "주님의 사랑은", artist: "나엘", url: "https://www.youtube.com/watch?v=mL8nQfxviLA" },
-  { title: "생명의 강물", artist: "제이어스", url: "https://www.youtube.com/watch?v=pBhi7ZfXiRs" },
+  { title: "은혜로다", artist: "어노인팅", url: "https://www.youtube.com/watch?v=DiFkQt22fPs" },
+  { title: "내 삶은 주의 것", artist: "피아워십(F.I.A)", url: "https://www.youtube.com/watch?v=b1EtdzK6Ug4" },
+  { title: "그가 오신 이유", artist: "마커스워십", url: "https://www.youtube.com/watch?v=X2ghffeda80" },
+  { title: "입례", artist: "위러브", url: "https://www.youtube.com/watch?v=6Xdy8I6aGpg" },
+  { title: "예수 피를 힘입어", artist: "예수전도단", url: "https://www.youtube.com/watch?v=rHoT6_UjUQk" },
+  { title: "십자가 그 사랑이", artist: "장한이", url: "https://www.youtube.com/watch?v=pZtoT_Y-68A" },
 ];
