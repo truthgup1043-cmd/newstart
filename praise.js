@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
 const PRAISE_UPDATED = "2026-10-27";
 const PRAISE_PICKS = [
-  { title: "은혜로다", artist: "어노인팅", url: "https://www.youtube.com/watch?v=DiFkQt22fPs" },
-  { title: "내 삶은 주의 것", artist: "피아워십(F.I.A)", url: "https://www.youtube.com/watch?v=b1EtdzK6Ug4" },
-  { title: "그가 오신 이유", artist: "마커스워십", url: "https://www.youtube.com/watch?v=X2ghffeda80" },
-  { title: "입례", artist: "위러브", url: "https://www.youtube.com/watch?v=6Xdy8I6aGpg" },
-  { title: "예수 피를 힘입어", artist: "예수전도단", url: "https://www.youtube.com/watch?v=rHoT6_UjUQk" },
-  { title: "십자가 그 사랑이", artist: "장한이", url: "https://www.youtube.com/watch?v=pZtoT_Y-68A" },
+  { title: "주님 다시 오실 때까지", artist: "소향", url: "https://www.youtube.com/watch?v=B_U8CtpBIyA" },
+  { title: "예수 우리 왕이여", artist: "마커스워십", url: "https://www.youtube.com/watch?v=eX-KRtn8Dnc" },
+  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=ZfUNI1cGL1Q" },
+  { title: "요게벳의 노래", artist: "염평안", url: "https://www.youtube.com/watch?v=knI6bsXeg2U" },
+  { title: "주님 거기 계시나요", artist: "위로CCM", url: "https://www.youtube.com/watch?v=tfsgQWBivoc" },
+  { title: "성령의 바람", artist: "제이어스", url: "https://www.youtube.com/watch?v=qVrcGkart8M" },
 ];
