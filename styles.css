@@ -154,7 +154,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="homeschool"] { --tab-c: #c47a15; }
 .tab[data-tab="livingbooks"] { --tab-c: #bf5f1a; }
 .tab {
-  flex: 1 1 calc(25% - 6px); border: 1.5px solid var(--tab-c); background: #fff;
+  flex: 1 1 calc(20% - 6.4px); min-width: 0; border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 8px 4px; font-size: 14px; font-weight: 700;
   cursor: pointer; color: var(--tab-c);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
