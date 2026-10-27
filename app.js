@@ -420,7 +420,7 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 // ---------- 탭 ----------
-const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise", "homeschool"];
+const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise", "homeschool", "livingbooks"];
 function goToTab(tabId) {
   const btn = document.querySelector('.tab[data-tab="' + tabId + '"]');
   if (btn) btn.click();
@@ -535,6 +535,41 @@ function renderHomeschool() {
 }
 renderHomeschool();
 
+// ---------- 살아있는 책 탭 ----------
+function renderLivingBooks() {
+  const d = LIVINGBOOKS_DATA;
+  const sumByTitle = {};
+  d.summaries.forEach(s => { sumByTitle[s.title] = s; });
+  const latest = d.summaries[d.summaries.length - 1];
+  let idx = 0;
+  let html = "";
+  d.subjects.forEach(sub => {
+    html += `<h4>${sub.name}</h4>`;
+    sub.books.forEach(b => {
+      const id = "lb-" + (idx++);
+      const s = sumByTitle[b.title];
+      const isOpen = !!(s && latest && s.title === latest.title);
+      const meta = [b.author, b.korean ? "한국어판 있음" : "", b.later ? "나중에" : "", b.note].filter(x => x).join(" · ");
+      html += `
+    <div class="card gospel-card${isOpen ? " open" : ""}" id="${id}">
+      <div class="gospel-toggle" onclick="document.getElementById('${id}').classList.toggle('open')">
+        <div>
+          <div class="gospel-kicker">${sub.name}</div>
+          <div class="gospel-title">${b.title}</div>
+          <div class="gospel-meta">${meta}</div>
+        </div>
+        <div class="go">›</div>
+      </div>
+      <div class="gospel-body">
+        ${s ? s.paragraphs.map(p => `<p>${p}</p>`).join("") : `<p>${b.note}</p><p>요약 준비 중입니다. 매주 금요일 한 권씩 추가됩니다.</p>`}
+      </div>
+    </div>`;
+    });
+  });
+  document.getElementById("livingbooksList").innerHTML = html;
+}
+renderLivingBooks();
+
 // ---------- 추천 찬양 ----------
 function renderPraise() {
   document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매일 갱신`;
@@ -604,6 +639,7 @@ const TABS_CONFIG = [
   { id: "english", name: "영어" },
   { id: "praise", name: "찬양" },
   { id: "homeschool", name: "홈스쿨" },
+  { id: "livingbooks", name: "살아있는 책" },
 ];
 function getTabVisibility() {
   try {
