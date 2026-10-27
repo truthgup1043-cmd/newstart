@@ -3,17 +3,6 @@ const SUPABASE_URL = "https://ztehhjsrffmawwtshddb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZWhoanNyZmZtYXd3dHNoZGRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMjg0NzYsImV4cCI6MjEwNzcwNDQ3Nn0.n_uIm2kqjgxaA4BpsQ_FFE_4EIMXzqLd41wqXtX4P-s";
 
 const ROUTINES = [
-  { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
-  { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
-    value: {
-      fields: [
-        { key: "prayer_minutes", dbCol: "minutes", label: "기도한 시간 수동입력", unit: "분", presets: [5, 10, 20, 30, 60], def: 30 },
-      ],
-      doneText: s => s.prayer_minutes != null ? `오늘 ${s.prayer_minutes}분 기도` : "완료",
-    } },
-  { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5" },
-  { id: "gospel", name: "복음 읽기", emoji: "✝️", sub: "오늘의 복음 연구", color: "#b7791f" },
-  { id: "catechism", name: "문답 공부", emoji: "❓", sub: "오늘의 문답", color: "#a05a2c" },
   { id: "sleep", name: "수면", emoji: "😴", sub: "푹 쉬기", color: "#5568b0",
     value: {
       fields: [
@@ -35,6 +24,17 @@ const ROUTINES = [
         return parts.length ? parts.join(" · ") : "완료";
       },
     } },
+  { id: "meditation", name: "QT", emoji: "💭", sub: "말씀 묵상", color: "#8a6fbf" },
+  { id: "prayer", name: "기도", emoji: "🙏", sub: "하루를 기도로 시작", color: "#4a7c59",
+    value: {
+      fields: [
+        { key: "prayer_minutes", dbCol: "minutes", label: "기도한 시간 수동입력", unit: "분", presets: [5, 10, 20, 30, 60], def: 30 },
+      ],
+      doneText: s => s.prayer_minutes != null ? `오늘 ${s.prayer_minutes}분 기도` : "완료",
+    } },
+  { id: "bible", name: "성경 읽기", emoji: "📖", sub: "말씀 한 장이라도", color: "#4a6fa5" },
+  { id: "gospel", name: "복음 읽기", emoji: "✝️", sub: "오늘의 복음 연구", color: "#b7791f" },
+  { id: "catechism", name: "문답 공부", emoji: "❓", sub: "오늘의 문답", color: "#a05a2c" },
   { id: "english", name: "영어 공부", emoji: "🔤", sub: "오늘의 영어", color: "#2a9d8f" },
   { id: "praise", name: "찬양", emoji: "🎵", sub: "마음으로 찬양", color: "#c05a7a" },
   { id: "reading", name: "독서", emoji: "📚", sub: "책 읽는 시간", color: "#6a5acd",
