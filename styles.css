@@ -151,6 +151,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="praise"] { --tab-c: #e0704a; }
 .tab[data-tab="english"] { --tab-c: #e8a33d; }
 .tab[data-tab="reading"] { --tab-c: #d67e2e; }
+.tab[data-tab="homeschool"] { --tab-c: #c47a15; }
 .tab {
   flex: 1 1 calc(25% - 6px); border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 8px 4px; font-size: 14px; font-weight: 700;
@@ -173,6 +174,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 #panel-bible h2 { color: #9a6526; }
 #panel-praise h2 { color: #c25a38; }
 #panel-english h2 { color: #c07f1a; }
+#panel-homeschool h2 { color: #8a5410; }
 
 /* 공용 카드 */
 .card {

@@ -54,6 +54,7 @@
     <button class="tab" data-tab="catechism">문답</button>
     <button class="tab" data-tab="english">영어</button>
     <button class="tab" data-tab="praise">찬양</button>
+    <button class="tab" data-tab="homeschool">홈스쿨</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -254,9 +255,17 @@
     </section>
     <div id="biblePassages"></div>
   </div>
+  <div class="tab-panel hidden" id="panel-homeschool">
+    <section class="stats">
+      <h2>홈스쿨</h2>
+      <p class="qt-note" style="margin-bottom:12px">처치홈스쿨 자료 모음 — 눌러서 펼쳐 읽기</p>
+      <div id="homeschoolList"></div>
+    </section>
+  </div>
 </div>
 <script src="qt.js"></script>
 <script src="gospel.js"></script>
+<script src="homeschool.js"></script>
 <script src="praise.js"></script>
 <script src="mcheyne.js"></script>
 <script src="bible.js"></script>

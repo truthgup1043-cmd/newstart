@@ -420,7 +420,7 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 // ---------- 탭 ----------
-const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise"];
+const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise", "homeschool"];
 function goToTab(tabId) {
   const btn = document.querySelector('.tab[data-tab="' + tabId + '"]');
   if (btn) btn.click();
@@ -507,6 +507,34 @@ function renderGospel() {
 }
 renderGospel();
 
+// ---------- 홈스쿨 탭 ----------
+function renderHomeschool() {
+  const listHtml = HOMESCHOOL_DATA.entries.map((e, i) => `
+    <div class="card gospel-card${i === 0 ? " open" : ""}" id="hs-${i}">
+      <div class="gospel-toggle" onclick="document.getElementById('hs-${i}').classList.toggle('open')">
+        <div>
+          <div class="gospel-kicker">${e.date}</div>
+          <div class="gospel-title">${e.title}</div>
+          <div class="gospel-meta">${e.subtitle}</div>
+        </div>
+        <div class="go">›</div>
+      </div>
+      <div class="gospel-body">
+        ${e.sections.map(sec => `
+          <h4>${sec.h}</h4>
+          <ul>${sec.items.map(item => `<li>${item}</li>`).join("")}</ul>
+        `).join("")}
+        <h4>강의에서 풀어야 할 열린 질문</h4>
+        <ul>${e.questions.map(q => `<li>${q}</li>`).join("")}</ul>
+        <h4>참고 문헌</h4>
+        <ul>${e.refs.map(r => `<li>${r}</li>`).join("")}</ul>
+      </div>
+    </div>`).join("");
+
+  document.getElementById("homeschoolList").innerHTML = listHtml;
+}
+renderHomeschool();
+
 // ---------- 추천 찬양 ----------
 function renderPraise() {
   document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매일 갱신`;
@@ -575,6 +603,7 @@ const TABS_CONFIG = [
   { id: "catechism", name: "문답" },
   { id: "english", name: "영어" },
   { id: "praise", name: "찬양" },
+  { id: "homeschool", name: "홈스쿨" },
 ];
 function getTabVisibility() {
   try {
