@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-10-27";
+const PRAISE_UPDATED = "2026-10-28";
 const PRAISE_PICKS = [
-  { title: "주님 다시 오실 때까지", artist: "소향", url: "https://www.youtube.com/watch?v=B_U8CtpBIyA" },
-  { title: "예수 우리 왕이여", artist: "마커스워십", url: "https://www.youtube.com/watch?v=eX-KRtn8Dnc" },
-  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=ZfUNI1cGL1Q" },
-  { title: "요게벳의 노래", artist: "염평안", url: "https://www.youtube.com/watch?v=knI6bsXeg2U" },
-  { title: "주님 거기 계시나요", artist: "위로CCM", url: "https://www.youtube.com/watch?v=tfsgQWBivoc" },
-  { title: "성령의 바람", artist: "제이어스", url: "https://www.youtube.com/watch?v=qVrcGkart8M" },
+  { title: "주 은혜로", artist: "마커스워십", url: "https://www.youtube.com/watch?v=YkNmp2-qBEQ" },
+  { title: "온전케 되리", artist: "마커스워십", url: "https://www.youtube.com/watch?v=7K8SIpmlZ3U" },
+  { title: "Amazing Grace", artist: "소향", url: "https://www.youtube.com/watch?v=M7OXYs1J8p4" },
+  { title: "새로운 바람", artist: "아가파오 워십", url: "https://www.youtube.com/watch?v=R6fTNTd3Mr4" },
+  { title: "새 일이 일어나네", artist: "아가파오 워십", url: "https://www.youtube.com/watch?v=_kLl8WDjzmU" },
+  { title: "은혜의 힘 입니다", artist: "김정석", url: "https://www.youtube.com/watch?v=lpMIogq9aOk" },
 ];
