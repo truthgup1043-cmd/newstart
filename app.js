@@ -639,7 +639,7 @@ const TABS_CONFIG = [
   { id: "english", name: "영어" },
   { id: "praise", name: "찬양" },
   { id: "homeschool", name: "홈스쿨" },
-  { id: "livingbooks", name: "살아있는 책" },
+  { id: "livingbooks", name: "리빙북" },
 ];
 function getTabVisibility() {
   try {
