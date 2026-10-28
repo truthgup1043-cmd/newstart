@@ -142,7 +142,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   position: sticky; top: 0; z-index: 20;
   background: var(--bg); padding: 10px 0;
 }
-/* 탭별 주황 계열 테마 컬러 */
+/* 탭별 테마 컬러 (홈스쿨·리빙북은 찐초록) */
 .tab[data-tab="routine"] { --tab-c: #e8833a; }
 .tab[data-tab="qt"] { --tab-c: #d9a441; }
 .tab[data-tab="gospel"] { --tab-c: #c96a2b; }
@@ -151,8 +151,8 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="praise"] { --tab-c: #e0704a; }
 .tab[data-tab="english"] { --tab-c: #e8a33d; }
 .tab[data-tab="reading"] { --tab-c: #d67e2e; }
-.tab[data-tab="homeschool"] { --tab-c: #c47a15; }
-.tab[data-tab="livingbooks"] { --tab-c: #bf5f1a; }
+.tab[data-tab="homeschool"] { --tab-c: #1b5e20; }
+.tab[data-tab="livingbooks"] { --tab-c: #1b5e20; }
 .tab {
   flex: 1 1 calc(20% - 6.4px); min-width: 0; border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 8px 4px; font-size: 14px; font-weight: 700;
@@ -175,8 +175,15 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 #panel-bible h2 { color: #9a6526; }
 #panel-praise h2 { color: #c25a38; }
 #panel-english h2 { color: #c07f1a; }
-#panel-homeschool h2 { color: #8a5410; }
-#panel-livingbooks h2 { color: #7d3f0e; }
+#panel-homeschool h2 { color: #1b5e20; }
+#panel-livingbooks h2 { color: #1b5e20; }
+/* 홈스쿨·리빙북 탭 찐초록 스타일 */
+#panel-homeschool .gospel-title, #panel-livingbooks .gospel-title { color: #1b5e20; }
+#panel-homeschool .gospel-body h4, #panel-livingbooks .gospel-body h4 { color: #1b5e20; }
+.tab[data-tab="homeschool"].active, .tab[data-tab="livingbooks"].active {
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
+  box-shadow: 0 3px 10px rgba(27,94,32,.45);
+}
 
 /* 공용 카드 */
 .card {
@@ -210,6 +217,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
   padding: 18px; text-decoration: none; color: inherit; margin-bottom: 12px;
 }
 .link-card .go { font-size: 26px; color: var(--muted); margin-left: auto; }
+.praise-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
 .qt-note { font-size: 12px; color: var(--muted); line-height: 1.6; }
 .qt-nav { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
 

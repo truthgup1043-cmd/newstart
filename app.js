@@ -579,6 +579,7 @@ function renderPraise() {
       <div class="info">
         <div class="name">${p.title}</div>
         <div class="sub">${p.artist}</div>
+        ${p.desc ? `<div class="praise-desc">${p.desc}</div>` : ""}
       </div>
       <div class="go">›</div>
     </a>`).join("");
