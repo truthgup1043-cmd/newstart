@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-10-28";
+const PRAISE_UPDATED = "2026-10-29";
 const PRAISE_PICKS = [
-  { title: "주 예수보다 더 귀한 것은 없네", artist: "패밀리워십", url: "https://www.youtube.com/watch?v=HsGoXMm1g5k", desc: "예수님 한 분이면 충분하다는 고백을 담은 찬양. 마음을 단순하게 주님께 모으고 싶을 때 좋아요." },
-  { title: "내 영혼이 은총입어", artist: "노승찬", url: "https://www.youtube.com/watch?v=pyMgApvOvQo", desc: "은혜로 구원받은 영혼의 기쁨을 노래한 곡. 잔잔하게 묵상하며 듣기 좋아요." },
-  { title: "전능하신 나의 주 하나님은", artist: "마커스워십", url: "https://www.youtube.com/watch?v=9vS0aGxVHjk", desc: "전능하신 하나님을 높이는 경배곡. 함께 부르며 예배의 문을 열 때 잘 어울려요." },
-  { title: "다시 일어나", artist: "위러브", url: "https://www.youtube.com/watch?v=--SaZQWI-Eg", desc: "넘어진 자리에서 다시 일어나 걷자는 격려의 곡. 지친 하루에 힘을 주는 찬양이에요." },
-  { title: "주는 선하시며", artist: "목소리상점", url: "https://www.youtube.com/watch?v=c-mTSU3oxwk", desc: "주님의 선하심을 찬양하는 곡. 일상의 감사 제목을 떠올리며 듣기 좋아요." },
-  { title: "여호와께 돌아가자", artist: "조수아", url: "https://www.youtube.com/watch?v=UV7fZ-NYoHU", desc: "주님께로 돌아가자는 초대의 곡. 마음을 돌이키는 결단의 시간에 어울려요." },
+  { title: "원하고 바라고 기도합니다", artist: "찬미워십 (민호기)", url: "https://www.youtube.com/watch?v=eoDsJr7LF-0", desc: "하나님의 마음을 품고 그 뜻대로 살아가기를 소망하는 고백. 하루의 방향을 주님께 여는 기도의 찬양이에요." },
+  { title: "꽃들도 (花も)", artist: "JWorship", url: "https://www.youtube.com/watch?v=BjNL5BA6kYQ", desc: "만물이 주의 영광을 노래하듯 우리의 입술로 주를 높이는 은혜. 눈물 골짝을 지나 열매 맺는 소망을 담은 곡이에요." },
+  { title: "주를 위한 이곳에", artist: "마커스워십", url: "https://www.youtube.com/watch?v=nw2k8voTATM", desc: "오직 주님만이 영광 받으시는 진정한 예배의 자리. 예배자로 서고 싶다는 갈망을 노래해요." },
+  { title: "내 모든 삶의 행동 주 안에", artist: "어노인팅", url: "https://www.youtube.com/watch?v=UPDiYmGBqh8", desc: "호흡마다 주의 거룩하심을 누리는 일상의 예배. 하루의 모든 걸음을 주 안에 두고 싶은 마음의 찬양이에요." },
+  { title: "하나님의 부르심", artist: "피아워십 (F.I.A)", url: "https://www.youtube.com/watch?v=ovjWMKsks2Y", desc: "거룩한 부르심 앞에 온전한 헌신으로 화답하는 찬양. '여기 내가 있나이다'라는 결단의 시간에 어울려요." },
+  { title: "오직 예수뿐이네", artist: "마커스워십", url: "https://www.youtube.com/watch?v=gfNH21Q9tOk", desc: "십자가 은혜 외에는 자랑할 것이 없는 영혼의 찬양. 은혜 아니면 살 수 없다는 고백을 다시 노래해요." },
 ];
