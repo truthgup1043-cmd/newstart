@@ -316,13 +316,14 @@ function renderDictation(verseText) {
 }
 
 /* --- 🗣️ 따라 말하기 --- */
-function renderSpeaking(verseText) {
+function renderSpeaking(verseText, verseKo) {
   const el = document.getElementById("engSpeaking");
   if (!el) return;
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   el.innerHTML = `
     <p class="qt-note">구절을 소리 내어 읽어보세요. 음성 인식이 되면 발음을 체크해드려요.</p>
     <div class="eng-verse-en" style="margin:8px 0">"${verseText.replace(/</g, "&lt;")}"</div>
+    ${verseKo ? `<div class="eng-verse-ko">${verseKo.replace(/</g, "&lt;")}</div>` : ""}
     <div class="eng-practice-row">
       <button class="btn eng-speak" id="engSpkListen">🔊 원어민 듣기</button>
       ${SR ? `<button class="btn" id="engSpkRec">🎤 말하기 시작</button>` : ``}
@@ -515,7 +516,7 @@ function renderEnglish() {
     // 쓰기·말하기 연습 (첫 번째 구절 기준)
     engPracticeVerse = verses[0].text;
     renderDictation(engPracticeVerse);
-    renderSpeaking(engPracticeVerse);
+    renderSpeaking(engPracticeVerse, verses[0].ko || "");
     renderBlanks(engPracticeVerse);
   }).catch(() => {
     // 구절 실패 시 내장 구절로 대체
@@ -533,7 +534,7 @@ function renderEnglish() {
     renderEnglishExprs(dailyPick(EN_EXPR, 2, day).map(e => ({ e, fromVerse: false })));
     engPracticeVerse = fullText;
     renderDictation(engPracticeVerse);
-    renderSpeaking(engPracticeVerse);
+    renderSpeaking(engPracticeVerse, verses[0].ko || "");
     renderBlanks(engPracticeVerse);
   });
 
