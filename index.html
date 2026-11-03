@@ -75,6 +75,7 @@
     <button class="tab" data-tab="praise">찬양</button>
     <button class="tab" data-tab="homeschool">홈스쿨</button>
     <button class="tab" data-tab="livingbooks">리빙북</button>
+    <button class="tab" data-tab="relation">관계</button>
   </nav>
 
   <div class="tab-panel" id="panel-routine">
@@ -289,11 +290,34 @@
       <div id="livingbooksList"></div>
     </section>
   </div>
+  <div class="tab-panel hidden" id="panel-relation">
+    <section class="stats">
+      <h2>관계</h2>
+      <p class="qt-note" style="margin-bottom:12px">주변 사람들에게 먼저 연락하는 작은 미션 — 매일 새로고침돼요</p>
+      <div id="relationMission"></div>
+      <h3 class="rel-h">💡 오늘의 연락 내용 추천</h3>
+      <div id="relationSuggest"></div>
+      <h3 class="rel-h">👥 연락 대상 <span class="rel-sub">범위를 정하면 매일 그 안에서 추천해줘요</span></h3>
+      <div id="relationScope" class="chips" style="margin-bottom:10px"></div>
+      <div class="rel-add">
+        <input id="relName" type="text" placeholder="이름" class="auth-input" style="margin-bottom:8px">
+        <select id="relGroup" class="auth-input" style="margin-bottom:8px">
+          <option value="가족">가족</option>
+          <option value="친구">친구</option>
+          <option value="교회 식구">교회 식구</option>
+          <option value="기타">기타</option>
+        </select>
+        <button class="btn primary" id="relAddBtn" style="width:100%">등록하기</button>
+      </div>
+      <div id="relationList" style="margin-top:10px"></div>
+    </section>
+  </div>
 </div>
 <script src="qt.js"></script>
 <script src="gospel.js"></script>
 <script src="homeschool.js"></script>
 <script src="livingbooks.js"></script>
+<script src="relation.js"></script>
 <script src="praise.js"></script>
 <script src="mcheyne.js"></script>
 <script src="bible.js"></script>

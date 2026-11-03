@@ -420,7 +420,7 @@ document.getElementById("todayLabel").textContent =
   new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
 
 // ---------- 탭 ----------
-const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise", "homeschool", "livingbooks"];
+const TAB_ORDER = ["routine", "qt", "bible", "gospel", "reading", "catechism", "english", "praise", "homeschool", "livingbooks", "relation"];
 function goToTab(tabId) {
   const btn = document.querySelector('.tab[data-tab="' + tabId + '"]');
   if (btn) btn.click();
@@ -446,6 +446,7 @@ document.querySelectorAll(".tab").forEach(t => {
     if (t.dataset.tab === "catechism") renderCatechism();
     if (t.dataset.tab === "qt") renderQtArchive();
     if (t.dataset.tab === "reading" && typeof renderReading === "function") renderReading();
+    if (t.dataset.tab === "relation") renderRelation();
   };
 });
 
@@ -571,6 +572,169 @@ function renderLivingBooks() {
 }
 renderLivingBooks();
 
+// ---------- 관계 탭 ----------
+const RELATION_GROUPS = ["가족", "친구", "교회 식구", "기타"];
+function getRelationPeople() {
+  try { return JSON.parse(localStorage.getItem("relation-people") || "[]"); }
+  catch { return []; }
+}
+function saveRelationPeople(p) {
+  localStorage.setItem("relation-people", JSON.stringify(p));
+}
+function getRelationScope() {
+  return localStorage.getItem("relation-scope") || "전체";
+}
+function getRelationDoneMap() {
+  try { return JSON.parse(localStorage.getItem("relation-done") || "{}"); }
+  catch { return {}; }
+}
+function relationTodayKey(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function relationDayOfYear(d) {
+  return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+}
+let relationShuffle = null;
+function relationCopy(text, btn) {
+  const done = () => {
+    const old = btn.textContent;
+    btn.textContent = "복사됨 ✓";
+    setTimeout(() => { btn.textContent = old; }, 1200);
+  };
+  const fallback = () => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else fallback();
+}
+function renderRelation() {
+  const now = new Date();
+  const doy = relationDayOfYear(now);
+  const tkey = relationTodayKey(now);
+  const people = getRelationPeople();
+  const scope = getRelationScope();
+  const inScope = scope === "전체" ? people : people.filter(p => p.group === scope);
+  const doneName = getRelationDoneMap()[tkey];
+
+  let pick = null, pickIdx = -1;
+  if (inScope.length) {
+    pickIdx = (relationShuffle !== null ? relationShuffle : doy) % inScope.length;
+    pick = inScope[pickIdx];
+  }
+
+  let missionHtml = "";
+  if (doneName) {
+    missionHtml = `<div class="card rel-mission done">
+      <div class="rel-kicker">오늘의 연락 미션</div>
+      <div class="rel-done-msg">🎉 완료! 오늘 ${doneName}님에게 연락했어요.<br>작은 안부가 큰 힘이 됩니다.</div>
+    </div>`;
+  } else if (pick) {
+    missionHtml = `<div class="card rel-mission">
+      <div class="rel-kicker">오늘의 연락 미션</div>
+      <div class="rel-person">${pick.name} <span class="rel-group-tag">${pick.group}</span></div>
+      <p class="rel-guide">막막하시죠? 아래 추천 내용 중 마음에 드는 걸 골라 그대로 보내보세요.<br>짧은 안부 한 줄이면 충분해요.</p>
+      <div class="rel-btn-row">
+        <button class="btn primary" id="relDoneBtn">연락 완료 ✅</button>
+        <button class="btn" id="relShuffleBtn">다른 사람으로</button>
+      </div>
+    </div>`;
+  } else {
+    missionHtml = `<div class="card rel-mission">
+      <div class="rel-kicker">오늘의 연락 미션</div>
+      <p class="rel-guide">아래에서 연락하고 싶은 사람을 먼저 등록해보세요.<br>등록해두면 매일 범위 안에서 한 분씩 추천해드려요.</p>
+    </div>`;
+  }
+  document.getElementById("relationMission").innerHTML = missionHtml;
+
+  const verse = RELATION_VERSES[doy % RELATION_VERSES.length];
+  const quote = RELATION_QUOTES[doy % RELATION_QUOTES.length];
+  const greet = RELATION_GREETINGS[doy % RELATION_GREETINGS.length].replace("{이름}", pick ? pick.name : "○○○");
+  const verseText = `📖 "${verse.text}" (${verse.ref})`;
+  const quoteText = `✍️ "${quote.text}" — ${quote.by}`;
+  document.getElementById("relationSuggest").innerHTML = `
+    <div class="card rel-sug">
+      <div class="rel-sug-head"><span>📖 오늘의 말씀</span><button class="link-btn" data-copy="${encodeURIComponent(verseText)}">복사</button></div>
+      <p class="rel-sug-text">"${verse.text}"</p>
+      <p class="rel-sug-ref">${verse.ref}</p>
+    </div>
+    <div class="card rel-sug">
+      <div class="rel-sug-head"><span>✍️ 좋은 글귀</span><button class="link-btn" data-copy="${encodeURIComponent(quoteText)}">복사</button></div>
+      <p class="rel-sug-text">"${quote.text}"</p>
+      <p class="rel-sug-ref">— ${quote.by}</p>
+    </div>
+    <div class="card rel-sug">
+      <div class="rel-sug-head"><span>💬 안부 인사</span><button class="link-btn" data-copy="${encodeURIComponent("💬 " + greet)}">복사</button></div>
+      <p class="rel-sug-text">${greet}</p>
+    </div>`;
+  document.querySelectorAll("#relationSuggest [data-copy]").forEach(b => {
+    b.onclick = () => relationCopy(decodeURIComponent(b.dataset.copy), b);
+  });
+
+  const scopes = ["전체", ...RELATION_GROUPS];
+  document.getElementById("relationScope").innerHTML = scopes.map(s =>
+    `<button class="chip${scope === s ? " sel" : ""}" data-scope="${s}">${s}</button>`
+  ).join("");
+  document.querySelectorAll("#relationScope .chip").forEach(c => {
+    c.onclick = () => {
+      localStorage.setItem("relation-scope", c.dataset.scope);
+      relationShuffle = null;
+      renderRelation();
+    };
+  });
+
+  document.getElementById("relationList").innerHTML = people.length ? people.map((p, i) => `
+    <div class="rel-row">
+      <div><strong>${p.name}</strong> <span class="rel-group-tag">${p.group}</span></div>
+      <button class="link-btn" data-del="${i}">삭제</button>
+    </div>`).join("")
+    : `<p class="qt-note">아직 등록된 사람이 없어요. 위에서 추가해보세요.</p>`;
+  document.querySelectorAll("#relationList [data-del]").forEach(b => {
+    b.onclick = () => {
+      const arr = getRelationPeople();
+      arr.splice(Number(b.dataset.del), 1);
+      saveRelationPeople(arr);
+      relationShuffle = null;
+      renderRelation();
+    };
+  });
+
+  const doneBtn = document.getElementById("relDoneBtn");
+  if (doneBtn) doneBtn.onclick = () => {
+    const m = getRelationDoneMap();
+    m[tkey] = pick.name;
+    localStorage.setItem("relation-done", JSON.stringify(m));
+    relationShuffle = null;
+    renderRelation();
+  };
+  const shBtn = document.getElementById("relShuffleBtn");
+  if (shBtn) shBtn.onclick = () => {
+    if (inScope.length > 1) {
+      let n;
+      do { n = Math.floor(Math.random() * inScope.length); } while (n === pickIdx);
+      relationShuffle = n;
+    }
+    renderRelation();
+  };
+  document.getElementById("relAddBtn").onclick = () => {
+    const nameEl = document.getElementById("relName");
+    const name = nameEl.value.trim();
+    const group = document.getElementById("relGroup").value;
+    if (!name) { nameEl.focus(); return; }
+    const arr = getRelationPeople();
+    arr.push({ name, group });
+    saveRelationPeople(arr);
+    nameEl.value = "";
+    relationShuffle = null;
+    renderRelation();
+  };
+}
+
 // ---------- 추천 찬양 ----------
 function renderPraise() {
   const updated = (typeof PRAISE_UPDATED !== "undefined" ? PRAISE_UPDATED : "");
@@ -647,6 +811,7 @@ const TABS_CONFIG = [
   { id: "praise", name: "찬양" },
   { id: "homeschool", name: "홈스쿨" },
   { id: "livingbooks", name: "리빙북" },
+  { id: "relation", name: "관계" },
 ];
 function getTabVisibility() {
   try {

@@ -153,6 +153,7 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .tab[data-tab="reading"] { --tab-c: #d67e2e; }
 .tab[data-tab="homeschool"] { --tab-c: #1b5e20; }
 .tab[data-tab="livingbooks"] { --tab-c: #1b5e20; }
+.tab[data-tab="relation"] { --tab-c: #c65d7b; }
 .tab {
   flex: 1 1 calc(20% - 6.4px); min-width: 0; border: 1.5px solid var(--tab-c); background: #fff;
   border-radius: 12px; padding: 8px 4px; font-size: 14px; font-weight: 700;
@@ -201,6 +202,25 @@ header h1 { font-size: 26px; letter-spacing: -0.5px; }
 .auth-btn { width: 100%; margin-bottom: 8px; padding: 13px; font-size: 15px; }
 .auth-label { display: block; font-size: 13px; font-weight: 600; margin: 2px 0 6px; }
 #signupView .auth-input { margin-bottom: 12px; }
+
+/* 관계 탭 */
+.rel-h { font-size: 16px; margin: 18px 0 10px; }
+.rel-sub { font-size: 12px; color: var(--muted); font-weight: 400; }
+.rel-mission { margin-bottom: 12px; border-left: 4px solid #c65d7b; }
+.rel-mission.done { border-left-color: #4a7c59; }
+.rel-kicker { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.rel-person { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.rel-group-tag { font-size: 12px; font-weight: 600; background: #f6e3e8; color: #c65d7b; border-radius: 99px; padding: 3px 10px; vertical-align: middle; }
+.rel-guide { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+.rel-btn-row { display: flex; gap: 8px; }
+.rel-btn-row .btn { flex: 1; }
+.rel-done-msg { font-size: 15px; line-height: 1.7; }
+.rel-sug { margin-bottom: 10px; }
+.rel-sug-head { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+.rel-sug-text { font-size: 15px; line-height: 1.8; }
+.rel-sug-ref { font-size: 13px; color: var(--muted); margin-top: 4px; text-align: right; }
+.rel-add { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+.rel-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 4px; border-bottom: 1px solid var(--line); font-size: 15px; }
 .auth-err { color: #c0392b; font-size: 13px; margin: 8px 0; min-height: 18px; line-height: 1.5; }
 .user-row { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .link-btn { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; padding: 0; }
