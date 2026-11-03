@@ -520,14 +520,14 @@ function renderHomeschool() {
         <div class="go">›</div>
       </div>
       <div class="gospel-body">
-        ${e.sections.map(sec => `
+        ${(e.sections || []).map(sec => `
           <h4>${sec.h}</h4>
-          <ul>${sec.items.map(item => `<li>${item}</li>`).join("")}</ul>
+          <ul>${(sec.items || []).map(item => `<li>${item}</li>`).join("")}</ul>
         `).join("")}
         <h4>강의에서 풀어야 할 열린 질문</h4>
-        <ul>${e.questions.map(q => `<li>${q}</li>`).join("")}</ul>
+        <ul>${(e.questions || []).map(q => `<li>${q}</li>`).join("")}</ul>
         <h4>참고 문헌</h4>
-        <ul>${e.refs.map(r => `<li>${r}</li>`).join("")}</ul>
+        <ul>${(e.refs || []).map(r => `<li>${r}</li>`).join("")}</ul>
       </div>
     </div>`).join("");
 
@@ -537,13 +537,14 @@ renderHomeschool();
 
 // ---------- 살아있는 책 탭 ----------
 function renderLivingBooks() {
-  const d = LIVINGBOOKS_DATA;
+  const d = (typeof LIVINGBOOKS_DATA !== "undefined" && LIVINGBOOKS_DATA) || {};
   const sumByTitle = {};
-  d.summaries.forEach(s => { sumByTitle[s.title] = s; });
-  const latest = d.summaries[d.summaries.length - 1];
+  (d.summaries || []).forEach(s => { sumByTitle[s.title] = s; });
+  const sums = d.summaries || [];
+  const latest = sums[sums.length - 1];
   let idx = 0;
   let html = "";
-  d.subjects.forEach(sub => {
+  (d.subjects || []).forEach(sub => {
     html += `<h4>${sub.name}</h4>`;
     sub.books.forEach(b => {
       const id = "lb-" + (idx++);
@@ -561,7 +562,7 @@ function renderLivingBooks() {
         <div class="go">›</div>
       </div>
       <div class="gospel-body">
-        ${s ? s.paragraphs.map(p => `<p>${p}</p>`).join("") : `<p>${b.note}</p><p>요약 준비 중입니다. 매주 금요일 한 권씩 추가됩니다.</p>`}
+        ${s ? (s.paragraphs || []).map(p => `<p>${p}</p>`).join("") : `<p>${b.note}</p><p>요약 준비 중입니다. 매주 금요일 한 권씩 추가됩니다.</p>`}
       </div>
     </div>`;
     });
@@ -572,8 +573,10 @@ renderLivingBooks();
 
 // ---------- 추천 찬양 ----------
 function renderPraise() {
-  document.getElementById("praiseUpdated").textContent = `업데이트: ${PRAISE_UPDATED} · 매일 갱신`;
-  document.getElementById("praisePicks").innerHTML = PRAISE_PICKS.map((p, i) => `
+  const updated = (typeof PRAISE_UPDATED !== "undefined" ? PRAISE_UPDATED : "");
+  const picks = (typeof PRAISE_PICKS !== "undefined" && PRAISE_PICKS) || [];
+  document.getElementById("praiseUpdated").textContent = `업데이트: ${updated} · 매일 갱신`;
+  document.getElementById("praisePicks").innerHTML = picks.map((p, i) => `
     <a class="link-card" href="${p.url}" target="_blank" rel="noopener" data-praise-idx="${i}">
       <div class="emoji">🎵</div>
       <div class="info">
