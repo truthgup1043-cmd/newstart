@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-02";
+const PRAISE_UPDATED = "2026-11-03";
 const PRAISE_PICKS = [
-  { title: "주 하나님 지으신 모든 세계", artist: "김범수", url: "https://www.youtube.com/watch?v=XWBG8Q263d4", desc: "창조주 하나님의 위대하심을 노래하는 찬송가 79장. 김범수의 진중한 목소리로 다시 들어보는 주일 아침 묵상에 좋은 곡이에요." },
-  { title: "내 평생에 가는 길", artist: "아이자야씩스티원 (THE GOSPEL Part 3)", url: "https://www.youtube.com/watch?v=AHPro2j5y1M", desc: "어떤 풍파 중에도 '내 영혼 평안하다' 고백하는 찬송가 413장. 마음을 다시 세우고 싶을 때, 고된 하루 끝에 들어보세요." },
-  { title: "주님 발 앞에서", artist: "어노인팅 (어노인팅 10집)", url: "https://www.youtube.com/watch?v=jlKjx6sdTlY", desc: "주님 발 앞에서 무릎 꿇는 예배자의 고백을 담은 어노인팅 10집 대표곡. 기도로 하루를 시작하고 싶을 때 어울리는 곡이에요." },
-  { title: "대단한 믿음 없어도", artist: "마커스워십 (마커스워십 2017)", url: "https://www.youtube.com/watch?v=MEe7PZFszXg", desc: "대단한 믿음 없어도 연약한 나를 사용하시는 주님을 노래하는 곡. 자격 없음에 주눅 들 때 위로가 되는 고백이에요." },
-  { title: "모닥불", artist: "콜링콰이어 (BORN FIRE)", url: "https://www.youtube.com/watch?v=jKdQVbeaqe4", desc: "작은 불씨도 결코 꺼지지 않는다는 메시지의 힙합 가스펠. 지친 마음에 온기를 불어넣고 싶을 때, 출근길에 들어보세요." },
-  { title: "하나님의 부르심", artist: "피아워십 (원곡 손경민)", url: "https://www.youtube.com/watch?v=dLp1_vFVdg4", desc: "'하나님의 부르심에는 후회하심이 없네' — 날 부르신 뜻을 신뢰하자는 피아워십의 고백. 진로와 사명을 놓고 기도할 때 듣기 좋은 곡이에요." },
+  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=kEizv1i6s9c", desc: "내가 누려온 모든 것이 당연한 게 아닌 '은혜'였음을 고백하는 손경민 목사의 대표곡. 하루의 시작, 아침 묵상 시간에 듣기 좋은 곡이에요." },
+  { title: "요게벳의 노래", artist: "염평안 (feat. 조찬미)", url: "https://www.youtube.com/watch?v=knI6bsXeg2U", desc: "모세를 갈대 상자에 띄워 보낸 요게벳의 믿음을 담은 찬양. 자녀를 하나님께 맡기는 부모의 마음으로, 간절한 기도가 필요할 때 들어보세요." },
+  { title: "여호와께 돌아가자 (Love Never Fails)", artist: "제이어스", url: "https://www.youtube.com/watch?v=NYiH9ftHjWo", desc: "'우린 돌아서도 그는 변치 않네' — 변치 않는 하나님의 사랑을 노래하는 제이어스의 라이브 워십. 회개와 회복의 자리에서 함께 부르기 좋은 곡이에요." },
+  { title: "그 안에 나 거하네", artist: "마커스워십", url: "https://www.youtube.com/watch?v=8zRdw3RWyLo", desc: "흔들리는 인생 속에서도 '그 안에 거하겠다'는 고백을 담은 마커스워십의 공식 MV. 불안한 마음이 찾아올 때 평안으로 인도하는 곡이에요." },
+  { title: "입례 (예배하는 자 되어)", artist: "위러브", url: "https://www.youtube.com/watch?v=6Xdy8I6aGpg", desc: "'온전히 영과 진리로 주를 예배하자' — 예배의 문을 여는 위러브의 입례 찬양. 주일 예배를 준비하는 마음으로, 아침 출근길에 듣기 좋아요." },
+  { title: "베드로의 고백", artist: "아가파오워십", url: "https://www.youtube.com/watch?v=GU6VfynUTuA", desc: "요한복음 21장의 '네가 나를 사랑하느냐'를 노래한 아가파오워십의 찬양. 실패와 연약함 속에서도 다시 불러주시는 주님을 만나는 시간에 어울려요." },
 ];
