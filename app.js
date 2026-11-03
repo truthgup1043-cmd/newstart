@@ -619,7 +619,10 @@ function updateAuthUI() {
   const loggedIn = !!user;
   document.getElementById("loginBtn").style.display = loggedIn ? "none" : "";
   document.getElementById("userRow").style.display = loggedIn ? "" : "none";
-  if (loggedIn) document.getElementById("userEmail").textContent = user.email;
+  if (loggedIn) {
+    const nm = user.user_metadata && user.user_metadata.name;
+    document.getElementById("userEmail").textContent = nm ? `${nm} (${user.email})` : user.email;
+  }
 }
 function authError(msg) {
   const el = document.getElementById("authErr");
@@ -961,8 +964,30 @@ async function initAuth() {
     }
   });
 }
+function showSignupView() {
+  document.getElementById("loginView").classList.add("hidden");
+  document.getElementById("signupView").classList.remove("hidden");
+  authError("");
+}
+function showLoginView() {
+  document.getElementById("signupView").classList.add("hidden");
+  document.getElementById("loginView").classList.remove("hidden");
+  const se = document.getElementById("suErr");
+  if (se) se.textContent = "";
+}
+function suError(msg) {
+  const el = document.getElementById("suErr");
+  el.textContent = msg;
+  el.style.color = "#c0392b";
+}
+function suSuccess(msg) {
+  const el = document.getElementById("suErr");
+  el.textContent = msg;
+  el.style.color = "#4a7c59";
+}
 document.getElementById("loginBtn").onclick = () => {
   authError("");
+  showLoginView();
   document.getElementById("authModal").classList.remove("hidden");
 };
 document.getElementById("authClose").onclick = () => {
@@ -979,24 +1004,39 @@ document.getElementById("authLogin").onclick = async () => {
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) authError("로그인 실패: " + error.message);
 };
-document.getElementById("authSignup").onclick = async () => {
-  authError("");
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPw").value;
-  if (!email || !password) { authError("이메일과 비밀번호를 입력해주세요."); return; }
-  if (password.length < 6) { authError("비밀번호는 6자 이상이어야 해요."); return; }
-  const { data, error } = await sb.auth.signUp({ email, password });
-  if (error) { authError("가입 실패: " + error.message); return; }
+document.getElementById("authSignupGo").onclick = showSignupView;
+document.getElementById("signupBack").onclick = showLoginView;
+document.getElementById("authSignupDo").onclick = async () => {
+  suError("");
+  const email = document.getElementById("suId").value.trim();
+  const password = document.getElementById("suPw").value;
+  const password2 = document.getElementById("suPw2").value;
+  const name = document.getElementById("suName").value.trim();
+  const phone = document.getElementById("suPhone").value.trim().replace(/ /g, "");
+  if (!email) { suError("아이디(메일 주소)를 입력해주세요."); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { suError("아이디는 메일 주소 형식으로 적어주세요. (예: xxx@naver.com)"); return; }
+  if (!password) { suError("비밀번호를 입력해주세요."); return; }
+  if (password.length < 6) { suError("비밀번호는 6자 이상이어야 해요."); return; }
+  if (password !== password2) { suError("비밀번호가 일치하지 않아요. 다시 확인해주세요."); return; }
+  if (!name) { suError("이름을 입력해주세요."); return; }
+  if (!phone) { suError("연락처를 입력해주세요."); return; }
+  if (!/^01[0-9]-?\d{3,4}-?\d{4}$/.test(phone)) { suError("연락처 형식을 확인해주세요. (예: 010-1234-5678)"); return; }
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { name, phone } }
+  });
+  if (error) { suError("가입 실패: " + error.message); return; }
   if (data.session) {
     // 이메일 확인이 꺼져 있으면 바로 로그인됨
     signupJustCompleted = true;
-    authSuccess("회원 가입이 완료 되었습니다.");
+    suSuccess("회원 가입이 완료 되었습니다.");
     setTimeout(() => {
       document.getElementById("authModal").classList.add("hidden");
+      showLoginView();
       signupJustCompleted = false;
     }, 1800);
   } else {
-    authSuccess("회원 가입이 완료 되었습니다. 이메일로 온 확인 링크를 눌러주세요.");
+    suSuccess("회원 가입이 완료 되었습니다. 이메일로 온 확인 링크를 눌러주세요.");
   }
 };
 document.getElementById("logoutBtn").onclick = async () => {
