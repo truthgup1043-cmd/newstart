@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-03";
+const PRAISE_UPDATED = "2026-11-04";
 const PRAISE_PICKS = [
-  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=kEizv1i6s9c", desc: "내가 누려온 모든 것이 당연한 게 아닌 '은혜'였음을 고백하는 손경민 목사의 대표곡. 하루의 시작, 아침 묵상 시간에 듣기 좋은 곡이에요." },
-  { title: "요게벳의 노래", artist: "염평안 (feat. 조찬미)", url: "https://www.youtube.com/watch?v=knI6bsXeg2U", desc: "모세를 갈대 상자에 띄워 보낸 요게벳의 믿음을 담은 찬양. 자녀를 하나님께 맡기는 부모의 마음으로, 간절한 기도가 필요할 때 들어보세요." },
-  { title: "여호와께 돌아가자 (Love Never Fails)", artist: "제이어스", url: "https://www.youtube.com/watch?v=NYiH9ftHjWo", desc: "'우린 돌아서도 그는 변치 않네' — 변치 않는 하나님의 사랑을 노래하는 제이어스의 라이브 워십. 회개와 회복의 자리에서 함께 부르기 좋은 곡이에요." },
-  { title: "그 안에 나 거하네", artist: "마커스워십", url: "https://www.youtube.com/watch?v=8zRdw3RWyLo", desc: "흔들리는 인생 속에서도 '그 안에 거하겠다'는 고백을 담은 마커스워십의 공식 MV. 불안한 마음이 찾아올 때 평안으로 인도하는 곡이에요." },
-  { title: "입례 (예배하는 자 되어)", artist: "위러브", url: "https://www.youtube.com/watch?v=6Xdy8I6aGpg", desc: "'온전히 영과 진리로 주를 예배하자' — 예배의 문을 여는 위러브의 입례 찬양. 주일 예배를 준비하는 마음으로, 아침 출근길에 듣기 좋아요." },
-  { title: "베드로의 고백", artist: "아가파오워십", url: "https://www.youtube.com/watch?v=GU6VfynUTuA", desc: "요한복음 21장의 '네가 나를 사랑하느냐'를 노래한 아가파오워십의 찬양. 실패와 연약함 속에서도 다시 불러주시는 주님을 만나는 시간에 어울려요." },
+  { title: "혼자 걷지 않을 거예요", artist: "예람워십", url: "https://www.youtube.com/watch?v=s3HySr8EoTY", desc: "그대 폭풍 속을 걷고 있을 때, 비바람을 마주해야 할 때… \"그대 혼자 걷지 않을 거예요.\" 외롭고 지칠 때 듣는 위로의 찬양. CCM 차트 1위·유튜브 차트 진입을 이룬 예람워십의 대표곡이에요." },
+  { title: "사랑한다 말하시네", artist: "기프티드", url: "https://www.youtube.com/watch?v=CS2F-nvDN2E", desc: "십자가에서 \"사랑한다\"고 말씀하시는 주님의 고백을 노래한 곡. 멜론 CCM 월간 차트 2위를 차지한 요즘 세대 대표 워십곡이에요." },
+  { title: "나의 하나님", artist: "박우정", url: "https://www.youtube.com/watch?v=evFTNQOrL3w", desc: "\"어느 보석보다 귀하다\" — 자존감이 흔들릴 때 나를 향한 하나님의 사랑을 일깨워주는 2017년 작 대표곡. 묵상과 기도에 어울리는 찬양이에요." },
+  { title: "나는 예배자입니다", artist: "박신화콰이어", url: "https://www.youtube.com/watch?v=8xfbjVMAwDU", desc: "\"내가 서 있는 곳 어디서나 하나님을 예배합니다\" — 일터와 일상이 곧 예배의 자리임을 선포하는 찬양. 매일의 삶 한복판에서 드리는 고백으로 들어보세요." },
+  { title: "어둔 날 다 지나고", artist: "위러브", url: "https://www.youtube.com/watch?v=EqDL2-OW1Z4", desc: "어둠의 시간이 지나고 주 품에서 영원히 찬양하리라 고백하는 위러브의 워십. 고난 가운데 소망을 붙잡고 싶을 때 듣기 좋은 곡이에요." },
+  { title: "오늘 이 곳에 계신 성령님", artist: "예람워십", url: "https://www.youtube.com/watch?v=jrbft5TU-Cc", desc: "성령님의 임재를 구하는 고백이 담긴 대표적인 예배곡을 예람워십이 2025 예람투어에서 고백한 버전. 기도를 시작할 때 어울리는 찬양이에요." },
 ];
