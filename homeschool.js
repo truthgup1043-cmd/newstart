@@ -2,6 +2,79 @@
 const HOMESCHOOL_DATA = {
   entries: [
     {
+      date: "2026-11-06",
+      title: "SoT 교과과정 (ACE School of Tomorrow)",
+      subtitle: "성경적 세계관의 자기주도식 교재 · PACE 워크북",
+      sections: [
+        {
+          h: "SoT란",
+          items: [
+            "SoT = School of Tomorrow, ACE(Accelerated Christian Education)의 교재 브랜드",
+            "1970년 도널드·에스더 하워드 부부가 미국 테네시에서 시작, 성경적 세계관 기반 K–12 자기주도식 교재",
+          ],
+        },
+        {
+          h: "PACE — 핵심 단위",
+          items: [
+            "PACE(Packet of Accelerated Christian Education): 교과서를 잘게 나눈 워크북식 단원",
+            "과목당 레벨(학년)마다 12권, 한 권을 마치면 자가 테스트와 PACE 시험으로 완전학습(mastery) 확인",
+            "1년에 과목당 12권, 전체 70여 권이 보통 진도",
+          ],
+        },
+        {
+          h: "과목",
+          items: [
+            "핵심 5과목: 성경(Bible Reading), 수학, 영어, 사회, 과학",
+            "Word Building(철자·어휘), 문학·창의 글쓰기 추가",
+            "고학년 선택과목: 회계·그리스어·선교·음악 등",
+          ],
+        },
+        {
+          h: "운영 방식",
+          items: [
+            "시작 전 진단평가(Diagnostic Test)로 과목별 수준 결정",
+            "아이는 하루 목표(Goal Card)를 세워 자기 속도로 풀고 스스로 채점",
+            "부모 준비 시간 거의 없음, 여러 연령이 같은 공간에서 각자 진도 — '학습 센터' 방식",
+          ],
+        },
+        {
+          h: "성경적 통합",
+          items: [
+            "각 PACE에 성경 말씀과 성품 훈련(정직·근면·순종 등)이 녹아 있음",
+            "과학은 창조론 관점, 교파 교리를 피하고 성경에 드러난 진리에 집중하는 무교파 노선",
+          ],
+        },
+        {
+          h: "처치홈스쿨 선택 이유",
+          items: [
+            "성경적 세계관에 기반한 전 과목 교재 + 자기 주도 학습 훈련",
+            "영어는 부수적 이득 — 전 과목이 영어로 되어 있어 자연스럽게 노출됨",
+          ],
+        },
+        {
+          h: "유의할 점 · 보완",
+          items: [
+            "워크북 암기·반복 위주라는 지적 — 토론, 살아있는 책, 이야기하기, 자연 관찰, 창의 글쓰기는 SoT만으로 부족",
+            "메이슨식 살아있는 책과 병행할 것",
+            "고학년 AP·SAT 대비는 별도 준비 필요",
+          ],
+        },
+        {
+          h: "구하는 곳",
+          items: [
+            "공식 사이트 aceschooloftomorrow.com (미국 직구)",
+            "국내: 기독교 홈스쿨 커뮤니티나 중고 거래 — 시작 전 진단평가와 레벨 확인이 먼저",
+          ],
+        },
+      ],
+      refs: [
+        "ACE School Catalog (aceschooloftomorrow.com)",
+        "Faith Ventures 'What is ACE'",
+        "Elm Grove Christian Academy 커리큘럼 안내",
+      ],
+      questions: [],
+    },
+    {
       date: "2026-10-30",
       title: "샬롯 메이슨 20가지 교육 원칙",
       subtitle: "교육 철학의 핵심 요약 · 다섯 묶음 정리",
