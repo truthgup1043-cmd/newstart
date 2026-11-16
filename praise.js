@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-15";
+const PRAISE_UPDATED = "2026-11-16";
 const PRAISE_PICKS = [
-  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=pZuW2CV0mXY", desc: "\"내가 누려왔던 모든 것들이 당연한 것 아니라 은혜였소\" — 손경민 정규 1집 타이틀곡. 태어나고 숨 쉬고 걸어온 모든 순간이 은혜였음을 고백하는 노래로, 추수감사주일을 맞아 한 해의 은혜를 돌아보며 감사를 세어보고 싶을 때 듣기 좋아요." },
-  { title: "송축해 내 영혼", artist: "예수전도단 화요모임", url: "https://www.youtube.com/watch?v=IToU4fzyIBo", desc: "\"송축해 내 영혼, 내 영혼아\" — 시편 103편을 노래한 매트 레드먼의 '10,000 Reasons' 한국어 번안곡을 예수전도단 서울화요모임이 부른 버전. 주님의 모든 은혜를 기억하며 영혼을 깨워 찬양하고 싶을 때, 아침저녁 언제든 듣기 좋아요." },
-  { title: "예수, 늘 함께 하시네", artist: "마커스워십", url: "https://www.youtube.com/watch?v=4v0oHeJ8-2k", desc: "\"하루를 살아도 기쁨으로 가리, 예수 늘 함께 하시네\" — 마커스워십 2017 앨범 수록곡. 힘든 하루에도 예수님이 내 마음을 아시고 함께하신다는 고백으로, 출근길·등굣길 아침을 시작하며 듣기 좋아요." },
-  { title: "내 모습 이대로", artist: "제이어스", url: "https://www.youtube.com/watch?v=FV5nMb93UwY", desc: "\"내 모습 이대로 사랑하시네\" — 외모와 스펙으로 가치를 매기는 세상 속에서, 있는 그대로의 나를 존귀하다 하시는 주님의 사랑을 노래한 제이어스 라이브 워십곡. 지치고 위축된 마음에 위로가 필요할 때 듣기 좋아요." },
-  { title: "사랑 바라기", artist: "J-FLOW WORSHIP", url: "https://www.youtube.com/watch?v=zeCfv8QG4tg", desc: "\"사랑받고 있음을 알면서도 느끼지 못하는 날\" — 요한일서 3장 16-18절 말씀을 담은 J-FLOW 워십의 신곡. 하나님의 사랑을 간절히 바라는 마음을 얼터너티브 R&B 사운드에 실어 노래해, 조용한 밤 묵상 시간에 듣기 좋아요." },
-  { title: "주님 다시 오실 때까지", artist: "LEVISTANCE", url: "https://www.youtube.com/watch?v=Xur6J6OAFaU&list=RDIFX1nyHpKp8&index=3", desc: "\"주님 다시 오실 때까지\" — 2023 뱁티스트 청년·대학생 연합캠프 예배 실황. 다시 오실 주님을 기다리며 세상의 가치에 저항하는 다음세대 예배팀 레비스탕스의 뜨거운 고백으로, 주일 예배 전 마음을 깨우고 싶을 때 듣기 좋아요." },
+  { title: "선한 능력으로", artist: "노래하는 청지기", url: "https://www.youtube.com/watch?v=0UbcBx2sUs8", desc: "\"주 선한 능력으로 안으시네\" — 본회퍼가 감옥에서 가족에게 보낸 시에 곡을 붙인 찬양. 어려운 시절에도 하나님의 선한 손길이 우리를 붙드신다는 고백으로, 마음이 무겁고 위로가 필요할 때 듣기 좋아요." },
+  { title: "주 하나님 지으신 모든 세계", artist: "바리톤 진정훈", url: "https://www.youtube.com/watch?v=BX0vyEXtYWo", desc: "새찬송가 79장 'How Great Thou Art' — 창조하신 하나님의 위대하심과 십자가의 은혜를 노래하는 찬양. 바리톤 진정훈의 깊은 목소리와 함께 주일 예배 전 마음을 모으고 싶을 때 듣기 좋아요." },
+  { title: "시간을 뚫고", artist: "WELOVE", url: "https://www.youtube.com/watch?v=A0FUMbDKmLA", desc: "\"당신은 시간을 뚫고 이 땅 가운데 오셨네\" — 성육신하신 예수님을 노래한 WELOVE의 대표곡. 하나님께서 우리 삶 한가운데 오셨다는 고백으로, 아침을 시작하며 마음을 깨우고 싶을 때 듣기 좋아요." },
+  { title: "나는 주를 섬기는 것에 후회가 없습니다", artist: "피아워십", url: "https://www.youtube.com/watch?v=AmwX2-BIpRU&list=RDAmwX2-BIpRU", desc: "\"나의 평생에 가장 복된 일은 주를 섬기는 것\" — 손경민 작사·작곡, 피아워십 정규 1집 수록곡. 어떤 상황에서도 주를 예배하겠다는 고백으로, 헌신과 섬김의 마음을 다잡고 싶을 때 듣기 좋아요." },
+  { title: "혼자 걷지 않을 거예요", artist: "예람워십", url: "https://www.youtube.com/watch?v=s3HySr8EoTY&list=RDI6zEuEteBKI&index=7", desc: "\"그대 혼자 걷지 않을 거예요\" — 폭풍 속을 걷는 이에게 주님이 동행하신다는 예람워십의 위로 찬양. 2026년 11월 CCM 차트 1위를 차지한 곡으로, 지친 하루 끝 위로가 필요할 때 듣기 좋아요." },
+  { title: "주를 찾는 모든 자들이", artist: "팀룩워십", url: "https://youtu.be/Fi2waeWY18g", desc: "\"주를 찾는 모든 자들이 기뻐하고 즐거워하리라\" — 시편 70편을 노래한 팀룩워십의 라이브 싱글(KOSTA·Youth Revival 실황). 하나님을 향한 갈급함을 고백하는 곡으로, 주님을 간절히 찾고 싶은 기도 시간에 듣기 좋아요." },
 ];
