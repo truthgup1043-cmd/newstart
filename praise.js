@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-22";
+const PRAISE_UPDATED = "2026-11-23";
 const PRAISE_PICKS = [
-  { title: "주 하나님 지으신 모든 세계", artist: "아이자야씩스티원", url: "https://www.youtube.com/watch?v=nN87Lz30tfs", desc: "창조하신 하나님의 위대하심을 노래하는 찬송가(새찬송가 79장). 창조의 경이로움 앞에서 하나님의 크심을 고백하고 싶을 때 듣기 좋아요." },
-  { title: "예수 사랑하심은", artist: "피아워십", url: "https://www.youtube.com/watch?v=0_Vbk7dZGzM", desc: "예수님이 나를 사랑하신다는 단순하고도 깊은 고백의 찬송가(새찬송가 563장). 어린아이 같은 믿음으로 주님의 사랑을 되새기고 싶을 때 듣기 좋아요." },
-  { title: "광야를 지나며", artist: "히즈윌", url: "https://www.youtube.com/watch?v=qaIqilD7QTI", desc: "\"왜 나를 깊은 어둠 속에 홀로 두시는지\" — 광야 같은 시간을 지나는 이에게 주님만이 도움이 되심을 고백하는 곡. 힘든 계절을 견디며 주님을 붙들고 싶을 때 듣기 좋아요." },
-  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=pZuW2CV0mXY", desc: "\"당연한 것 아니라 은혜였소\" — 지나온 모든 순간이 하나님의 은혜였음을 고백하는 손경민 목사의 대표곡. 삶의 은혜를 돌아보며 감사하고 싶을 때 듣기 좋아요." },
-  { title: "사랑한다 말하시네", artist: "GIFTED", url: "https://www.youtube.com/watch?v=A_SEQKpeHVw", desc: "\"아무런 자격도 없는 나를 위해 사랑한다 말하시네\" — 칭의의 복음을 노래하는 GIFTED의 곡. 자격 없는 나를 사랑하시는 하나님의 음성을 듣고 싶을 때 듣기 좋아요." },
-  { title: "하나님의 부르심", artist: "마커스워십", url: "https://www.youtube.com/watch?v=alH63KOscus", desc: "\"하나님의 부르심에는 후회하심이 없네\" — 나를 부르신 하나님의 신실하심을 고백하는 곡. 부르심의 자리에서 감사와 순종으로 걸어가고 싶을 때 듣기 좋아요." },
+  { title: "내 영혼의 그윽히 깊은 데서", artist: "아이자야씩스티원", url: "https://www.youtube.com/watch?v=OwCNM4Q26q8", desc: "하늘에서 내려오는 평화가 영혼을 덮는다는 고백의 찬송가(새찬송가 412장). 마음이 어지럽고 평안이 필요할 때 조용히 듣기 좋아요." },
+  { title: "십자가 그 사랑이", artist: "김승민, 하니", url: "https://www.youtube.com/watch?v=tY1-tXkzFQk", desc: "나를 위해 십자가를 지신 주님의 사랑을 노래하는 곡. 십자가의 은혜를 다시 묵상하며 감사하고 싶을 때 듣기 좋아요." },
+  { title: "송축해 내 영혼", artist: "예수전도단 화요모임", url: "https://www.youtube.com/watch?v=IToU4fzyIBo", desc: "만 가지 이유로 주님을 송축하자는 고백(Matt Redman '10,000 Reasons' 한국어 번안). 어떤 상황에서도 찬양으로 마음을 일으키고 싶을 때 듣기 좋아요." },
+  { title: "시간을 뚫고", artist: "WELOVE", url: "https://www.youtube.com/watch?v=A0FUMbDKmLA", desc: "\"당신은 시간을 뚫고 이 땅 가운데 오셨네\" — 성육신하신 예수님을 노래하는 WELOVE의 대표곡. 주님이 나와 함께하신다는 사실에 위로받고 싶을 때 듣기 좋아요." },
+  { title: "혼자 걷지 않을 거예요", artist: "예람워십", url: "https://www.youtube.com/watch?v=m38NPe7aWHY", desc: "\"그대 혼자 걷지 않을 거예요\" — 폭풍 속을 걷는 이에게 주님의 동행을 전하는 예람워십의 대표곡. 외롭고 지친 마음에 위로가 필요할 때 듣기 좋아요." },
+  { title: "주를 바라보며", artist: "GIFTED", url: "https://www.youtube.com/watch?v=GoDfGIzFIyA", desc: "\"나의 시선을 당신께 돌릴 때 비로소 내 맘 평안해\" — 흔들리는 시선을 주님께 고정하는 고백의 곡. 걱정과 두려움 앞에서 마음을 주님께 맡기고 싶을 때 듣기 좋아요." },
 ];
