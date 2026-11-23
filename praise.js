@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-23";
+const PRAISE_UPDATED = "2026-11-24";
 const PRAISE_PICKS = [
-  { title: "내 영혼의 그윽히 깊은 데서", artist: "아이자야씩스티원", url: "https://www.youtube.com/watch?v=OwCNM4Q26q8", desc: "하늘에서 내려오는 평화가 영혼을 덮는다는 고백의 찬송가(새찬송가 412장). 마음이 어지럽고 평안이 필요할 때 조용히 듣기 좋아요." },
-  { title: "십자가 그 사랑이", artist: "김승민, 하니", url: "https://www.youtube.com/watch?v=tY1-tXkzFQk", desc: "나를 위해 십자가를 지신 주님의 사랑을 노래하는 곡. 십자가의 은혜를 다시 묵상하며 감사하고 싶을 때 듣기 좋아요." },
-  { title: "송축해 내 영혼", artist: "예수전도단 화요모임", url: "https://www.youtube.com/watch?v=IToU4fzyIBo", desc: "만 가지 이유로 주님을 송축하자는 고백(Matt Redman '10,000 Reasons' 한국어 번안). 어떤 상황에서도 찬양으로 마음을 일으키고 싶을 때 듣기 좋아요." },
-  { title: "시간을 뚫고", artist: "WELOVE", url: "https://www.youtube.com/watch?v=A0FUMbDKmLA", desc: "\"당신은 시간을 뚫고 이 땅 가운데 오셨네\" — 성육신하신 예수님을 노래하는 WELOVE의 대표곡. 주님이 나와 함께하신다는 사실에 위로받고 싶을 때 듣기 좋아요." },
-  { title: "혼자 걷지 않을 거예요", artist: "예람워십", url: "https://www.youtube.com/watch?v=m38NPe7aWHY", desc: "\"그대 혼자 걷지 않을 거예요\" — 폭풍 속을 걷는 이에게 주님의 동행을 전하는 예람워십의 대표곡. 외롭고 지친 마음에 위로가 필요할 때 듣기 좋아요." },
-  { title: "주를 바라보며", artist: "GIFTED", url: "https://www.youtube.com/watch?v=GoDfGIzFIyA", desc: "\"나의 시선을 당신께 돌릴 때 비로소 내 맘 평안해\" — 흔들리는 시선을 주님께 고정하는 고백의 곡. 걱정과 두려움 앞에서 마음을 주님께 맡기고 싶을 때 듣기 좋아요." },
+  { title: "선한 능력으로", artist: "마커스워십", url: "https://www.youtube.com/watch?v=vG_E39ZYAjs", desc: "디트리히 본회퍼의 옥중 시에 곡을 붙인 찬양. 절망 속에서도 주님의 선한 능력에 안겨 다시 일어서리라는 고백 — 힘든 시기를 지날 때 큰 위로가 되는 곡이에요." },
+  { title: "약할 때 강함되시네", artist: "예수전도단 화요모임", url: "https://www.youtube.com/watch?v=tAIu_LC9E58", desc: "\"약할 때 강함되시네, 나의 보배가 되신 주\" — 나의 약함을 고백할 때 주님이 나의 강함이 되신다는 찬양. 지치고 연약함을 느낄 때 듣기 좋아요." },
+  { title: "광야를 지나며", artist: "히즈윌", url: "https://www.youtube.com/watch?v=qaIqilD7QTI", desc: "깊은 어둠과 고독의 광야 같은 시간에도 주님만 바라보며 걷는다는 고백의 곡. 인내와 신뢰가 필요한 시기에 조용히 묵상하며 듣기 좋아요." },
+  { title: "더 가까이", artist: "예람워십", url: "https://www.youtube.com/watch?v=8xrMV6fjBPU", desc: "시편 91편의 말씀처럼 주님의 깃 아래, 날개 아래로 더 가까이 나아가는 고백. 주님 품에 가까이 다가가고 싶을 때 듣기 좋아요." },
+  { title: "나의 하나님", artist: "예람워십", url: "https://www.youtube.com/watch?v=YnyY7dsWPg0", desc: "\"나의 하나님, 완전한 사랑 찬양해\" — 하나님을 인격적으로 고백하는 예람워십의 대표곡. 하나님과의 친밀함을 되새기고 싶을 때 듣기 좋아요." },
+  { title: "잠이 올 것 같아", artist: "J-FLOW WORSHIP", url: "https://www.youtube.com/watch?v=RmLROIbdyb0", desc: "시편 4:8, 잠들지 못하는 밤 아버지의 따뜻한 사랑 안에서 평안히 쉬고 싶다는 기도 같은 곡. 하루를 마치고 잠들기 전 듣기 좋아요." },
 ];
