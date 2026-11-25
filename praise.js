@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-25";
+const PRAISE_UPDATED = "2026-11-26";
 const PRAISE_PICKS = [
-  { title: "송축해 내 영혼", artist: "예수전도단 화요모임", url: "https://www.youtube.com/watch?v=IToU4fzyIBo", desc: "맷 레드먼의 '10,000 Reasons'를 한국어로 부른 명곡. 시편 103편의 고백처럼 어떤 날에도 주님을 송축하는 마음을 되새기게 해요 — 아침 예배를 열며 듣기 좋아요." },
-  { title: "내 모습 이대로", artist: "제이어스", url: "https://www.youtube.com/watch?v=FV5nMb93UwY", desc: "\"내 모습 이대로 사랑하시네\" — 연약함 그대로의 나를 사랑하시는 주님을 고백하는 곡. 있는 그대로의 나를 받아들이기 어려울 때, 주님의 눈으로 나를 바라보게 해줘요." },
-  { title: "예수, 늘 함께 하시네", artist: "마커스워십", url: "https://www.youtube.com/watch?v=4v0oHeJ8-2k", desc: "\"고단한 인생길, 힘겨운 오늘도 예수, 내 마음 아시네\" — 고단한 하루 속에서도 예수님이 늘 함께하신다는 위로의 찬양. 지친 마음으로 하루를 시작할 때 듣기 좋아요." },
-  { title: "시간을 뚫고", artist: "WELOVE", url: "https://www.youtube.com/watch?v=A0FUMbDKmLA", desc: "시간을 뚫고 이 땅에 오신 예수님, 영원히 우리와 함께하신다는 고백의 곡. 세대를 넘어 사랑받는 위러브의 대표곡으로, 힘차게 찬양하고 싶을 때 듣기 좋아요." },
-  { title: "혼자 걷지 않을 거예요", artist: "예람워십", url: "https://www.youtube.com/watch?v=s3HySr8EoTY", desc: "폭풍 속을 걷는 그대, 혼자 걷지 않을 거라는 따뜻한 약속의 노래. CCM 차트 1위를 기록한 예람워십의 대표곡 — 외롭고 두려운 밤에 큰 위로가 되는 곡이에요." },
-  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=uVOOXOLCpm0", desc: "\"내가 누려왔던 모든 것들이 당연한 것 아니라 은혜였소\" — 삶의 모든 순간이 은혜였음을 고백하는 손경민 목사의 대표곡. 지나온 시간을 돌아보며 감사할 때 듣기 좋아요." },
+  { title: "주의 옷자락 만지며", artist: "피아워십", url: "https://www.youtube.com/watch?v=4VWhSCioX58", desc: "혈루병 여인처럼 주님의 옷자락만 닿아도 낫겠다는 믿음의 고백. 치유와 회복이 간절한 날, 손을 뻗듯 조용히 부르며 듣기 좋은 곡이에요." },
+  { title: "주와 같이 길 가는 것", artist: "GIFTED", url: "https://www.youtube.com/watch?v=--lX6TwDFhs", desc: "주와 같이 길 가는 것이 얼마나 달콤한지를 노래한 오래된 찬송가를 GIFTED가 새롭게 편곡했어요. 주님과 동행하는 일상의 기쁨을 되새기며 산책하듯 듣기 좋아요." },
+  { title: "하나님의 부르심", artist: "마커스워십", url: "https://www.youtube.com/watch?v=alH63KOscus", desc: "\"하나님의 부르심에는 후회하심이 없네\" — 작은 나를 부르신 뜻을 오직 감사와 순종으로 따라가겠다는 고백. 부르심의 의미를 다시 묻는 아침, 결단의 마음으로 듣기 좋아요." },
+  { title: "비 준비하시니", artist: "뉴클레이", url: "https://www.youtube.com/watch?v=YyVjVI_w9II", desc: "시편 147편의 말씀처럼 땅을 위해 비를 준비하시는 하나님을 노래해요. 기다림의 계절에 하나님의 때를 신뢰하며 잔잔히 묵상할 때 듣기 좋은 곡이에요." },
+  { title: "사랑한다 말하시네", artist: "GIFTED", url: "https://www.youtube.com/watch?v=CS2F-nvDN2E", desc: "아무런 자격도 없는 나를 위해 \"사랑한다\" 말씀하시는 주님의 음성. 스스로 부족하다고 느껴질 때, 아가서 2장 10절의 그 부르심을 들으며 위로받기 좋아요." },
+  { title: "예수 아름다우신", artist: "예람워십", url: "https://www.youtube.com/watch?v=qVkalJTQRFA", desc: "아름다우신 예수님을 찬양하는 예람워십의 타이니하우스워십 곡. 예배의 자리에서 주님의 아름다움을 마음껏 높이며 부르고 싶을 때 듣기 좋아요." },
 ];
