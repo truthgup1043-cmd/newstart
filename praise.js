@@ -1,10 +1,10 @@
 /* 하영시 앱 — 추천 찬양 (매일 갱신) */
-const PRAISE_UPDATED = "2026-11-26";
+const PRAISE_UPDATED = "2026-11-27";
 const PRAISE_PICKS = [
-  { title: "주의 옷자락 만지며", artist: "피아워십", url: "https://www.youtube.com/watch?v=4VWhSCioX58", desc: "혈루병 여인처럼 주님의 옷자락만 닿아도 낫겠다는 믿음의 고백. 치유와 회복이 간절한 날, 손을 뻗듯 조용히 부르며 듣기 좋은 곡이에요." },
-  { title: "주와 같이 길 가는 것", artist: "GIFTED", url: "https://www.youtube.com/watch?v=--lX6TwDFhs", desc: "주와 같이 길 가는 것이 얼마나 달콤한지를 노래한 오래된 찬송가를 GIFTED가 새롭게 편곡했어요. 주님과 동행하는 일상의 기쁨을 되새기며 산책하듯 듣기 좋아요." },
-  { title: "하나님의 부르심", artist: "마커스워십", url: "https://www.youtube.com/watch?v=alH63KOscus", desc: "\"하나님의 부르심에는 후회하심이 없네\" — 작은 나를 부르신 뜻을 오직 감사와 순종으로 따라가겠다는 고백. 부르심의 의미를 다시 묻는 아침, 결단의 마음으로 듣기 좋아요." },
-  { title: "비 준비하시니", artist: "뉴클레이", url: "https://www.youtube.com/watch?v=YyVjVI_w9II", desc: "시편 147편의 말씀처럼 땅을 위해 비를 준비하시는 하나님을 노래해요. 기다림의 계절에 하나님의 때를 신뢰하며 잔잔히 묵상할 때 듣기 좋은 곡이에요." },
-  { title: "사랑한다 말하시네", artist: "GIFTED", url: "https://www.youtube.com/watch?v=CS2F-nvDN2E", desc: "아무런 자격도 없는 나를 위해 \"사랑한다\" 말씀하시는 주님의 음성. 스스로 부족하다고 느껴질 때, 아가서 2장 10절의 그 부르심을 들으며 위로받기 좋아요." },
-  { title: "예수 아름다우신", artist: "예람워십", url: "https://www.youtube.com/watch?v=qVkalJTQRFA", desc: "아름다우신 예수님을 찬양하는 예람워십의 타이니하우스워십 곡. 예배의 자리에서 주님의 아름다움을 마음껏 높이며 부르고 싶을 때 듣기 좋아요." },
+  { title: "송축해 내 영혼", artist: "예수전도단 화요모임", url: "https://www.youtube.com/watch?v=IToU4fzyIBo", desc: "시편 103편의 고백을 담은 '10,000 Reasons' 한국어 버전. 해가 뜨는 새 아침에도, 저녁이 올 때에도 만 가지 이유로 주를 찬양하는 곡이에요. 하루를 시작하며 감사로 마음을 열 때 듣기 좋아요." },
+  { title: "예수, 늘 함께 하시네", artist: "마커스워십", url: "https://www.youtube.com/watch?v=4v0oHeJ8-2k", desc: "고단한 인생길, 힘겨운 오늘에도 예수님이 내 마음을 아시고 늘 함께하신다는 위로의 고백. 지치고 흔들리는 날, '이 또한 지나가리라'는 믿음을 다시 붙들며 듣기 좋은 곡이에요." },
+  { title: "시간을 뚫고", artist: "WELOVE", url: "https://www.youtube.com/watch?v=A0FUMbDKmLA", desc: "시간을 뚫고 이 땅 가운데 낮은 모습으로 오신 예수님을 노래해요. 우리 없는 하늘을 원치 않으시고 우리 삶에 오신 그 사랑을 묵상하며, 힘차게 예배하고 싶을 때 듣기 좋아요." },
+  { title: "은혜", artist: "손경민", url: "https://www.youtube.com/watch?v=pZuW2CV0mXY", desc: "내가 누려온 모든 것, 지나온 모든 시간이 당연한 것이 아니라 은혜였음을 고백하는 곡. 지나온 삶을 되돌아보며 감사로 기도하고 싶을 때, 조용히 마음을 모아 듣기 좋아요." },
+  { title: "혼자 걷지 않을 거예요", artist: "예람워십", url: "https://www.youtube.com/watch?v=s3HySr8EoTY", desc: "폭풍 속을 걷고 있을 때, 비바람을 마주해야 할 때 — 그대 혼자 걷지 않을 거예요. 외롭고 두려운 마음에 주님이 함께 걷고 계심을 전하는 위로의 곡이에요. 2026년 11월 CCM 차트 1위 곡입니다." },
+  { title: "주를 찾는 모든 자들이", artist: "팀룩워십", url: "https://www.youtube.com/watch?v=Fi2waeWY18g", desc: "시편 70편 말씀을 바탕으로, 주를 찾는 자들이 주로 말미암아 기뻐하고 즐거워하게 하시길 구하는 찬양. 가난하고 궁핍한 마음으로 주님을 속히 구할 때, 소망을 담아 함께 부르기 좋은 곡이에요." },
 ];
